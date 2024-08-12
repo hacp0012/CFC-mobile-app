@@ -18,7 +18,7 @@ class ReadCommScreen extends StatefulWidget {
 class _ReadCommScreenState extends State<ReadCommScreen> {
   @override
   Widget build(BuildContext context) {
-    return EmptyLayout(
+    return DefaultLayout(
       child: Scaffold(
         appBar: AppBar(title: const Text('Communiquer'), actions: [
           IconButton(onPressed: () {}, icon: const Icon(CupertinoIcons.heart)),
@@ -127,8 +127,8 @@ class _ReadCommScreenState extends State<ReadCommScreen> {
             "data data Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam "
             "data data",
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  // fontFamily: CConstants.FONT_FAMILY_PRIMARY,
-                  // fontWeight: FontWeight.normal,
+                // fontFamily: CConstants.FONT_FAMILY_PRIMARY,
+                // fontWeight: FontWeight.normal,
                 ),
           ),
 

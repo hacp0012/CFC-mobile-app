@@ -15,11 +15,14 @@ class CConstants {
 
   static const double MAX_CONTAINER_WIDTH = GOLDEN_SIZE * 42;
 
+  static const String IMAGE_UPLOAD_NAME = 'picture';
+
   // static const String FONT_FAMILY_PRIMARY = 'Poppins';
   // static const String FONT_FAMILY_PRIMARY = 'Rubik';
   // static const String FONT_FAMILY_PRIMARY = 'Zain';
   // static const String? FONT_FAMILY_PRIMARY = null;
   static const String FONT_FAMILY_PRIMARY = 'Figtree';
+  // static const String FONT_FAMILY_PRIMARY = 'Nunito';
   // static const String FONT_FAMILY_PRIMARY = 'Open sens';
   static const String FONT_FAMILY_SECONDARY = 'Figtree';
 }

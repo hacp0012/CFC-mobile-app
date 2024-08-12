@@ -20,7 +20,7 @@ class NotificationsScreen extends StatefulWidget {
 class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   Widget build(BuildContext context) {
-    return EmptyLayout(
+    return DefaultLayout(
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Notifications'),
@@ -46,8 +46,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           ),
           const Divider(),
           ...AnimateList(
-            interval: 450.ms,
-            effects: [FadeEffect(duration: 1.seconds), SlideEffect(duration: 500.ms)],
+            interval: 108.ms,
+            effects: [FadeEffect(duration: 360.ms), SlideEffect(duration: 360.ms, begin: const Offset(0.0, 0.4))],
             children: List<Widget>.generate(9, (int index) => const CNotificationCardListComponent()),
           )
         ]),

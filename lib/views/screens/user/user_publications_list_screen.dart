@@ -18,7 +18,7 @@ class UserPublicationsListScreen extends StatefulWidget {
 class _UserPublicationsListScreenState extends State<UserPublicationsListScreen> {
   @override
   Widget build(BuildContext context) {
-    return EmptyLayout(
+    return DefaultLayout(
       child: Scaffold(
         appBar: AppBar(title: const Text('Mes publications')),
         body: SingleChildScrollView(

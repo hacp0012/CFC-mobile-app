@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 
 class TCDialog {
   static DialogTheme light = DialogTheme(
-      barrierColor: TcColorScheme.light.surface.withOpacity(0.5),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CConstants.GOLDEN_SIZE)),
-      elevation: CConstants.GOLDEN_SIZE,
-      shadowColor: Colors.grey.withOpacity(0.6),
+    barrierColor: TcColorScheme.light.primaryContainer.withOpacity(0.5),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CConstants.GOLDEN_SIZE)),
+    elevation: CConstants.GOLDEN_SIZE,
+    shadowColor: Colors.grey.withOpacity(0.6),
   );
 
   static DialogTheme dark = DialogTheme(
     barrierColor: TcColorScheme.dark.surface.withOpacity(0.9),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CConstants.GOLDEN_SIZE)),
-      elevation: CConstants.GOLDEN_SIZE,
-      shadowColor: Colors.grey.withOpacity(0.6),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CConstants.GOLDEN_SIZE)),
+    elevation: CConstants.GOLDEN_SIZE,
+    shadowColor: Colors.grey.withOpacity(0.6),
   );
 }

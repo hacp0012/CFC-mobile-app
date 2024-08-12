@@ -1,4 +1,5 @@
 import 'package:cfc_christ/env.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -28,6 +29,7 @@ class CAppPreferences {
     instance = await SharedPreferences.getInstance();
 
     loginToken = instance?.getString(Env.API_SESSION_TOKEN_NAME);
+    debugPrint(loginToken);
   }
 
   /// Update session login token.

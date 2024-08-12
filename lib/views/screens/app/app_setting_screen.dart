@@ -30,7 +30,7 @@ class _AppSettingScreenState extends State<AppSettingScreen> {
   Widget build(BuildContext context) {
     final watchedThemeState = watchValue<CDefaultState, ThemeMode>((CDefaultState data) => data.themeMode);
 
-    return EmptyLayout(
+    return DefaultLayout(
       child: Scaffold(
         appBar: AppBar(title: const Text('Parametrises')),
 

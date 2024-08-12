@@ -16,7 +16,7 @@ class DonateScreen extends StatefulWidget {
 class _DonateScreenState extends State<DonateScreen> {
   @override
   Widget build(BuildContext context) {
-    return EmptyLayout(
+    return DefaultLayout(
       transparentStatusBar: true,
       child: Scaffold(
         appBar: AppBar(title: const Text('Donation')),

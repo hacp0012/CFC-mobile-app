@@ -38,7 +38,13 @@ class MiscDataHandlerMv {
 
   /// Get countries code.
   static List<dynamic> get countriesCodes {
-    List<dynamic> data = jsonDecode(CAppPreferences().instance?.getString(storeKey) ?? '[]') as List<dynamic>;
-    return data;
+    Map data = jsonDecode(CAppPreferences().instance?.getString(storeKey) ?? '{}');
+    return data['phone_codes'] ?? [];
+  }
+
+  /// Get countries code.
+  static List<dynamic> get roles {
+    Map data = jsonDecode(CAppPreferences().instance?.getString(storeKey) ?? '{}');
+    return data['roles'] ?? [];
   }
 }

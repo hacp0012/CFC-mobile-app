@@ -26,7 +26,7 @@ class _PresentationScreenState extends State<PresentationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return EmptyLayout(
+    return DefaultLayout(
       transparentStatusBar: true,
       child: Scaffold(
         body: Column(

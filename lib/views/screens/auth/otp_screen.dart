@@ -46,7 +46,7 @@ class _OtpScreeState extends State<OtpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return EmptyLayout(
+    return DefaultLayout(
       child: Scaffold(
         appBar: AppBar(title: const Text("Vérification OTP")),
 
@@ -120,9 +120,9 @@ class _OtpScreeState extends State<OtpScreen> {
               ]),
 
               // --- Actions :
-              const SizedBox(height: CConstants.GOLDEN_SIZE * 7),
+              const SizedBox(height: CConstants.GOLDEN_SIZE * 2),
               ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: CConstants.GOLDEN_SIZE * 36),
+                constraints: const BoxConstraints(maxWidth: CConstants.MAX_CONTAINER_WIDTH),
                 child: Row(children: [
                   const Spacer(),
                   TextButton(onPressed: () => Navigator.pop(context), child: const Text("Corriger le numéro")),

@@ -19,7 +19,7 @@ class ReadTeachingScreen extends StatefulWidget {
 class _ReadTeachingScreenState extends State<ReadTeachingScreen> {
   @override
   Widget build(BuildContext context) {
-    return EmptyLayout(
+    return DefaultLayout(
       child: Scaffold(
         appBar: AppBar(title: const Text('Enseignement'), actions: [
           IconButton(onPressed: () {}, icon: const Icon(CupertinoIcons.heart)),

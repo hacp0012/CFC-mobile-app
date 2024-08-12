@@ -21,7 +21,7 @@ class UserFamilyHomeScreen extends StatefulWidget {
 class _UserFamilyHomeScreenState extends State<UserFamilyHomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return EmptyLayout(
+    return DefaultLayout(
       child: Scaffold(
         appBar: AppBar(title: const Text('Ma famille')),
 

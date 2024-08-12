@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:cfc_christ/classes/c_image_handler_class.dart';
+import 'package:cfc_christ/configs/c_api.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
+import 'package:cfc_christ/model_view/auth/login_mv.dart';
 import 'package:cfc_christ/model_view/user_mv.dart';
 import 'package:cfc_christ/views/screens/family/user_family_home_screen.dart';
 import 'package:cfc_christ/views/screens/user/profile_setting_screen.dart';
@@ -8,11 +12,19 @@ import 'package:cfc_christ/views/screens/user/user_favorits_screen.dart';
 import 'package:cfc_christ/views/screens/user/user_publications_list_screen.dart';
 import 'package:cfc_christ/views/screens/user/user_responsability_screen.dart';
 import 'package:cfc_christ/views/screens/user/validable_screen.dart';
+import 'package:cfc_christ/views/widgets/c_image_cropper.dart';
 import 'package:cfc_christ/views/widgets/c_modal_widget.dart';
+import 'package:cfc_christ/views/widgets/c_snackbar_widget.dart';
+import 'package:crop_image/crop_image.dart';
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager_dio/flutter_cache_manager_dio.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:share_plus/share_plus.dart';
 
 class UserPartialProfileScreen extends StatefulWidget {
   const UserPartialProfileScreen({super.key, this.showEditButton = false});
@@ -26,12 +38,22 @@ class UserPartialProfileScreen extends StatefulWidget {
 class _UserPartialProfileScreenState extends State<UserPartialProfileScreen> {
   // DATAS -------------------------------------------------------------------------------------------------------------------
   final Map<String, dynamic>? userData = UserMv.data;
+  Map userPhoto = {'loading': false};
+  final controller = CropController(
+    /// If not specified, [aspectRatio] will not be enforced.
+    aspectRatio: 1,
+
+    /// Specify in percentages (1 means full width and height). Defaults to the full image.
+    defaultCrop: const Rect.fromLTRB(0.1, 0.1, 0.9, 0.9),
+  );
 
   // INITIALIZERS ------------------------------------------------------------------------------------------------------------
   @override
   void initState() {
     super.initState();
   }
+
+  void _s(fn) => super.setState(fn);
 
   // VIEW --------------------------------------------------------------------------------------------------------------------
   @override
@@ -47,10 +69,17 @@ class _UserPartialProfileScreenState extends State<UserPartialProfileScreen> {
               padding: const EdgeInsets.all(CConstants.GOLDEN_SIZE / 2),
               label: const Icon(CupertinoIcons.camera, size: CConstants.GOLDEN_SIZE * 2),
               backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              child: CircleAvatar(
-                radius: CConstants.GOLDEN_SIZE * 5,
-                // backgroundImage: const AssetImage('lib/assets/pictures/smil_man.jpg'),
-                child: Image.network(CImageHandlerClass.byPid('0')),
+              child: CachedNetworkImage(
+                cacheManager: DioCacheManager.instance,
+                // cacheKey: 'USER_PHOTO_CACHE_KEY',
+                imageUrl: CImageHandlerClass.byPid(userData?['photo']),
+                imageBuilder: (context, imageProvider) {
+                  return CircleAvatar(
+                    radius: CConstants.GOLDEN_SIZE * 5,
+                    backgroundImage: userPhoto['loading'] ? null : imageProvider,
+                    child: userPhoto['loading'] ? const CircularProgressIndicator(strokeCap: StrokeCap.round) : null,
+                  );
+                },
               ),
             ),
             onTap: () {
@@ -71,9 +100,16 @@ class _UserPartialProfileScreenState extends State<UserPartialProfileScreen> {
                     ),
                     ListTile(
                       title: const Text("Changer la photo"),
+                      subtitle: Text(
+                        "Sélectionnez une phone dans la bibliothèque.",
+                        style: Theme.of(context).textTheme.labelSmall,
+                      ),
                       leading: const Icon(CupertinoIcons.camera),
                       dense: false,
-                      onTap: () => openFile(),
+                      onTap: () {
+                        CModalWidget.close(context);
+                        openFile();
+                      },
                     ),
                     Row(children: [
                       const Spacer(),
@@ -98,7 +134,7 @@ class _UserPartialProfileScreenState extends State<UserPartialProfileScreen> {
             FilledButton.tonalIcon(
               onPressed: () => context.pushNamed(ProfileSettingScreen.routeName),
               icon: const Icon(Icons.edit, size: 18),
-              label: const Text("Modifie"),
+              label: const Text("Modifier"),
             ),
         ]),
       ),
@@ -161,6 +197,53 @@ class _UserPartialProfileScreenState extends State<UserPartialProfileScreen> {
 
   // FUNCTIONS ---------------------------------------------------------------------------------------------------------------
   void openFile() async {
-    await FilePicker.platform.pickFiles();
+    FilePickerResult? file = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpeg', 'png'],
+    );
+
+    if (file != null) {
+      var picked = file.files.first.xFile;
+      cropperAndUpload(picked);
+    }
+  }
+
+  void _showSnackbar(String message, [Color? color]) {
+    CSnackbarWidget(context, content: Text(message), backgroundColor: color);
+  }
+
+  void cropperAndUpload(XFile xfile) {
+    CImageCropper(context, path: xfile.path, onCropped: (croppedFile, bytesList, tempPath) async {
+      print("8888888888888888888888888888888888888");
+      print(xfile.path);
+      var data = FormData.fromMap({
+        CConstants.IMAGE_UPLOAD_NAME: await MultipartFile.fromFile(
+          tempPath,
+          filename: xfile.name,
+          // contentType: MediaType.parse(xfile.mimeType ?? 'image/jpeg'),
+        ),
+        // CConstants.IMAGE_UPLOAD_NAME: MultipartFile.fromBytes(
+        //   bytesList,
+        //   filename: xfile.name,
+        //   contentType: MediaType.parse(xfile.mimeType ?? 'application/octet-stream'),
+        // ),
+      });
+
+      _s(() => userPhoto['loading'] = true);
+      CApi.request.post('/user/update/photo', data: data).then(
+        (response) {
+          print(response.data);
+          if (response.data['state'] == 'STORED') {
+            _s(() => userData?['photo'] = response.data['pid']);
+            LoginMv().downloadAndInstallUserDatas();
+          }
+          _s(() => userPhoto['loading'] = false);
+        },
+        onError: (error) {
+          _s(() => userPhoto['loading'] = false);
+          _showSnackbar("Le téléversement n'a pas pût être effectué. Réessayer plus tard.");
+        },
+      );
+    });
   }
 }

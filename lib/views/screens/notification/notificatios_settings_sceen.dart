@@ -15,7 +15,7 @@ class NotificatiosSettingsScreen extends StatefulWidget {
 class _NotificatiosSettingsScreenState extends State<NotificatiosSettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    return EmptyLayout(
+    return DefaultLayout(
       child: Scaffold(
         appBar: AppBar(title: const Text('Paramètres des notifications')),
 

@@ -16,7 +16,7 @@ class AboutusScreen extends StatefulWidget {
 class _AboutusScreenState extends State<AboutusScreen> {
   @override
   Widget build(BuildContext context) {
-    return EmptyLayout(
+    return DefaultLayout(
       child: Scaffold(
         appBar: AppBar(title: const Text('A propos de la CFC')),
         body: ListView(children: [

@@ -99,7 +99,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }).toList();
 
     // -------------------------------------------------------------- :
-    return EmptyLayout(
+    return DefaultLayout(
       child: Scaffold(
         appBar: AppBar(title: const Text("S'inscrire"), centerTitle: true),
 
@@ -376,7 +376,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         );
         return false;
       }
-
 
       // Control PCN :
       if (inputDatas['deja_membre'] == true &&

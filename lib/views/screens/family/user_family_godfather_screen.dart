@@ -14,7 +14,7 @@ class UserFamilyGodfatherScreen extends StatefulWidget {
 class _UserFamilyGodfatherScreenState extends State<UserFamilyGodfatherScreen> {
   @override
   Widget build(BuildContext context) {
-    return EmptyLayout(
+    return DefaultLayout(
       child: Scaffold(
         appBar: AppBar(title: const Text('Godfather')),
       ),

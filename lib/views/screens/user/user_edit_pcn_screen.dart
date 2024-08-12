@@ -16,7 +16,7 @@ class UserEditPcnScreen extends StatefulWidget {
 class _UserEditPcnScreenState extends State<UserEditPcnScreen> {
   @override
   Widget build(BuildContext context) {
-    return EmptyLayout(
+    return DefaultLayout(
       child: Scaffold(
         appBar: AppBar(title: const Text('PCN'), actions: [
           TextButton.icon(

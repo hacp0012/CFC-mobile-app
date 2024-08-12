@@ -18,7 +18,7 @@ class ReadEchoScreen extends StatefulWidget {
 class _ReadEchoScreenState extends State<ReadEchoScreen> {
   @override
   Widget build(BuildContext context) {
-    return EmptyLayout(
+    return DefaultLayout(
       child: Scaffold(
         appBar: AppBar(title: const Text('Echo'), actions: [
           IconButton(onPressed: () {}, icon: const Icon(CupertinoIcons.heart)),
@@ -69,14 +69,13 @@ class _ReadEchoScreenState extends State<ReadEchoScreen> {
               Expanded(
                 child: RichText(
                   text: TextSpan(
-                    text:
-                    "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
-                    "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
-                    "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod \n\n"
-                    "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
-                    "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
-                    "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod \n\n"
-                    "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
+                    text: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
+                        "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
+                        "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod \n\n"
+                        "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
+                        "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
+                        "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod \n\n"
+                        "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
                         "tempor invidunt ut labore et dolore... ",
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Colors.grey.shade700, height: 1.1),
                     // children: <TextSpan>[
@@ -111,8 +110,8 @@ class _ReadEchoScreenState extends State<ReadEchoScreen> {
                   children: [
                     ConstrainedBox(
                       constraints: const BoxConstraints(maxHeight: (270 / 2) - 1.5),
-                      child: Image.asset('lib/assets/pictures/praying_people.jpg',
-                          fit: BoxFit.cover, height: double.infinity),
+                      child:
+                          Image.asset('lib/assets/pictures/praying_people.jpg', fit: BoxFit.cover, height: double.infinity),
                     ),
                     const SizedBox(height: 3.0),
                     ConstrainedBox(

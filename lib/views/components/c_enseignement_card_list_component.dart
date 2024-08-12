@@ -28,7 +28,7 @@ class CEnseignementCardListComponent extends StatelessWidget {
               label: const Icon(CupertinoIcons.heart, size: 12),
               offset: const Offset(-3.0, 0.0),
               child: const CircleAvatar(
-                radius: CConstants.GOLDEN_SIZE * 4,
+                radius: CConstants.GOLDEN_SIZE * 3,
                 backgroundImage: AssetImage('lib/assets/pictures/church_logo.jpg'),
               ),
             ),

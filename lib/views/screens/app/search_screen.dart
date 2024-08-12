@@ -16,16 +16,20 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
-    return EmptyLayout(
+    return DefaultLayout(
       child: Scaffold(
         appBar: AppBar(
           title: TextField(
-            textInputAction: TextInputAction.go,
+            textInputAction: TextInputAction.search,
             decoration: const InputDecoration().copyWith(
-              filled: true,
+              filled: false,
               fillColor: Theme.of(context).colorScheme.surface,
-              suffixIcon: IconButton(onPressed: () {}, icon: const Icon(CupertinoIcons.search_circle)),
-              hintText: "Chercher ...",
+              prefixIcon: IconButton(
+                style: const ButtonStyle(visualDensity: VisualDensity.compact),
+                onPressed: () {},
+                icon: const Icon(CupertinoIcons.search),
+              ),
+              hintText: "Faites votre recherche ici...",
             ),
           ),
           actions: [IconButton(onPressed: () {}, icon: const Icon(CupertinoIcons.settings))],

@@ -18,7 +18,7 @@ class DbMigrations {
      CREATE TABLE ${UserModel.tableName} (
         ${UserModel.id}             INTEGER PRIMARY KEY AUTOINCREMENT,
         ${UserModel.identifierKey}  TEXT DEFAULT ${UserModel.identifierKey},
-        ${UserModel.data}           TEXT,
+        ${UserModel.data}           TEXT
      );
     """);
   }

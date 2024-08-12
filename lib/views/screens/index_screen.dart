@@ -14,7 +14,7 @@ class IndexScreen extends StatefulWidget {
 class _IndexScreenState extends State<IndexScreen> {
   @override
   Widget build(BuildContext context) {
-    return DefaultLayout(
+    return DefaultLayoutLoose(
       title: const Text("My custom title"),
       child: Center(
         child: ElevatedButton(

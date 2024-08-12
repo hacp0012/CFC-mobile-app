@@ -29,7 +29,7 @@ class _UserDeleteAccountScreenState extends State<UserDeleteAccountScreen> {
           icon: const Icon(CupertinoIcons.xmark),
         ),
       ),
-      body: EmptyLayout(
+      body: DefaultLayout(
         child: SingleChildScrollView(
           child: Center(
             child: ConstrainedBox(

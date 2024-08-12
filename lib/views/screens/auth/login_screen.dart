@@ -38,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     var q = MediaQuery.sizeOf(context);
 
-    return EmptyLayout(
+    return DefaultLayout(
       transparentStatusBar: true,
       child: Scaffold(
         body: Center(

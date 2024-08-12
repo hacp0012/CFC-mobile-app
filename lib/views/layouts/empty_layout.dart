@@ -1,24 +1,22 @@
-import 'package:cfc_christ/configs/c_constants.dart';
+import 'package:cfc_christ/classes/c_misc_class.dart';
 import 'package:cfc_christ/configs/c_network_state.dart';
-import 'package:cfc_christ/theme/c_transition_thme.dart';
 import 'package:cfc_christ/theme/configs/tc_overlay_ui_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:watch_it/watch_it.dart';
 
-class EmptyLayout extends WatchingStatefulWidget with WatchItStatefulWidgetMixin {
+class DefaultLayout extends WatchingStatefulWidget with WatchItStatefulWidgetMixin {
   final Widget child;
   final Color? navColor;
   final bool transparentStatusBar;
 
-  const EmptyLayout({super.key, required this.child, this.navColor, this.transparentStatusBar = false});
+  const DefaultLayout({super.key, required this.child, this.navColor, this.transparentStatusBar = false});
 
   @override
   State<StatefulWidget> createState() => _EmptyLayoutState();
 }
 
-class _EmptyLayoutState extends State<EmptyLayout> {
+class _EmptyLayoutState extends State<DefaultLayout> {
   // DATAS -------------------------------------------------------------------------------------------------------------------
   bool appIsOnline = false;
 
@@ -36,18 +34,19 @@ class _EmptyLayoutState extends State<EmptyLayout> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: TcOverlayUiStyle.of(context, navColor: widget.navColor, statusBarTo: widget.transparentStatusBar),
       child: Column(mainAxisSize: MainAxisSize.min, children: [
-        if (!appIsOnline)
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: CConstants.GOLDEN_SIZE / 2),
-            decoration: BoxDecoration(color: Colors.grey.shade800),
-            child: Text(
-              "hors ligne",
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(color: CConstants.LIGHT_COLOR),
-            ),
-          ).animate(effects: CTransitionsTheme.model_1),
-
         // APPLICATION CONTENT :
         Expanded(child: widget.child),
+
+        if (!appIsOnline)
+          Container(
+            width: double.infinity,
+            decoration: BoxDecoration(color: CMiscClass.whenBrightnessOf<Color>(context, light: Colors.grey.shade200)),
+            child: Text(
+              "hors ligne",
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.error),
+            ),
+          ),
       ]),
     );
   }

@@ -16,11 +16,12 @@ class Env {
   static const String APP_DESCRIPTION = "L’amour, la joie, la paix du Christ";
 
   /// Specify for somes features to be accessible offline too.
-  static const bool APP_NETWORK_OFFLINE_MODE = true;
+  static const bool APP_NETWORK_OFFLINE_MODE = false;
 
   /// Local API local url
   // static const String API_LOCAL_URL = "http://10.0.2.2";
-  static const String API_LOCAL_URL = "http://192.168.0.144:80";
+  // static const String API_LOCAL_URL = "https://cfc-media.org";
+  static const String API_LOCAL_URL = "http://192.168.108.180:80";
 
   /// API real url.
   static const String API_URL = DEBUG ? API_LOCAL_URL : "";

@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return EmptyLayout(
+    return DefaultLayout(
       navColor: Theme.of(context).colorScheme.surfaceContainer,
       child: Scaffold(
         // --- AppBar :

@@ -16,7 +16,7 @@ class NewCommScreen extends StatefulWidget {
 class _NewCommScreenState extends State<NewCommScreen> {
   @override
   Widget build(BuildContext context) {
-    return EmptyLayout(
+    return DefaultLayout(
       child: Scaffold(
         appBar: AppBar(title: const Text('Nouvelle communiquée'), actions: [
           TextButton.icon(

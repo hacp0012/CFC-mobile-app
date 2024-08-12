@@ -84,6 +84,8 @@ dependencies:
   file_picker: ^8.0.7
   crop_image: ^1.0.13
   image_cropper: ^8.0.1
+  http_parser: ^4.0.2
+  easy_image_viewer: ^1.5.1
 
 dev_dependencies:
   flutter_test:
@@ -170,6 +172,9 @@ flutter:
     - family: Open sens
       fonts:
         - asset: lib/assets/fonts/Open_sens/OpenSans-VariableFont_wdth_wght.ttf
+    - family: Nunito
+      fonts:
+        - asset: lib/assets/fonts/Nunito-VariableFont_wght.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

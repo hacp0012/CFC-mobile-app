@@ -16,7 +16,7 @@ class NewEchoScreen extends StatefulWidget {
 class _NewEchoScreenState extends State<NewEchoScreen> {
   @override
   Widget build(BuildContext context) {
-    return EmptyLayout(
+    return DefaultLayout(
       child: Scaffold(
         appBar: AppBar(title: const Text('Nouvelle écho'), actions: [
           TextButton.icon(

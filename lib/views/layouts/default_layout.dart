@@ -3,18 +3,18 @@ import 'package:cfc_christ/theme/configs/tc_overlay_ui_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class DefaultLayout extends StatefulWidget {
-  const DefaultLayout({super.key, required this.child, this.title});
+class DefaultLayoutLoose extends StatefulWidget {
+  const DefaultLayoutLoose({super.key, required this.child, this.title});
 
   final Widget child;
 
   final Widget? title;
 
   @override
-  createState() => _DefaultLayoutState();
+  createState() => _DefaultLayoutLooseState();
 }
 
-class _DefaultLayoutState extends State<DefaultLayout> {
+class _DefaultLayoutLooseState extends State<DefaultLayoutLoose> {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(

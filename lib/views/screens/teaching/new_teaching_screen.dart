@@ -25,7 +25,7 @@ class _NewTeachingScreenState extends State<NewTeachingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return EmptyLayout(
+    return DefaultLayout(
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Nouvelle enseignement'),

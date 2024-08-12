@@ -19,18 +19,18 @@ class _HomeScreenPartialViewHomeState extends State<HomeScreenPartialViewHome> {
       Padding(
         padding: const EdgeInsets.symmetric(vertical: CConstants.GOLDEN_SIZE),
         child: FlutterCarousel(
-          options: CarouselOptions(height: CConstants.GOLDEN_SIZE * 22, autoPlay: true, viewportFraction: 0.85),
+          options: CarouselOptions(height: CConstants.GOLDEN_SIZE * 22, autoPlay: true, viewportFraction: 0.80),
           items: List<Widget>.generate(
             3,
             (int index) => Container(
               width: CConstants.GOLDEN_SIZE * 36,
               margin: const EdgeInsets.symmetric(vertical: CConstants.GOLDEN_SIZE),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS),
+                borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS / 2),
                 boxShadow: const [BoxShadow(color: Colors.blueGrey, blurRadius: CConstants.GOLDEN_SIZE - 6)],
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS),
+                borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS / 2),
                 child: Image.asset('lib/assets/pictures/family_1.jpg', height: 100, fit: BoxFit.cover),
               ),
             ),

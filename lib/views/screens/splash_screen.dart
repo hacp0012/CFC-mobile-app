@@ -26,6 +26,10 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+
+    // // Open permissions asker.
+    // CSBoot.askingForPermissions();
+
     start();
   }
 
@@ -34,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return EmptyLayout(
+    return DefaultLayout(
       child: Scaffold(
         body: SafeArea(
           child: Container(
@@ -138,9 +142,6 @@ class _SplashScreenState extends State<SplashScreen> {
           if (kDebugMode) {
             print("APP LOADING FINISH *********");
           }
-
-          // Open permissions asker.
-          CSBoot.askingForPermissions();
 
           // Start first time launching process.
           CSBoot.isFirstTime(context);

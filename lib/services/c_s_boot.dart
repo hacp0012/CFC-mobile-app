@@ -18,6 +18,9 @@ class CSBoot {
       onFinish: onFinish,
       onError: onFailed,
     );
+
+    // ASK FOR PERSMISSIONS :
+    // Isolate.run(() => CSBoot.askingForPermissions());
   }
 
   /// Control wether is first time launch.

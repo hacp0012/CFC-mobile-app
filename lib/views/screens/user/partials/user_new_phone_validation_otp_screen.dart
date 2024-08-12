@@ -47,7 +47,7 @@ class _UserNewPhoneValidationOtpScreenState extends State<UserNewPhoneValidation
   // VIEW --------------------------------------------------------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
-    return EmptyLayout(
+    return DefaultLayout(
       child: Scaffold(
         appBar: AppBar(title: const Text('Nouveau numéro')),
         body: Center(
@@ -74,7 +74,7 @@ class _UserNewPhoneValidationOtpScreenState extends State<UserNewPhoneValidation
                   phoneCode: phoneCode,
                   phoneNumber: phoneNumber,
                   onSuccess: (data) {
-                    if(data['state'] == 'VALIDE') {
+                    if (data['state'] == 'VALIDE') {
                       validateNewPhoneNumber();
                     } else {
                       _showSnackbar("Le code OTP que vous avez fourni est incorrect.");
@@ -122,22 +122,22 @@ class _UserNewPhoneValidationOtpScreenState extends State<UserNewPhoneValidation
     };
 
     CApi.request.post("/user/phone/update", data: data).then(
-          (response) {
-            if (response.data['state'] == 'SUCCESS') {
-              // Download user data.
-              LoginMv().downloadAndInstallUserDatas();
+      (response) {
+        if (response.data['state'] == 'SUCCESS') {
+          // Download user data.
+          LoginMv().downloadAndInstallUserDatas();
 
-              _showSnackbar("Numéro changé avec succès", Colors.green.shade200);
+          _showSnackbar("Numéro changé avec succès", Colors.green.shade200);
 
-              _back();
-            } else {
-              _showSnackbar("Votre numéro est déjà changé.", Colors.red);
-            }
-          },
-          onError: (error) {
-            _showSnackbar("Erreur réseau, vérifier votre connexion internet.");
-          },
-        );
+          _back();
+        } else {
+          _showSnackbar("Votre numéro est déjà changé.", Colors.red);
+        }
+      },
+      onError: (error) {
+        _showSnackbar("Erreur réseau, vérifier votre connexion internet.");
+      },
+    );
   }
 
   void _back() => Navigator.pop(context);

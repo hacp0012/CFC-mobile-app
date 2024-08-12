@@ -14,7 +14,7 @@ class UserFamilyParentsScreen extends StatefulWidget {
 class _UserFamilyParentsScreenState extends State<UserFamilyParentsScreen> {
   @override
   Widget build(BuildContext context) {
-    return EmptyLayout(
+    return DefaultLayout(
       child: Scaffold(
         appBar: AppBar(title: const Text('Mes Parents')),
       ),

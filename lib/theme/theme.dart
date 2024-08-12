@@ -20,7 +20,7 @@ class CTheme {
 
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
-    // fontFamily: CConstants.FONT_FAMILY_PRIMARY,
+    fontFamily: CConstants.FONT_FAMILY_PRIMARY,
     brightness: Brightness.light,
     colorScheme: TcColorScheme.light,
 
@@ -42,7 +42,7 @@ class CTheme {
 
   static ThemeData dark = ThemeData(
     useMaterial3: true,
-    // fontFamily: CConstants.FONT_FAMILY_PRIMARY,
+    fontFamily: CConstants.FONT_FAMILY_PRIMARY,
     brightness: Brightness.dark,
     colorScheme: TcColorScheme.dark,
 
