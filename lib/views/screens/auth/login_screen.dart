@@ -92,10 +92,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Expanded(
                                     child: DropdownButtonHideUnderline(
                                       child: DropdownMenu(
-                                        onSelected: (value) => loginFieldsData['phone_code'],
+                                        onSelected: (value) => loginFieldsData['phone_code'] = value ?? '',
                                         dropdownMenuEntries: MiscDataHandlerMv.countriesCodes.map((element) {
                                           return DropdownMenuEntry(
-                                            value: "element['code']",
+                                            value: "${element['code']}",
                                             label: "${element['country']} ${element['code']}",
                                           );
                                         }).toList(),

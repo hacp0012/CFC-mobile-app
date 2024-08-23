@@ -82,10 +82,15 @@ dependencies:
   flutter_cache_manager_dio: ^4.0.0
   permission_handler_platform_interface: ^4.2.2
   file_picker: ^8.0.7
-  crop_image: ^1.0.13
   image_cropper: ^8.0.1
   http_parser: ^4.0.2
   easy_image_viewer: ^1.5.1
+  faker: ^2.1.0
+  card_loading: ^0.3.2
+  date_time_format: ^2.0.1
+  flutter_localizations:
+    sdk: flutter
+  intl: any
 
 dev_dependencies:
   flutter_test:
@@ -117,10 +122,7 @@ flutter:
   assets:
     - lib/assets/icons/
     - lib/assets/fonts/
-    - lib/assets/fonts/Poppins/
-    - lib/assets/fonts/Rubik/
-    - lib/assets/fonts/Zain/
-    - lib/assets/fonts/Open_sens/
+    - lib/assets/fonts/chirp-font-master/
     - lib/assets/pictures/
     - lib/assets/pictures/final/
   #   - images/a_dot_burr.jpeg
@@ -149,32 +151,12 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
-    - family: Poppins
+    - family: Chirp
       fonts:
-        - asset: lib/assets/fonts/Poppins/Poppins-Regular.ttf
-        - asset: lib/assets/fonts/Poppins/Poppins-Italic.ttf
-        - asset: lib/assets/fonts/Poppins/Poppins-Bold.ttf
-        - asset: lib/assets/fonts/Poppins/Poppins-Light.ttf
-        - asset: lib/assets/fonts/Poppins/Poppins-Medium.ttf
-        - asset: lib/assets/fonts/Poppins/Poppins-Thin.ttf
-    - family: Rubik
-      fonts:
-        - asset: lib/assets/fonts/Rubik/Rubik-VariableFont_wght.ttf
-        - asset: lib/assets/fonts/Rubik/Rubik-Light.ttf
-        - asset: lib/assets/fonts/Rubik/Rubik-Medium.ttf
-        - asset: lib/assets/fonts/Rubik/Rubik-Regular.ttf
-        - asset: lib/assets/fonts/Rubik/Rubik-Italic.ttf
-    - family: Zain
-      fonts:
-        - asset: lib/assets/fonts/Zain/Zain-Light.ttf
-        - asset: lib/assets/fonts/Zain/Zain-Regular.ttf
-        - asset: lib/assets/fonts/Zain/Zain-Bold.ttf
-    - family: Open sens
-      fonts:
-        - asset: lib/assets/fonts/Open_sens/OpenSans-VariableFont_wdth_wght.ttf
-    - family: Nunito
-      fonts:
-        - asset: lib/assets/fonts/Nunito-VariableFont_wght.ttf
+        - asset: lib/assets/fonts/chirp-font-master/Chirp-Bold.ttf
+        - asset: lib/assets/fonts/chirp-font-master/Chirp-Heavy.ttf
+        - asset: lib/assets/fonts/chirp-font-master/Chirp-Medium.ttf
+        - asset: lib/assets/fonts/chirp-font-master/Chirp-Regular.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

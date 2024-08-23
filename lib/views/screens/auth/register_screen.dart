@@ -119,7 +119,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ButtonSegment<String>(value: 'jeune', label: Text('Jeune')),
                       ],
                       selected: <String>{typePersonne},
-                      onSelectionChanged: (Set<String> selected) => _s(() => typePersonne = selected.first),
+                      onSelectionChanged: (Set<String> selected) => _s(() {
+                        typePersonne = selected.first;
+                        coupleDatas['selected'] = null;
+                        coupleTextFieldController.text = '';
+                      }),
                     ),
 
                     // Form.
@@ -178,7 +182,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             validator: CFormValidator([CFormValidator.required()]).validate,
                             controller: coupleTextFieldController,
                             textInputAction: TextInputAction.next,
-                            readOnly: coupleDatas['state'] == 'selected',
+                            readOnly: coupleDatas['state'] == 'selected' || typePersonne == 'jeune',
                             decoration: InputDecoration(
                               labelText:
                                   typePersonne == 'parent' ? (inputDatas['civilite'] == 'F' ? 'Épouse' : 'Épous') : 'Famille',
@@ -261,7 +265,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 DropdownButtonHideUnderline(
                                   child: DropdownMenu(
                                     label: const Text("Pool"),
-                                    width: double.infinity,
+                                    width: CConstants.MAX_CONTAINER_WIDTH,
                                     onSelected: (value) => _s(() {
                                       inputDatas['pool'] = value;
                                       inputDatas['com'] = '';
@@ -275,7 +279,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   child: DropdownMenu(
                                     initialSelection: inputDatas['com'],
                                     label: const Text("Communauté locale"),
-                                    width: double.infinity,
+                                    width: CConstants.MAX_CONTAINER_WIDTH,
                                     enabled: dropDownComList(inputDatas['pool']).isNotEmpty,
                                     onSelected: (value) => _s(() {
                                       inputDatas['com'] = value;
@@ -290,7 +294,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     initialSelection: inputDatas['na'],
                                     enabled: dropDownNAList(inputDatas['com']).isNotEmpty,
                                     label: const Text("Noyau d’affermissement"),
-                                    width: double.infinity,
+                                    width: CConstants.MAX_CONTAINER_WIDTH,
                                     onSelected: (value) => _s(() => inputDatas['na'] = value),
                                     dropdownMenuEntries: dropDownNAList(inputDatas['com']),
                                   ),
@@ -486,12 +490,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
           });
         });
       },
-      onFailed: () {
-        CModalWidget.close(context);
+      onFailed: (error) {
+        context.pop();
         CSnackbarWidget(
           context,
           content: const Text("Échec ! Une erreur est survenue lors de l'enregistrement."),
           backgroundColor: Theme.of(context).colorScheme.error,
+        );
+
+        // TODO: remove because is for debug. {#f00,8}
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text("Registration error verif"),
+            // content: Text(error.toString()),
+            content: Text(inputDatas.toString()),
+          ),
         );
       },
     );

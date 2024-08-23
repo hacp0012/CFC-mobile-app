@@ -43,8 +43,23 @@ class MiscDataHandlerMv {
   }
 
   /// Get countries code.
+  /// {state: ACTIVE|INWAIT, name, level, role: STANDARD_USER|COMMUNICATION_MANAGER|EVANGELISM_MANAGER, can: []}.
   static List<dynamic> get roles {
     Map data = jsonDecode(CAppPreferences().instance?.getString(storeKey) ?? '{}');
     return data['roles'] ?? [];
+  }
+
+  static Map getRole(String? role) {
+    Map element = {};
+
+    for (Map roler in roles) {
+      if (roler['role'] == role) {
+        return roler;
+      } else if (roler['role'] == 'STANDARD_USER') {
+        element = roler;
+      }
+    }
+
+    return element;
   }
 }

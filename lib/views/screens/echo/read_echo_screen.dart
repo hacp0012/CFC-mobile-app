@@ -49,45 +49,18 @@ class _ReadEchoScreenState extends State<ReadEchoScreen> {
           ),
 
           // --- Title -->
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: CConstants.GOLDEN_SIZE),
-            child: Row(children: [
-              Text(
-                "nec vix docendi eget sapientem",
-                style: Theme.of(context)
-                    .textTheme
-                    .titleSmall
-                    ?.copyWith(fontWeight: FontWeight.bold, color: Colors.grey.shade700),
-              ),
-            ]),
-          ),
+          Text("nec vix docendi eget sapientem", style: Theme.of(context).textTheme.titleMedium),
 
           // --- SMALL DESCRIPTIONS -->
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Row(children: [
-              Expanded(
-                child: RichText(
-                  text: TextSpan(
-                    text: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
-                        "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
-                        "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod \n\n"
-                        "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
-                        "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
-                        "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod \n\n"
-                        "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
-                        "tempor invidunt ut labore et dolore... ",
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Colors.grey.shade700, height: 1.1),
-                    // children: <TextSpan>[
-                    //   TextSpan(
-                    //     text: 'voir plus',
-                    //     style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Colors.blue, height: 1.1),
-                    //   ),
-                    // ],
-                  ),
-                ),
-              ),
-            ]),
+          const Text(
+            "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
+            "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
+            "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod \n\n"
+            "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
+            "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
+            "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod \n\n"
+            "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
+            "tempor invidunt ut labore et dolore... ",
           ),
 
           // --- PICTURES -->

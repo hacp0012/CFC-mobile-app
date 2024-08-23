@@ -35,10 +35,12 @@ class TcDropdownButton {
       constraints: const BoxConstraints(maxHeight: CConstants.GOLDEN_SIZE * 4),
     ),
     menuStyle: MenuStyle(
-      padding: WidgetStateProperty.all(const EdgeInsets.all(CConstants.GOLDEN_SIZE)),
+      padding: WidgetStateProperty.all(const EdgeInsets.all(CConstants.GOLDEN_SIZE / 2)),
       backgroundColor: WidgetStateProperty.all(const Color(0xFF2E2F33)),
       side: WidgetStateProperty.all(const BorderSide(style: BorderStyle.none)),
-      shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS))),
+      shape: WidgetStateProperty.all(
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS / 2)),
+      ),
       elevation: const WidgetStatePropertyAll(5),
     ),
   );

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cfc_christ/database/app_preferences.dart';
 import 'package:cfc_christ/database/models/user_model.dart';
 import 'package:cfc_christ/services/c_s_loader.dart';
@@ -5,6 +7,7 @@ import 'package:cfc_christ/services/c_s_permissions.dart';
 import 'package:cfc_christ/views/screens/auth/login_screen.dart';
 import 'package:cfc_christ/views/screens/home/home_screen.dart';
 import 'package:cfc_christ/views/screens/presentation_screen.dart';
+import 'package:cfc_christ/views/screens/user/user_uncomfirmed_home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 
@@ -18,9 +21,6 @@ class CSBoot {
       onFinish: onFinish,
       onError: onFailed,
     );
-
-    // ASK FOR PERSMISSIONS :
-    // Isolate.run(() => CSBoot.askingForPermissions());
   }
 
   /// Control wether is first time launch.
@@ -43,13 +43,22 @@ class CSBoot {
   }
 
   /// Open vieuw screen.
+  /// Open home screen or User uncomfirmed screen.
   static void openSession(BuildContext context) {
     var loginTokenState = CAppPreferences().loginToken;
     String? userDataState = CAppPreferences().instance?.getString(UserModel.tableName);
 
     if (loginTokenState != null && userDataState != null && userDataState.isNotEmpty) {
-      // Open Home Screen -----------------:>
-      context.goNamed(HomeScreen.routeName);
+      Map<dynamic, dynamic> udata = jsonDecode(userDataState);
+
+      if (udata['child_state'] == 'UNCOMFIRMED') {
+        // Open Uncomfirmed Child Screen -----------------:>
+        context.goNamed(UserUncomfirmedHomeScreen.routeName);
+        // context.replaceNamed(UserUncomfirmedHomeScreen.routeName);
+      } else {
+        // Open Home Screen -----------------:>
+        context.goNamed(HomeScreen.routeName);
+      }
     } else {
       // Open Login Screen ----------------:>
       context.goNamed(LoginScreen.routeName);

@@ -1,4 +1,6 @@
+import 'package:cfc_christ/classes/c_misc_class.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
+import 'package:cfc_christ/configs/c_styled_text_tags.dart';
 import 'package:cfc_christ/model_view/auth/register_mv.dart';
 import 'package:cfc_christ/views/layouts/empty_layout.dart';
 import 'package:cfc_christ/views/widgets/c_modal_widget.dart';
@@ -6,6 +8,7 @@ import 'package:cfc_christ/views/widgets/c_snackbar_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:styled_text/widgets/styled_text.dart';
 
 class UserDeleteAccountScreen extends StatefulWidget {
   static const String routeName = 'user.unregister';
@@ -22,18 +25,26 @@ class _UserDeleteAccountScreenState extends State<UserDeleteAccountScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('User unregister'),
+        title: Text(
+          'User unregister',
+          style: TextStyle(
+            color: CMiscClass.whenBrightnessOf<Color>(context, dark: Theme.of(context).colorScheme.error),
+          ),
+        ),
         backgroundColor: Colors.red.shade100,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(CupertinoIcons.xmark),
+          icon: Icon(
+            CupertinoIcons.xmark,
+            color: CMiscClass.whenBrightnessOf<Color>(context, dark: Theme.of(context).colorScheme.error),
+          ),
         ),
       ),
       body: DefaultLayout(
         child: SingleChildScrollView(
           child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: CConstants.MAX_CONTAINER_WIDTH),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: CConstants.GOLDEN_SIZE),
               child: Column(children: [
                 const SizedBox(height: CConstants.GOLDEN_SIZE * 2),
                 const Icon(Icons.warning_amber, size: CConstants.GOLDEN_SIZE * 7),
@@ -41,9 +52,19 @@ class _UserDeleteAccountScreenState extends State<UserDeleteAccountScreen> {
 
                 // --- Body :
                 const SizedBox(height: CConstants.GOLDEN_SIZE * 2),
-                const Text(
-                  "En continuant vous allez procéder à la suppression des toutes vos données et "
-                  "cette action est irréversible car vous ne pourrez pas récupérer vos données.",
+                StyledText(
+                  text: "En continuant vous allez procéder à la suppression des toutes vos données et "
+                      "cette action est irréversible car vous ne pourrez pas récupérer vos données."
+                      "\n\n"
+                      "<bold>Tou vos publications</bold>\n"
+                      "<italic>- Vos commentaires -\n"
+                      "- Vos donnés utiisateur -\n"
+                      "- Vos enregistrements -\n"
+                      "- vos favoris -</italic>"
+                      '<br/>'
+                      '<br/>'
+                      "SERONT SUPPRIMÉ",
+                  tags: CStyledTextTags().tags,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: CConstants.GOLDEN_SIZE * 2),
@@ -69,10 +90,9 @@ class _UserDeleteAccountScreenState extends State<UserDeleteAccountScreen> {
                           ),
                           const SizedBox(height: CConstants.GOLDEN_SIZE),
                           Row(children: [
-                            FilledButton.tonal(
+                            TextButton(
                               style: ButtonStyle(
-                                backgroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.error),
-                                foregroundColor: const WidgetStatePropertyAll(CConstants.LIGHT_COLOR),
+                                foregroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.error),
                               ),
                               onPressed: () {
                                 CModalWidget.close(context);

@@ -237,6 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
           shape: const StadiumBorder(),
           activeIcon: CupertinoIcons.xmark,
           icon: CupertinoIcons.ellipsis_vertical,
+          overlayColor: Theme.of(context).colorScheme.surfaceContainer,
           childMargin: const EdgeInsets.all(CConstants.GOLDEN_SIZE * 1),
           label: const Text("Pub"),
           activeLabel: const Text("Fermer"),
@@ -272,7 +273,7 @@ class _HomeScreenState extends State<HomeScreen> {
         // --- Navigation :
         bottomNavigationBar: NavigationBarTheme(
           data: NavigationBarThemeData(
-            labelTextStyle: WidgetStatePropertyAll(Theme.of(context).textTheme.labelMedium),
+            labelTextStyle: WidgetStatePropertyAll(Theme.of(context).textTheme.labelSmall),
           ),
           child: NavigationBar(
             labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,

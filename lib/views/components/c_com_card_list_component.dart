@@ -1,5 +1,6 @@
 import 'package:cfc_christ/configs/c_constants.dart';
 import 'package:cfc_christ/views/screens/comm/read_comm_screen.dart';
+import 'package:faker/faker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -14,7 +15,6 @@ class CComCardListComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       child: Card(
-        // color: Colors.white,
         borderOnForeground: false,
         margin: const EdgeInsets.all(CConstants.GOLDEN_SIZE),
         child: Padding(
@@ -59,7 +59,7 @@ class CComCardListComponent extends StatelessWidget {
 
                 // --- Secondary :
                 // const SizedBox(width: CConstants.GOLDEN_SIZE),
-                Text('Pool de Bukavu', style: Theme.of(context).textTheme.labelSmall),
+                Text('Pool de ${Faker().company.name()}', style: Theme.of(context).textTheme.labelSmall),
                 // Text('Publié le 27 aout 2024', style: Theme.of(context).textTheme.labelSmall),
                 Row(children: [
                   const Icon(CupertinoIcons.clock, size: 12),
@@ -88,7 +88,7 @@ class CComCardListComponent extends StatelessWidget {
             // --- Conconst const taints :
             Column(mainAxisAlignment: MainAxisAlignment.start, children: [
               // --- Texts :
-              const Text("Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam", maxLines: 2),
+              Text(Faker().lorem.sentences(3).join(' '), maxLines: 4, overflow: TextOverflow.ellipsis),
 
               // --- Actions :
               Padding(

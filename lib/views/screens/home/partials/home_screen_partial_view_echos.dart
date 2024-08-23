@@ -7,7 +7,7 @@ class HomeScreenPartialViewEchos extends StatefulWidget {
   const HomeScreenPartialViewEchos({super.key});
 
   @override
-  State<StatefulWidget>  createState() => _HomeScreenPartialViewEchosState();
+  State<StatefulWidget> createState() => _HomeScreenPartialViewEchosState();
 }
 
 class _HomeScreenPartialViewEchosState extends State<HomeScreenPartialViewEchos> {

@@ -21,8 +21,9 @@ class CConstants {
   // static const String FONT_FAMILY_PRIMARY = 'Rubik';
   // static const String FONT_FAMILY_PRIMARY = 'Zain';
   // static const String? FONT_FAMILY_PRIMARY = null;
-  static const String FONT_FAMILY_PRIMARY = 'Figtree';
+  // static const String FONT_FAMILY_PRIMARY = 'Figtree';
   // static const String FONT_FAMILY_PRIMARY = 'Nunito';
   // static const String FONT_FAMILY_PRIMARY = 'Open sens';
+  static const String FONT_FAMILY_PRIMARY = 'Chirp';
   static const String FONT_FAMILY_SECONDARY = 'Figtree';
 }

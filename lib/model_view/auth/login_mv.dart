@@ -5,11 +5,13 @@ import 'package:cfc_christ/configs/c_api.dart';
 import 'package:cfc_christ/database/app_preferences.dart';
 import 'package:cfc_christ/database/models/user_model.dart';
 import 'package:cfc_christ/env.dart';
+import 'package:cfc_christ/views/screens/user/user_uncomfirmed_home_screen.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_cache_manager_dio/flutter_cache_manager_dio.dart';
 
 class LoginMv {
   String get deviceId {
-    // TODO: Get device name id.
+    // ! Get device name id !
     return "device-${Random.secure().nextInt(9999999)}";
   }
 
@@ -71,18 +73,27 @@ class LoginMv {
   void storeTokenKey(String key) => CAppPreferences().updateLoginToken(key);
 
   void logout({Function()? onSuccess, Function()? onFailed}) async {
-    CAppPreferences().instance?.remove(Env.API_SESSION_TOKEN_NAME);
-    CAppPreferences().instance?.remove(UserModel.tableName);
-    CAppPreferences().updateLoginToken();
+    // CAppPreferences().instance?.clear();
+    DioCacheManager.instance.emptyCache();
     CApi.request.delete('/auth/login/logout').then((response) {
       // CAppPreferences().instance?.remove(Env.API_SESSION_TOKEN_NAME);
       // CAppPreferences().instance?.remove(UserModel.tableName);
       // CAppPreferences().updateLoginToken();
+      // DioCacheManager.instance.emptyCache();
       // Finish.
 
-      onSuccess?.call();
+      if (response.data['state'] == 'LOGED_OUT') {
+        onSuccess?.call();
+      } else {
+        onFailed?.call();
+      }
     }, onError: (error) {
       onFailed?.call();
     });
+
+    CAppPreferences().instance?.remove(Env.API_SESSION_TOKEN_NAME);
+    CAppPreferences().instance?.remove(UserModel.tableName);
+    CAppPreferences().instance?.remove(UserUncomfirmedHomeScreen.parentStoreKey);
+    CAppPreferences().updateLoginToken();
   }
 }

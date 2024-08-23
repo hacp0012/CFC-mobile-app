@@ -42,7 +42,7 @@ class _ErrorScreenState extends State<ErrorScreen> {
             const Padding(
               padding: EdgeInsets.all(CConstants.GOLDEN_SIZE * 3),
               child: TextAnimator(
-                "vocibus adhuc adversarium accumsan pretium vituperatoribus odio assueverit voluptatum",
+                "La page que vous vous tenter de visiter n'est pas disponible. Tente reflaire le processus.",
                 textAlign: TextAlign.center,
               ),
             ),

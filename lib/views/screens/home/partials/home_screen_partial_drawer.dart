@@ -1,5 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cfc_christ/classes/c_image_handler_class.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
+import 'package:cfc_christ/env.dart';
 import 'package:cfc_christ/model_view/user_mv.dart';
+import 'package:cfc_christ/services/validable/c_s_validable.dart';
 import 'package:cfc_christ/states/c_default_state.dart';
 import 'package:cfc_christ/views/screens/app/aboutus_screen.dart';
 import 'package:cfc_christ/views/screens/app/app_pastoral_calendar_screen.dart';
@@ -14,6 +18,7 @@ import 'package:cfc_christ/views/screens/user/profile_screen.dart';
 import 'package:cfc_christ/views/screens/user/validable_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager_dio/flutter_cache_manager_dio.dart';
 import 'package:go_router/go_router.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:widget_and_text_animator/widget_and_text_animator.dart';
@@ -33,6 +38,7 @@ class _HomeScreenPartialDrawerState extends State<HomeScreenPartialDrawer> {
     ThemeMode.system: CupertinoIcons.sunrise_fill,
   };
   Map<String, dynamic> userData = {};
+  int validableCount = 0;
 
   // INITLIZER ---------------------------------------------------------------------------------------------------------------
   // void _s(fn) => super.setState(fn);
@@ -47,6 +53,8 @@ class _HomeScreenPartialDrawerState extends State<HomeScreenPartialDrawer> {
   // VIEW --------------------------------------------------------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
+    validableCount = watchValue<CSValidable, int>((CSValidable x) => x.counter);
+
     return Column(
       children: [
         DrawerHeader(
@@ -70,7 +78,7 @@ class _HomeScreenPartialDrawerState extends State<HomeScreenPartialDrawer> {
                   padding: const EdgeInsets.only(right: CConstants.GOLDEN_SIZE / 2),
                   child: CircleAvatar(
                     backgroundColor: CConstants.LIGHT_COLOR,
-                    child: Image.asset('lib/assets/icons/LOGO_CFC_512.png'),
+                    child: Image.asset(Env.APP_ICON_ASSET),
                   ),
                 ),
                 const Column(
@@ -93,23 +101,30 @@ class _HomeScreenPartialDrawerState extends State<HomeScreenPartialDrawer> {
             // --- Profile :
             const SizedBox(height: CConstants.GOLDEN_SIZE),
             InkWell(
-              child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Padding(
-                  padding: EdgeInsets.only(right: CConstants.GOLDEN_SIZE),
-                  child: CircleAvatar(radius: CConstants.GOLDEN_SIZE * 4, child: Icon(CupertinoIcons.person)),
+              child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: CConstants.GOLDEN_SIZE),
+                  // child: CircleAvatar(radius: CConstants.GOLDEN_SIZE * 4, child: Icon(CupertinoIcons.person)),
+                  child: Hero(
+                    tag: 'USER_PROFILE_PHOTO',
+                    child: CachedNetworkImage(
+                      cacheManager: DioCacheManager.instance,
+                      imageUrl: CImageHandlerClass.byPid(userData['photo']),
+                      placeholder: (context, url) => const Icon(CupertinoIcons.person),
+                      imageBuilder: (context, imageProvider) => CircleAvatar(
+                        radius: CConstants.GOLDEN_SIZE * 4,
+                        backgroundImage: imageProvider,
+                      ),
+                    ),
+                  ),
                 ),
                 Expanded(
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text.rich(
-                      TextSpan(text: '${userData['civility'] == 'F' ? 'Frère' : 'Sœur'} : ', children: [
-                        TextSpan(
-                          text: userData['fullname'],
-                          style: const TextStyle(fontWeight: FontWeight.w500),
-                        )
-                      ]),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
+                    Text(
+                      '${userData['civility'] == 'F' ? 'Frère' : 'Sœur'} : ',
+                      style: Theme.of(context).textTheme.labelSmall,
                     ),
+                    Text(userData['fullname'], style: const TextStyle(fontWeight: FontWeight.w500)),
                     Text(
                       "Modifier le profil",
                       style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 9.0),
@@ -128,7 +143,7 @@ class _HomeScreenPartialDrawerState extends State<HomeScreenPartialDrawer> {
         // -- Logout Button :
         Padding(
           padding: const EdgeInsets.symmetric(vertical: CConstants.GOLDEN_SIZE),
-          child: Text("cfc.app v1.0", textAlign: TextAlign.start, style: Theme.of(context).textTheme.labelSmall),
+          child: Text("CFC V1.0", textAlign: TextAlign.start, style: Theme.of(context).textTheme.labelSmall),
         ),
       ],
     );
@@ -146,15 +161,20 @@ class _HomeScreenPartialDrawerState extends State<HomeScreenPartialDrawer> {
       //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS)),
       //   onTap: () => context.pushNamed(ProfileScreen.routeName),
       // ),
-      ListTile(
-        title: const Text("Demande d'approbation"),
-        subtitle: Text(
-          "Certains activités nécessite vraiment votre approbation.",
-          style: Theme.of(context).textTheme.labelSmall?.copyWith(fontFamily: CConstants.FONT_FAMILY_SECONDARY),
+      if (validableCount > 0)
+        ListTile(
+          title: const Text("Demande d'approbation"),
+          subtitle: Text(
+            "Certains activités nécessite vraiment votre approbation.",
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(fontFamily: CConstants.FONT_FAMILY_SECONDARY),
+          ),
+          leading: WidgetAnimator(
+            atRestEffect: WidgetRestingEffects.pulse(),
+            child: Icon(CupertinoIcons.shield_lefthalf_fill, color: Theme.of(context).colorScheme.error),
+          ),
+          trailing: validableCount == 0 ? null : Badge.count(count: validableCount),
+          onTap: () => context.pushNamed(ValidableScreen.routeName),
         ),
-        leading: Icon(CupertinoIcons.shield_lefthalf_fill, color: Theme.of(context).colorScheme.error),
-        onTap: () => context.pushNamed(ValidableScreen.routeName),
-      ),
       ListTile(
         title: const Text("Calendrier pastoral"),
         leading: const Icon(CupertinoIcons.calendar),

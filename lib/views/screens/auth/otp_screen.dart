@@ -1,9 +1,9 @@
 import 'package:cfc_christ/classes/c_otp_handler_class.dart';
 import 'package:cfc_christ/model_view/auth/login_mv.dart';
+import 'package:cfc_christ/services/c_s_boot.dart';
 import 'package:cfc_christ/views/components/c_otp_component.dart';
 import 'package:cfc_christ/views/layouts/empty_layout.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
-import 'package:cfc_christ/views/screens/home/home_screen.dart';
 import 'package:cfc_christ/views/widgets/c_modal_widget.dart';
 import 'package:cfc_christ/views/widgets/c_snackbar_widget.dart';
 import 'package:flutter/gestures.dart';
@@ -162,9 +162,7 @@ class _OtpScreeState extends State<OtpScreen> {
     );
   }
 
-  void _openHomeScreen() {
-    context.goNamed(HomeScreen.routeName);
-  }
+  void _openHomeScreen() => CSBoot.openSession(context);
 
   void __showSnackBar(String message) {
     CSnackbarWidget(context, content: Text(message), backgroundColor: Theme.of(context).colorScheme.error);

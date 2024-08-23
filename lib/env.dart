@@ -21,7 +21,7 @@ class Env {
   /// Local API local url
   // static const String API_LOCAL_URL = "http://10.0.2.2";
   // static const String API_LOCAL_URL = "https://cfc-media.org";
-  static const String API_LOCAL_URL = "http://192.168.108.180:80";
+  static const String API_LOCAL_URL = "http://192.168.206.126:80";
 
   /// API real url.
   static const String API_URL = DEBUG ? API_LOCAL_URL : "";
@@ -35,4 +35,7 @@ class Env {
 
   /// Databse name.
   static const String APP_DATABSE_NAME = 'cfc_database';
+
+  /// Background service ID.
+  static const String APP_BACKGROUND_SERVICE_NAME = 'CFC_BACKGROUND_FOREGROUND_SERVICE';
 }

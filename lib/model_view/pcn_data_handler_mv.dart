@@ -74,4 +74,58 @@ class PcnDataHandlerMv {
 
     return list;
   }
+
+  /// Get pool by id.
+  /// return {nom, type, nom, label}
+  static Map? getPool(String poolId) {
+    for (Map pool in pools) {
+      if (pool['id'] == poolId && pool['type'] == 'POOL') {
+        return pool;
+      }
+    }
+
+    return null;
+  }
+
+  // Get Com by id.
+  /// return {nom, type, nom, label}
+  static Map? getCom(String comId) {
+    List<dynamic> data = jsonDecode(CAppPreferences().instance?.getString(storeKey) ?? '[]') as List<dynamic>;
+    List<Map> list = [];
+
+    for (Map data in data) {
+      if (data['type'] == 'COM') {
+        list.add(data);
+      }
+    }
+
+    for (Map com in list) {
+      if (com['id'] == comId && com['type'] == 'COM') {
+        return com;
+      }
+    }
+
+    return null;
+  }
+
+  // Get NA by id.
+  /// return {nom, type, nom, label}
+  static Map? getNa(String naId) {
+    List<dynamic> data = jsonDecode(CAppPreferences().instance?.getString(storeKey) ?? '[]') as List<dynamic>;
+    List<Map> list = [];
+
+    for (Map data in data) {
+      if (data['type'] == 'NA') {
+        list.add(data);
+      }
+    }
+
+    for (Map na in list) {
+      if (na['id'] == naId && na['type'] == 'NA') {
+        return na;
+      }
+    }
+
+    return null;
+  }
 }

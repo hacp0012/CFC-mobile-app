@@ -1,5 +1,6 @@
 import 'package:cfc_christ/classes/c_misc_class.dart';
 import 'package:cfc_christ/views/screens/teaching/read_teaching_screen.dart';
+import 'package:faker/faker.dart' hide Color;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
@@ -64,16 +65,22 @@ class CEnseignementCardListComponent extends StatelessWidget {
 
                   // --- Secondary :
                   const SizedBox(width: CConstants.GOLDEN_SIZE),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: CConstants.GOLDEN_SIZE - 6,
-                      horizontal: CConstants.GOLDEN_SIZE - 4,
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: CConstants.GOLDEN_SIZE - 6,
+                        horizontal: CConstants.GOLDEN_SIZE - 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surface,
+                        borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS),
+                      ),
+                      child: Text(
+                        'Pool de ${Faker().company.name()}',
+                        style: Theme.of(context).textTheme.labelSmall,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS),
-                    ),
-                    child: Text('Pool de Bukavu', style: Theme.of(context).textTheme.labelSmall),
                   ),
 
                   // --- State badget :
@@ -82,7 +89,7 @@ class CEnseignementCardListComponent extends StatelessWidget {
                 ]),
 
                 // --- Texts :
-                const Text("Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam", maxLines: 2),
+                Text(Faker().lorem.sentences(4).join(' '), maxLines: 5, overflow: TextOverflow.ellipsis),
 
                 // --- Actions :
                 Padding(

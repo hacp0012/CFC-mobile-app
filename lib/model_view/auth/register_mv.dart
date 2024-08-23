@@ -1,7 +1,6 @@
 import 'package:cfc_christ/configs/c_api.dart';
 import 'package:cfc_christ/database/app_preferences.dart';
-import 'package:cfc_christ/database/models/user_model.dart';
-import 'package:cfc_christ/env.dart';
+import 'package:flutter_cache_manager_dio/flutter_cache_manager_dio.dart';
 
 class RegisterMv {
   void verifyIfRegistred(
@@ -42,15 +41,15 @@ class RegisterMv {
 
     // Callbacks :
     Function(Map data)? onSuccess,
-    Function()? onFailed,
+    Function(dynamic)? onFailed,
   }) {
     Map data = {
-      'name': name,
-      'fullname': fullname,
-      'civility': civility,
-      'd_brith': dBrith,
-      'phone_code': phoneCode,
-      'phone_number': phoneNumber,
+      'name': name.trim(),
+      'fullname': fullname.trim(),
+      'civility': civility.trim(),
+      'd_brith': dBrith.trim(),
+      'phone_code': phoneCode.trim(),
+      'phone_number': phoneNumber.trim(),
       'is_parent': isParent,
       'family_name': familyName,
       'family_id': familyId,
@@ -62,11 +61,13 @@ class RegisterMv {
 
     // Request :
     CApi.request.post("/auth/register", data: data).then(
-          // Call success callback :
-          (response) => onSuccess?.call(response.data),
-          // Call failed callback :
-          onError: (error) => onFailed?.call(),
-        );
+      // Call success callback :
+      (response) => onSuccess?.call(response.data),
+      // Call failed callback :
+      onError: (error) {
+        onFailed?.call(error);
+      },
+    );
   }
 
   void validateAccount(String phoneCode, String phoneNumber, {Function()? onSuccess, Function()? onFailed}) {
@@ -84,10 +85,12 @@ class RegisterMv {
 
   void unregister({Function()? onSuccess, Function()? onFailed}) {
     CApi.request.delete('/auth/register/unregister').then(
-      (response) {
-        CAppPreferences().instance?.remove(Env.API_SESSION_TOKEN_NAME);
-        CAppPreferences().instance?.remove(UserModel.tableName);
-        CAppPreferences().updateLoginToken();
+      (response) async {
+        // CAppPreferences().instance?.remove(Env.API_SESSION_TOKEN_NAME);
+        // CAppPreferences().instance?.remove(UserModel.tableName);
+        CAppPreferences().instance?.clear();
+        // CAppPreferences().updateLoginToken();
+        await DioCacheManager.instance.emptyCache();
 
         onSuccess?.call();
       },

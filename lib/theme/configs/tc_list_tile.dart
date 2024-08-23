@@ -6,10 +6,7 @@ class TcListTile {
   static ListTileThemeData light = ListTileThemeData(
     dense: true,
     visualDensity: VisualDensity.compact,
-    subtitleTextStyle: TcTextTheme.light.labelSmall?.copyWith(
-      fontWeight: FontWeight.normal,
-      fontFamily: CConstants.FONT_FAMILY_SECONDARY,
-    ),
+    subtitleTextStyle: TcTextTheme.light.labelSmall,
     style: ListTileStyle.list,
   );
 

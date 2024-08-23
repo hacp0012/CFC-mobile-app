@@ -14,6 +14,7 @@ class CApi {
   static final Dio _dio = Dio(BaseOptions(
     baseUrl: '${Env.API_URL}/api/v1',
     headers: {'Accept': 'application/json'},
+    receiveDataWhenStatusError: true,
   ));
 
   static CacheOptions cacheOptions = CacheOptions(

@@ -1,3 +1,4 @@
+import 'package:cfc_christ/services/notification/c_s_notification.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class CSPermissions {
@@ -67,6 +68,8 @@ class CSPermissions {
     Permission.accessMediaLocation
         .onDeniedCallback(() => Permission.accessMediaLocation.request())
         .onPermanentlyDeniedCallback(() => openAppSettings());
+
+    CSNotification.permissionInitilize();
   }
 
   static void recheck() {}
