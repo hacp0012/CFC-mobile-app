@@ -19,7 +19,7 @@ class _HomeScreenPartialViewHomeState extends State<HomeScreenPartialViewHome> {
       Padding(
         padding: const EdgeInsets.symmetric(vertical: CConstants.GOLDEN_SIZE),
         child: FlutterCarousel(
-          options: CarouselOptions(height: CConstants.GOLDEN_SIZE * 22, autoPlay: true, viewportFraction: 0.80),
+          options: CarouselOptions(height: CConstants.GOLDEN_SIZE * 22, autoPlay: true, viewportFraction: 0.85),
           items: List<Widget>.generate(
             3,
             (int index) => Container(

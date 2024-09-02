@@ -4,7 +4,7 @@ import 'package:cfc_christ/model_view/auth/login_mv.dart';
 import 'package:cfc_christ/model_view/auth/register_mv.dart';
 import 'package:cfc_christ/services/c_s_boot.dart';
 import 'package:cfc_christ/views/components/c_otp_component.dart';
-import 'package:cfc_christ/views/layouts/empty_layout.dart';
+import 'package:cfc_christ/views/layouts/default_layout.dart';
 import 'package:cfc_christ/views/widgets/c_modal_widget.dart';
 import 'package:cfc_christ/views/widgets/c_snackbar_widget.dart';
 import 'package:flutter/gestures.dart';

@@ -1,9 +1,9 @@
 class CFormValidator {
-  List<Function>  validators;
+  List<Function> validators;
 
   CFormValidator(this.validators);
 
-  String? validate(String? value) {
+  String? validate(dynamic value) {
     for (Function validator in validators) {
       String? state = validator.call(value);
 
@@ -36,6 +36,18 @@ class CFormValidator {
     };
   }
 
+  static Function date({String? message}) {
+    return (String? value) {
+      if (value != null && value.isNotEmpty) {
+        String newValue = value.replaceAll(RegExp(r'[\-/ ]'), '');
+
+        return newValue.length == 8 ? null : message ?? "Date incomplete";
+      } else {
+        return null;
+      }
+    };
+  }
+
   static Function max(int max, {String? message}) {
     return (String? value) {
       if (value != null && value.isNotEmpty) {
@@ -52,7 +64,7 @@ class CFormValidator {
         return value.length >= min ? null : message ?? "Nombre des caractères doit être supérieur ou égale à $min";
       }
 
-      return true;
+      return null;
     };
   }
 }

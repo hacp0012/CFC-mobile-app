@@ -5,7 +5,7 @@ import 'package:cfc_christ/classes/c_misc_class.dart';
 import 'package:cfc_christ/model_view/auth/login_mv.dart';
 import 'package:cfc_christ/model_view/misc_data_handler_mv.dart';
 import 'package:cfc_christ/theme/c_transition_thme.dart';
-import 'package:cfc_christ/views/layouts/empty_layout.dart';
+import 'package:cfc_christ/views/layouts/default_layout.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
 import 'package:cfc_christ/views/screens/auth/otp_screen.dart';
 import 'package:cfc_christ/views/screens/auth/register_otp_screen.dart';
@@ -71,8 +71,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       // Form.
                       const SizedBox(height: CConstants.GOLDEN_SIZE),
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: CConstants.MAX_CONTAINER_WIDTH),
+                      Padding(
+                        padding: const EdgeInsets.all(CConstants.GOLDEN_SIZE * 2),
                         child: Column(
                           children: [
                             Text(

@@ -84,13 +84,15 @@ dependencies:
   file_picker: ^8.0.7
   image_cropper: ^8.0.1
   http_parser: ^4.0.2
-  easy_image_viewer: ^1.5.1
   faker: ^2.1.0
   card_loading: ^0.3.2
   date_time_format: ^2.0.1
   flutter_localizations:
     sdk: flutter
   intl: any
+  uuid: ^4.4.2
+  fluttertoast: ^8.2.8
+  another_audio_recorder: ^1.2.1
 
 dev_dependencies:
   flutter_test:

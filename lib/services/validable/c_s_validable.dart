@@ -12,10 +12,10 @@ class CSValidable {
 
   // INITIALIZER -------------------------------------------------------------------------------------------------------------
   CSValidable({bool autoload = false}) {
-    if (autoload) _periodicLoader();
+    // if (autoload) _periodicLoader();
   }
 
-  void _periodicLoader() => _timer = Timer.periodic(const Duration(seconds: 9), (timer) => load());
+  // void _periodicLoader() => _timer = Timer.periodic(const Duration(minutes: 18), (timer) => load());
 
   // METHODS -----------------------------------------------------------------------------------------------------------------
   Future<void> load([bool downloadDisponibleAnyway = false]) {

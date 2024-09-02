@@ -18,7 +18,10 @@ class CAudioPlayerWidgetComponent extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("----------------------------"),
+                  const LinearProgressIndicator(
+                    value: .45,
+                    borderRadius: BorderRadius.all(Radius.circular(CConstants.DEFAULT_RADIUS)),
+                  ),
                   Row(children: [
                     Text("01:12", style: Theme.of(context).textTheme.labelSmall),
                     const Spacer(),

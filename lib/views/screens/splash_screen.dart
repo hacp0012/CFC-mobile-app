@@ -1,7 +1,7 @@
 import 'package:cfc_christ/classes/c_misc_class.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
 import 'package:cfc_christ/services/c_s_boot.dart';
-import 'package:cfc_christ/views/layouts/empty_layout.dart';
+import 'package:cfc_christ/views/layouts/default_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

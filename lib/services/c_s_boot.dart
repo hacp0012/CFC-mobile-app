@@ -4,11 +4,13 @@ import 'package:cfc_christ/database/app_preferences.dart';
 import 'package:cfc_christ/database/models/user_model.dart';
 import 'package:cfc_christ/services/c_s_loader.dart';
 import 'package:cfc_christ/services/c_s_permissions.dart';
+import 'package:cfc_christ/services/notification/c_s_notification.dart';
 import 'package:cfc_christ/views/screens/auth/login_screen.dart';
 import 'package:cfc_christ/views/screens/home/home_screen.dart';
 import 'package:cfc_christ/views/screens/presentation_screen.dart';
 import 'package:cfc_christ/views/screens/user/user_uncomfirmed_home_screen.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:go_router/go_router.dart';
 
 /// Boot manager.
@@ -21,6 +23,14 @@ class CSBoot {
       onFinish: onFinish,
       onError: onFailed,
     );
+
+    CSNotification().updateLastUseForTowDays();
+    var bgService = FlutterBackgroundService();
+    bgService.invoke('UPDATE_PREFERENCE_STORAGE');
+
+    // bgService.on(CSNotification.UPDATE_NOTIFICATION_BG_SERVICE).listen((data) {
+    //   GetIt.I<CDefaultState>().notificationsCount.value = data?['count'] ?? 0;
+    // });
   }
 
   /// Control wether is first time launch.

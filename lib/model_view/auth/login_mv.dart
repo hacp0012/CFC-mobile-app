@@ -5,6 +5,9 @@ import 'package:cfc_christ/configs/c_api.dart';
 import 'package:cfc_christ/database/app_preferences.dart';
 import 'package:cfc_christ/database/models/user_model.dart';
 import 'package:cfc_christ/env.dart';
+import 'package:cfc_christ/model_view/favorites_mv.dart';
+import 'package:cfc_christ/services/c_s_draft.dart';
+import 'package:cfc_christ/services/c_s_tts.dart';
 import 'package:cfc_christ/views/screens/user/user_uncomfirmed_home_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_cache_manager_dio/flutter_cache_manager_dio.dart';
@@ -95,5 +98,8 @@ class LoginMv {
     CAppPreferences().instance?.remove(UserModel.tableName);
     CAppPreferences().instance?.remove(UserUncomfirmedHomeScreen.parentStoreKey);
     CAppPreferences().updateLoginToken();
+    CAppPreferences().instance?.remove(CSTts.configsStoreKey);
+    FavoritesMv().cleanCache();
+    CSDraft.cleanAll();
   }
 }

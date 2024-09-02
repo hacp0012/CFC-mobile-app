@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:cfc_christ/configs/c_constants.dart';
 import 'package:cfc_christ/services/c_s_boot.dart';
-import 'package:cfc_christ/views/layouts/empty_layout.dart';
+import 'package:cfc_christ/views/layouts/default_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';

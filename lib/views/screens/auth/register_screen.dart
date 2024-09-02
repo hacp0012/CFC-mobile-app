@@ -7,7 +7,7 @@ import 'package:cfc_christ/model_view/misc_data_handler_mv.dart';
 import 'package:cfc_christ/model_view/pcn_data_handler_mv.dart';
 import 'package:cfc_christ/theme/c_transition_thme.dart';
 import 'package:cfc_christ/views/components/c_find_couple_component.dart';
-import 'package:cfc_christ/views/layouts/empty_layout.dart';
+import 'package:cfc_christ/views/layouts/default_layout.dart';
 import 'package:cfc_christ/views/screens/auth/register_otp_screen.dart';
 import 'package:cfc_christ/views/widgets/c_modal_widget.dart';
 import 'package:cfc_christ/views/widgets/c_snackbar_widget.dart';

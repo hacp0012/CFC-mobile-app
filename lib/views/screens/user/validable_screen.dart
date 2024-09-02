@@ -2,7 +2,7 @@ import 'package:cfc_christ/configs/c_constants.dart';
 import 'package:cfc_christ/configs/c_styled_text_tags.dart';
 import 'package:cfc_christ/services/validable/c_s_validable.dart';
 import 'package:cfc_christ/views/components/c_validable_list_card_component.dart';
-import 'package:cfc_christ/views/layouts/empty_layout.dart';
+import 'package:cfc_christ/views/layouts/default_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:styled_text/styled_text.dart';

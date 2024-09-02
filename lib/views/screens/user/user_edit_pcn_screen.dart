@@ -4,7 +4,7 @@ import 'package:cfc_christ/model_view/auth/login_mv.dart';
 import 'package:cfc_christ/model_view/pcn_data_handler_mv.dart';
 import 'package:cfc_christ/model_view/user_mv.dart';
 import 'package:cfc_christ/theme/c_transition_thme.dart';
-import 'package:cfc_christ/views/layouts/empty_layout.dart';
+import 'package:cfc_christ/views/layouts/default_layout.dart';
 import 'package:cfc_christ/views/screens/app/contactus_screen.dart';
 import 'package:cfc_christ/views/widgets/c_snackbar_widget.dart';
 import 'package:flutter/cupertino.dart';

@@ -7,7 +7,7 @@ import 'package:cfc_christ/database/app_preferences.dart';
 import 'package:cfc_christ/database/c_database.dart';
 import 'package:cfc_christ/services/bg/c_s_background.dart';
 import 'package:cfc_christ/services/c_s_boot.dart';
-import 'package:cfc_christ/services/notification/c_s_notification.dart';
+import 'package:cfc_christ/services/c_s_tts.dart';
 import 'package:cfc_christ/services/validable/c_s_validable.dart';
 import 'package:cfc_christ/states/c_default_state.dart';
 import 'package:flutter/material.dart';
@@ -18,11 +18,16 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
 
+  // INITIALIZE PREFERENCE SEINGLETON CLASS.
+  CAppPreferences().initialize();
+
+  // SERVICES --------------------------------------------------------------------------------------------------------------->
   // BG SERVICE.
   CSBackground.initialize();
 
   // NOTIFICATION.
-  CSNotification.initialize();
+  // ? Is initialized in CSBackground initilizer. ?
+  // CSNotification.initialize();
 
   // INITALIZER ------------------------------------------------------------------------------------------------------------->
   // CACHE INITIALIZER.
@@ -32,14 +37,14 @@ void main() async {
   // CDatabase.removeDatabase();
   await CDatabase().initialize();
 
-  // INITIALIZE PREFERENCE SEINGLETON CLASS.
-  CAppPreferences().initialize();
-
   GetIt.I.registerSingleton<CNetworkState>(CNetworkState());
   GetIt.I.registerSingleton<CDefaultState>(CDefaultState());
 
   // INIT VALIDABLE SERVICE.
   GetIt.I.registerSingleton<CSValidable>(CSValidable(autoload: true));
+
+  // INITIALIZER TTS ENGINE - SINGLETON.
+  CSTts.instance.initiliaze();
 
   // ASKING FOR PERMISSIONS.
   CSBoot.askingForPermissions();

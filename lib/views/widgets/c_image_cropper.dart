@@ -1,22 +1,24 @@
+import 'package:cfc_christ/app.dart';
 import 'package:cfc_christ/classes/c_misc_class.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
+import 'package:cfc_christ/theme/configs/rc_color_sheme.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 
 class CImageCropper {
   // DATAS -------------------------------------------------------------------------------------------------------------------
-  BuildContext context;
+  BuildContext? context = Setup.globalKey.currentContext;
 
   final Function(String? tempPath)? onCropped;
 
   // VIEW --------------------------------------------------------------------------------------------------------------------
-  CImageCropper(
-    this.context, {
+  CImageCropper({
     required String path,
     bool squareGrid = false,
     String? titleText,
     int compressQuality = 90,
     String? mimeType,
+    CropAspectRatioPreset gridMode = CropAspectRatioPreset.original,
     this.onCropped,
   }) {
     () async {
@@ -32,16 +34,16 @@ class CImageCropper {
         uiSettings: [
           AndroidUiSettings(
             toolbarTitle: titleText,
-            statusBarColor: Theme.of(context).colorScheme.surfaceContainer,
-            toolbarColor: Theme.of(context).colorScheme.surfaceContainer,
-            toolbarWidgetColor: CMiscClass.whenBrightnessOf<Color>(context, dark: CConstants.LIGHT_COLOR),
-            backgroundColor: Theme.of(context).colorScheme.surface,
+            statusBarColor: CMiscClass.whenBrightnessOf<Color>(context!, dark: TcColorScheme.dark.primaryContainer),
+            toolbarColor: CMiscClass.whenBrightnessOf<Color>(context!, dark: TcColorScheme.dark.primaryContainer),
+            toolbarWidgetColor: CMiscClass.whenBrightnessOf<Color>(context!, dark: CConstants.LIGHT_COLOR),
+            backgroundColor: Theme.of(context!).colorScheme.surface,
             cropFrameColor: CConstants.LIGHT_COLOR,
             cropGridColor: CConstants.LIGHT_COLOR,
             // activeControlsWidgetColor: Theme.of(context).colorScheme.primary,
             // showCropGrid: false,
             hideBottomControls: true,
-            initAspectRatio: squareGrid ? CropAspectRatioPreset.square : CropAspectRatioPreset.original,
+            initAspectRatio: squareGrid ? CropAspectRatioPreset.square : gridMode,
             cropStyle: CropStyle.rectangle,
             aspectRatioPresets: [
               CropAspectRatioPreset.original,

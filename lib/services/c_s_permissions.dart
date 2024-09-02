@@ -11,35 +11,35 @@ class CSPermissions {
       openAppSettings();
     }
 
-    var accessNotificationsStatus = await Permission.camera.status;
+    var accessNotificationsStatus = await Permission.notification.status;
     if (accessNotificationsStatus.isDenied) {
       Permission.accessMediaLocation.request();
     } else if (accessNotificationsStatus.isPermanentlyDenied) {
       openAppSettings();
     }
 
-    var accessNotificationsPolicyStatus = await Permission.camera.status;
+    var accessNotificationsPolicyStatus = await Permission.accessNotificationPolicy.status;
     if (accessNotificationsPolicyStatus.isDenied) {
       Permission.accessNotificationPolicy.request();
     } else if (accessNotificationsPolicyStatus.isPermanentlyDenied) {
       openAppSettings();
     }
 
-    var audioStatus = await Permission.camera.status;
+    var audioStatus = await Permission.audio.status;
     if (audioStatus.isDenied) {
       Permission.audio.request();
     } else if (audioStatus.isPermanentlyDenied) {
       openAppSettings();
     }
 
-    var mediaStatus = await Permission.camera.status;
+    var mediaStatus = await Permission.mediaLibrary.status;
     if (mediaStatus.isDenied) {
       Permission.mediaLibrary.request();
     } else if (mediaStatus.isPermanentlyDenied) {
       openAppSettings();
     }
 
-    var microStatus = await Permission.camera.status;
+    var microStatus = await Permission.microphone.status;
     if (microStatus.isDenied) {
       Permission.microphone.request();
     } else if (microStatus.isPermanentlyDenied) {

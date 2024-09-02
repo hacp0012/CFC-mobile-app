@@ -1,10 +1,11 @@
 import 'package:cfc_christ/classes/c_misc_class.dart';
 import 'package:cfc_christ/views/screens/teaching/read_teaching_screen.dart';
-import 'package:faker/faker.dart' hide Color;
+import 'package:faker/faker.dart' hide Color, Image;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
 import 'package:go_router/go_router.dart';
+import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
 class CEnseignementCardListComponent extends StatelessWidget {
   const CEnseignementCardListComponent({super.key, this.showTypeLabel = false, this.isInFavorite = false});
@@ -17,8 +18,9 @@ class CEnseignementCardListComponent extends StatelessWidget {
     return Card(
       // color: Colors.white,
       borderOnForeground: false,
+      elevation: 0,
       margin: const EdgeInsets.all(CConstants.GOLDEN_SIZE),
-      child: InkWell(
+      child: GestureAnimator(
         child: Padding(
           padding: const EdgeInsets.all(CConstants.GOLDEN_SIZE),
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -27,9 +29,9 @@ class CEnseignementCardListComponent extends StatelessWidget {
               backgroundColor: Theme.of(context).colorScheme.primaryContainer,
               padding: const EdgeInsets.symmetric(horizontal: 1.0),
               label: const Icon(CupertinoIcons.heart, size: 12),
-              offset: const Offset(-3.0, 0.0),
+              offset: const Offset(3.0, 0.0),
               child: const CircleAvatar(
-                radius: CConstants.GOLDEN_SIZE * 3,
+                radius: CConstants.GOLDEN_SIZE * 2,
                 backgroundImage: AssetImage('lib/assets/pictures/church_logo.jpg'),
               ),
             ),
@@ -66,30 +68,46 @@ class CEnseignementCardListComponent extends StatelessWidget {
                   // --- Secondary :
                   const SizedBox(width: CConstants.GOLDEN_SIZE),
                   Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: CConstants.GOLDEN_SIZE - 6,
-                        horizontal: CConstants.GOLDEN_SIZE - 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surface,
-                        borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS),
-                      ),
-                      child: Text(
-                        'Pool de ${Faker().company.name()}',
-                        style: Theme.of(context).textTheme.labelSmall,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                    child: Text(
+                      'Pool de ${Faker().company.name()}',
+                      style: Theme.of(context).textTheme.labelSmall,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
 
                   // --- State badget :
-                  const Spacer(),
-                  Text("17 avr 2024", style: Theme.of(context).textTheme.labelSmall),
+                  // const Spacer(),
+                  // Text("17 avr 2024", style: Theme.of(context).textTheme.labelSmall),
                 ]),
 
                 // --- Texts :
-                Text(Faker().lorem.sentences(4).join(' '), maxLines: 5, overflow: TextOverflow.ellipsis),
+                Row(children: [
+                  Expanded(
+                    child: Text(
+                      Faker().lorem.sentence(),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                  ),
+                ]),
+
+                const ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(CConstants.DEFAULT_RADIUS)),
+                  child: Image(
+                    image: AssetImage('lib/assets/pictures/pray_hand.jpg'),
+                    fit: BoxFit.cover,
+                    height: CConstants.GOLDEN_SIZE * 17,
+                    width: double.infinity,
+                  ),
+                ),
+
+                Text(
+                  Faker().lorem.sentences(4).join(' '),
+                  maxLines: 5,
+                  overflow: TextOverflow.ellipsis,
+                  // style: Theme.of(context).textTheme.bodyMedium,
+                ),
 
                 // --- Actions :
                 Padding(

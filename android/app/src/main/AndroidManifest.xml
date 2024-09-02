@@ -34,11 +34,14 @@
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
+
     <!-- APPLICATION -->
     <application
         android:label="Famille Chrétienne"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"

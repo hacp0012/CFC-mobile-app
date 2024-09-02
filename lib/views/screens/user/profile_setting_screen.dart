@@ -8,7 +8,7 @@ import 'package:cfc_christ/model_view/auth/login_mv.dart';
 import 'package:cfc_christ/model_view/misc_data_handler_mv.dart';
 import 'package:cfc_christ/model_view/user_mv.dart';
 import 'package:cfc_christ/theme/c_transition_thme.dart';
-import 'package:cfc_christ/views/layouts/empty_layout.dart';
+import 'package:cfc_christ/views/layouts/default_layout.dart';
 import 'package:cfc_christ/views/screens/home/home_screen.dart';
 import 'package:cfc_christ/views/screens/user/partials/user_new_phone_validation_otp_screen.dart';
 import 'package:cfc_christ/views/screens/user/user_delete_account_screen.dart';

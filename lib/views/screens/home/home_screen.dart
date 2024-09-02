@@ -1,6 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cfc_christ/classes/c_image_handler_class.dart';
 import 'package:cfc_christ/classes/c_misc_class.dart';
+import 'package:cfc_christ/model_view/notification_mv.dart';
+import 'package:cfc_christ/model_view/user_mv.dart';
 import 'package:cfc_christ/states/c_default_state.dart';
-import 'package:cfc_christ/views/layouts/empty_layout.dart';
+import 'package:cfc_christ/views/layouts/default_layout.dart';
 import 'package:cfc_christ/views/screens/app/aboutus_screen.dart';
 import 'package:cfc_christ/views/screens/app/app_pastoral_calendar_screen.dart';
 import 'package:cfc_christ/views/screens/app/app_setting_screen.dart';
@@ -17,16 +21,16 @@ import 'package:cfc_christ/views/screens/home/partials/home_screen_partial_view_
 import 'package:cfc_christ/views/screens/home/partials/home_screen_partial_view_favorits.dart';
 import 'package:cfc_christ/views/screens/notification/notifications_screen.dart';
 import 'package:cfc_christ/views/screens/teaching/new_teaching_screen.dart';
-import 'package:cfc_christ/views/screens/user/validable_screen.dart';
+import 'package:cfc_christ/views/screens/user/profile_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
 import 'package:cfc_christ/views/screens/home/partials/home_screen_partial_view_home.dart';
 import 'package:cfc_christ/views/screens/home/partials/home_screen_partial_view_teachings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager_dio/flutter_cache_manager_dio.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:go_router/go_router.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
 class HomeScreen extends WatchingStatefulWidget {
   static const String routeName = 'home';
@@ -53,18 +57,26 @@ class _HomeScreenState extends State<HomeScreen> {
     ThemeMode.system: CupertinoIcons.sunrise_fill,
   };
 
+  Map userData = {};
+
+  // INITIALIZER /////////////////////////////////////////////////////////////////////////////////////////////////////////////
   @override
   void setState(VoidCallback fn) => super.setState(fn);
 
   @override
   void initState() {
+    userData = UserMv.data ?? {};
+
     super.initState();
 
     mainPagesViewControler = PageController(initialPage: selectedPageViewIndex);
   }
 
+  // VIEW ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   @override
   Widget build(BuildContext context) {
+    int countNotifications = watchValue((CDefaultState n) => n.notificationsCount);
+
     return DefaultLayout(
       navColor: Theme.of(context).colorScheme.surfaceContainer,
       child: Scaffold(
@@ -73,25 +85,31 @@ class _HomeScreenState extends State<HomeScreen> {
           automaticallyImplyLeading: false,
           titleSpacing: CConstants.GOLDEN_SIZE / 2,
           title: Row(children: [
-            Builder(
-              builder: (context) => IconButton(
-                onPressed: () => Scaffold.of(context).openDrawer(),
-                icon: Row(children: [
-                  const Icon(CupertinoIcons.ellipsis_vertical),
-                  CircleAvatar(
-                    backgroundColor: CMiscClass.whenBrightnessOf(context, dark: CConstants.LIGHT_COLOR),
-                    child: Image.asset('lib/assets/icons/LOGO_CFC_512.png'),
-                  ),
-                ]),
-              ),
-            ),
-            // Padding(
-            //   padding: const EdgeInsets.only(right: CConstants.GOLDEN_SIZE / 1),
-            //   child: CircleAvatar(
-            //     backgroundColor: CMiscClass.whenBrightnessOf(context, dark: CConstants.LIGHT_COLOR),
-            //     child: Image.asset('lib/assets/icons/LOGO_CFC_512.png'),
+            // Builder(
+            //   builder: (context) => IconButton(
+            //     onPressed: () => Scaffold.of(context).openDrawer(),
+            //     icon: Row(children: [
+            //       const Icon(CupertinoIcons.ellipsis_vertical),
+            //       CircleAvatar(
+            //         backgroundColor: CMiscClass.whenBrightnessOf(context, dark: CConstants.LIGHT_COLOR),
+            //         child: Image.asset('lib/assets/icons/LOGO_CFC_512.png'),
+            //       ),
+            //     ]),
             //   ),
             // ),
+            PopupMenuButton(
+              itemBuilder: (context) => menuDrawerListItems().map((item) => PopupMenuItem(child: item)).toList(),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS)),
+              // onSelected: (value) => context.pop(),
+              child: Row(children: [
+                const Icon(CupertinoIcons.ellipsis_vertical),
+                CircleAvatar(
+                  backgroundColor: CMiscClass.whenBrightnessOf(context, dark: CConstants.LIGHT_COLOR),
+                  child: Image.asset('lib/assets/icons/LOGO_CFC_512.png'),
+                ),
+              ]),
+            ),
+            const SizedBox(width: CConstants.GOLDEN_SIZE),
             const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -109,9 +127,22 @@ class _HomeScreenState extends State<HomeScreen> {
           // title: const Text("CFC", style: TextStyle(fontWeight: FontWeight.bold)),
           actions: [
             IconButton(onPressed: () => context.pushNamed(SearchScreen.routeName), icon: const Icon(CupertinoIcons.search)),
-            IconButton(
-              onPressed: () => context.pushNamed(NotificationsScreen.routeName),
-              icon: const Icon(CupertinoIcons.bell),
+            // IconButton(
+            //   onPressed: () => context.pushNamed(NotificationsScreen.routeName),
+            //   icon: const Icon(CupertinoIcons.bell),
+            // ),
+            Badge(
+              label: countNotifications > 0
+                  ? Text(countNotifications.toString())
+                  : NotificationMv.count() > 0
+                      ? Text(NotificationMv.count().toString())
+                      : null,
+              alignment: Alignment.bottomRight,
+              offset: const Offset(-7, -24),
+              child: IconButton(
+                onPressed: () => context.pushNamed(NotificationsScreen.routeName),
+                icon: const Icon(CupertinoIcons.bell),
+              ),
             ),
             // PopupMenuButton(
             //   itemBuilder: (context) => menuDrawerListItems().map((item) => PopupMenuItem(child: item)).toList(),
@@ -238,6 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
           activeIcon: CupertinoIcons.xmark,
           icon: CupertinoIcons.ellipsis_vertical,
           overlayColor: Theme.of(context).colorScheme.surfaceContainer,
+          foregroundColor: CMiscClass.whenBrightnessOf(context, dark: Colors.white70),
           childMargin: const EdgeInsets.all(CConstants.GOLDEN_SIZE * 1),
           label: const Text("Pub"),
           activeLabel: const Text("Fermer"),
@@ -274,6 +306,9 @@ class _HomeScreenState extends State<HomeScreen> {
         bottomNavigationBar: NavigationBarTheme(
           data: NavigationBarThemeData(
             labelTextStyle: WidgetStatePropertyAll(Theme.of(context).textTheme.labelSmall),
+            iconTheme: WidgetStatePropertyAll(
+              IconThemeData(color: CMiscClass.whenBrightnessOf(context, dark: Colors.white70)),
+            ),
           ),
           child: NavigationBar(
             labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
@@ -298,36 +333,55 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // METHODS /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   List<Widget> menuDrawerListItems() {
     return [
-      // ListTile(
-      //   title: const Text("Mon compte"),
-      //   leading: const Icon(CupertinoIcons.person_circle),
-      //   tileColor: Theme.of(context).colorScheme.primaryContainer,
-      //   titleAlignment: ListTileTitleAlignment.center,
-      //   contentPadding: const EdgeInsets.symmetric(horizontal: CConstants.GOLDEN_SIZE),
-      //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS)),
-      //   onTap: () => context.pushNamed(ProfileScreen.routeName),
-      // ),
       ListTile(
-        title: const Text("Demande d'approbation"),
-        subtitle: Text(
-          "Certains activités nécessite vraiment votre approbation.",
-          style: Theme.of(context).textTheme.labelSmall?.copyWith(fontFamily: CConstants.FONT_FAMILY_SECONDARY),
+        title: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text("Mon compte", style: Theme.of(context).textTheme.labelSmall),
+          Text(userData['fullname'], style: const TextStyle(fontWeight: FontWeight.w500)),
+        ]),
+        leading: Hero(
+          tag: 'USER_PROFILE_PHOTO',
+          child: CachedNetworkImage(
+            cacheManager: DioCacheManager.instance,
+            imageUrl: CImageHandlerClass.byPid(userData['photo']),
+            placeholder: (context, url) => const Icon(CupertinoIcons.person),
+            imageBuilder: (context, imageProvider) => CircleAvatar(
+              radius: CConstants.GOLDEN_SIZE * 3,
+              backgroundImage: imageProvider,
+            ),
+          ),
         ),
-        leading: Icon(CupertinoIcons.shield_lefthalf_fill, color: Theme.of(context).colorScheme.error),
-        onTap: () => context.pushNamed(ValidableScreen.routeName),
+        tileColor: Theme.of(context).colorScheme.primaryContainer,
+        titleAlignment: ListTileTitleAlignment.center,
+        contentPadding: const EdgeInsets.symmetric(vertical: CConstants.GOLDEN_SIZE / 2),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS)),
+        onTap: () => context.pushNamed(ProfileScreen.routeName),
       ),
+      // ListTile(
+      //   title: const Text("Demande d'approbation"),
+      //   subtitle: Text(
+      //     "Certains activités nécessite vraiment votre approbation.",
+      //     style: Theme.of(context).textTheme.labelSmall?.copyWith(fontFamily: CConstants.FONT_FAMILY_SECONDARY),
+      //   ),
+      //   leading: Icon(CupertinoIcons.shield_lefthalf_fill, color: Theme.of(context).colorScheme.error),
+      //   onTap: () => context.pushNamed(ValidableScreen.routeName),
+      // ),
       ListTile(
         title: const Text("Calendrier pastoral"),
         leading: const Icon(CupertinoIcons.calendar),
         onTap: () => context.pushNamed(AppPastoralCalendarScreen.routeName),
       ),
-      ListTile(
-        title: const Text("9 : Notifications"),
-        leading: const Icon(CupertinoIcons.bell),
-        onTap: () => context.pushNamed(NotificationsScreen.routeName),
-      ),
+      Builder(builder: (context) {
+        int count = NotificationMv.count();
+        return ListTile(
+          title: const Text("Notifications"),
+          leading: const Icon(CupertinoIcons.bell),
+          trailing: count > 0 ? Badge.count(count: count) : null,
+          onTap: () => context.pushNamed(NotificationsScreen.routeName),
+        );
+      }),
       ListTile(
         title: const Text("CFC à proximité"),
         leading: const Icon(CupertinoIcons.map_pin_ellipse),
@@ -355,7 +409,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       ListTile(
         title: const Text("Paramètres"),
-        leading: WidgetAnimator(atRestEffect: WidgetRestingEffects.rotate(), child: const Icon(CupertinoIcons.settings)),
+        leading: const Icon(CupertinoIcons.settings),
         onTap: () => context.pushNamed(AppSettingScreen.routeName),
       ),
       ListTile(
@@ -379,4 +433,6 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
   }
+
+  showDomoNotif() {}
 }

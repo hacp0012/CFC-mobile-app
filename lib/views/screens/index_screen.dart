@@ -1,4 +1,4 @@
-import 'package:cfc_christ/views/layouts/default_layout.dart';
+import 'package:cfc_christ/views/layouts/default_layout_loose.dart';
 import 'package:flutter/material.dart';
 
 class IndexScreen extends StatefulWidget {

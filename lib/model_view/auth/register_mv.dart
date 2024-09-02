@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:cfc_christ/configs/c_api.dart';
 import 'package:cfc_christ/database/app_preferences.dart';
+import 'package:cfc_christ/services/bg/c_s_background.dart';
+import 'package:cfc_christ/services/c_s_draft.dart';
 import 'package:flutter_cache_manager_dio/flutter_cache_manager_dio.dart';
 
 class RegisterMv {
@@ -92,7 +96,15 @@ class RegisterMv {
         // CAppPreferences().updateLoginToken();
         await DioCacheManager.instance.emptyCache();
 
+        CSDraft.cleanAll();
+
+        CSBackground.killService();
+
         onSuccess?.call();
+
+        sleep(const Duration(seconds: 5));
+
+        exit(0);
       },
       onError: (error) {
         onFailed?.call();

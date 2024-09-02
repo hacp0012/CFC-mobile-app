@@ -1,8 +1,9 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
 import 'package:cfc_christ/env.dart';
 import 'package:cfc_christ/views/widgets/c_modal_widget.dart';
-import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager_dio/flutter_cache_manager_dio.dart';
@@ -31,41 +32,60 @@ class CImageHandlerClass {
     return false;
   }
 
-  static void show(BuildContext context, List<String?> pids, {int scaleSize = defaultScaleSize}) {
-    dynamic imageProvider;
+  // open imagee previewer by [pids].
+  static void show(
+    BuildContext context,
+    List<String?> pids, {
+    bool userFile = false,
+    int scaleSize = defaultScaleSize,
+    int startAt = 1,
+  }) {
+    // List<CachedNetworkImageProvider> imageProviders = [];
+    List<dynamic> imageProviders = [];
 
-    if (pids.length > 1) {
-      MultiImageProvider multiImageProvider = MultiImageProvider(
-        pids
-            .map((pid) => CachedNetworkImageProvider(
-                  CImageHandlerClass.byPid(pid, scale: scaleSize),
-                  cacheManager: DioCacheManager.instance,
-                ))
-            .toList(),
-      );
-
-      imageProvider = multiImageProvider;
-    } else if (pids.isNotEmpty) {
-      imageProvider = CachedNetworkImageProvider(
-        CImageHandlerClass.byPid(pids.first, scale: scaleSize),
-        cacheManager: DioCacheManager.instance,
-      );
+    if (userFile == false) {
+      for (String? pid in pids) {
+        imageProviders.add(
+          CachedNetworkImageProvider(CImageHandlerClass.byPid(pid, scale: scaleSize), cacheManager: DioCacheManager.instance),
+        );
+      }
+    } else {
+      imageProviders = pids;
     }
 
     if (pids.isNotEmpty) {
-      // showImageViewer(
-      //   context,
-      //   useSafeArea: true,
-      //   doubleTapZoomable: true,
-      //   immersive: false,
-      //   // barrierColor: Theme.of(context).colorScheme.,
-      //   imageProvider,
-      // );
+      int cursor = startAt;
+
+      PageController pageController = PageController(initialPage: cursor);
+
+      next() {
+        if (cursor < imageProviders.length) {
+          pageController.animateToPage(cursor + 1, duration: const Duration(milliseconds: 801), curve: Curves.ease);
+        }
+      }
+
+      prev() {
+        if (cursor > 1) {
+          pageController.animateToPage(cursor - 1, duration: const Duration(milliseconds: 801), curve: Curves.ease);
+        }
+      }
+
       CModalWidget.fullscreen(
         context: context,
         child: Stack(children: [
           Positioned.fill(
-            child: InteractiveViewer(child: Image(image: imageProvider)),
+            child: Expanded(
+              child: PageView(
+                controller: pageController,
+                onPageChanged: (index) => cursor = index,
+                children: imageProviders.map<InteractiveViewer>((image) {
+                  if (image == null) {
+                    return InteractiveViewer(child: const Image(image: AssetImage(Env.APP_ICON_ASSET)));
+                  }
+                  return InteractiveViewer(child: userFile ? Image.file(File(image)) : Image(image: image));
+                }).toList(),
+              ),
+            ),
           ),
           Positioned(
             child: Row(children: [
@@ -76,10 +96,17 @@ class CImageHandlerClass {
                 icon: const Icon(CupertinoIcons.xmark),
               ),
               const Spacer(),
-              Text("1/1", style: Theme.of(context).textTheme.titleSmall),
+              Text("$cursor/${imageProviders.length}", style: Theme.of(context).textTheme.titleSmall),
               const SizedBox(width: CConstants.GOLDEN_SIZE),
-              const IconButton.filledTonal(onPressed: null, icon: Icon(CupertinoIcons.chevron_compact_left)),
-              const IconButton.filledTonal(onPressed: null, icon: Icon(CupertinoIcons.chevron_compact_right)),
+              const IconButton.filledTonal(onPressed: null, icon: Icon(CupertinoIcons.down_arrow)),
+              IconButton.filledTonal(
+                onPressed: imageProviders.isEmpty || cursor <= 1 ? null : prev,
+                icon: const Icon(CupertinoIcons.chevron_compact_left),
+              ),
+              IconButton.filledTonal(
+                onPressed: imageProviders.isEmpty || cursor >= imageProviders.length ? null : next,
+                icon: const Icon(CupertinoIcons.chevron_compact_right),
+              ),
               const SizedBox(width: CConstants.GOLDEN_SIZE),
             ]),
           )

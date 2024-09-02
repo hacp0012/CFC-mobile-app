@@ -1,5 +1,5 @@
 import 'package:cfc_christ/configs/c_constants.dart';
-import 'package:cfc_christ/views/layouts/empty_layout.dart';
+import 'package:cfc_christ/views/layouts/default_layout.dart';
 import 'package:cfc_christ/views/screens/user/partials/user_partial_profile_screen.dart';
 import 'package:cfc_christ/views/screens/user/profile_setting_screen.dart';
 import 'package:flutter/material.dart';

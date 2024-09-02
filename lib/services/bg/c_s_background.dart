@@ -1,6 +1,6 @@
-// import 'dart:io';
-
+import 'package:cfc_christ/database/app_preferences.dart';
 import 'package:cfc_christ/env.dart';
+import 'package:cfc_christ/services/notification/c_s_notification.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 
 class CSBackground {
@@ -27,16 +27,18 @@ class CSBackground {
     // ! KILL THIS SERVICE !
     service.on(Env.APP_BACKGROUND_SERVICE_NAME).listen((event) => service.stopSelf());
 
+    // REGISTER METHODS
+    CSBackground().methodsRegistration(service);
+
+    // INIT PREFERENCE FOR BG SERVICE.
+    CAppPreferences().initialize();
+
+    // NOTIFICATION.
+    CSNotification.initialize();
+
     // RUN SERVICES.
     // Lazy runing services.
     CSBackground().lazyRuning();
-
-    // Frequantly runing services.
-    // while (true) {
-    //   await CSBackground().instantRuning();
-
-    //   sleep(const Duration(milliseconds: 360));
-    // }
   }
 
   /// KILL THE BACKGROUNG PROCESS.
@@ -48,13 +50,18 @@ class CSBackground {
   }
 
   // SERVICES RUNNERS --------------------------------------------------------------------------------------------------------
-  /// Called even 360ms.
-  Future<void> instantRuning() async {
-    // A TIMER CALLS HERE...
+
+  void methodsRegistration(ServiceInstance service) {
+    // Register : Notification request controller.
+    service.on(CSNotification.NOTIFICATION_BG_RQ_CTR_ID).listen((data) => CSNotification().requestController(data ?? {}));
+
+    // Update Isolate preference state.
+    service.on("UPDATE_PREFERENCE_STORAGE").listen((event) => CAppPreferences().instance?.reload());
   }
 
   /// Keep runing evently.
-  void lazyRuning() {
+  void lazyRuning() async {
     // ADD CALLS HERE...
+    CSNotification().loader.load();
   }
 }

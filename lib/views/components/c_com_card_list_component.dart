@@ -1,9 +1,11 @@
+import 'package:cfc_christ/classes/c_misc_class.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
 import 'package:cfc_christ/views/screens/comm/read_comm_screen.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
 class CComCardListComponent extends StatelessWidget {
   const CComCardListComponent({super.key, this.showTypeLabel = false, this.isInFavorite = false});
@@ -13,7 +15,7 @@ class CComCardListComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureAnimator(
       child: Card(
         borderOnForeground: false,
         margin: const EdgeInsets.all(CConstants.GOLDEN_SIZE),
@@ -28,7 +30,7 @@ class CComCardListComponent extends StatelessWidget {
                 label: const Icon(CupertinoIcons.heart, size: 12),
                 offset: const Offset(-3.0, 0.0),
                 child: const CircleAvatar(
-                  radius: CConstants.GOLDEN_SIZE * 3,
+                  radius: CConstants.GOLDEN_SIZE * 2,
                   backgroundImage: AssetImage('lib/assets/pictures/pray_wonam.jpg'),
                 ),
               ),
@@ -47,11 +49,12 @@ class CComCardListComponent extends StatelessWidget {
                       color: Colors.amber.shade200,
                       borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS),
                     ),
-                    child: const Text(
+                    child: Text(
                       'COMMUNIQUER',
                       style: TextStyle(
                         fontSize: 9,
                         fontWeight: FontWeight.bold,
+                        color: CMiscClass.whenBrightnessOf(context, dark: Colors.black),
                         // fontFamily: CConstants.FONT_FAMILY_PRIMARY,
                       ),
                     ),
@@ -88,6 +91,16 @@ class CComCardListComponent extends StatelessWidget {
             // --- Conconst const taints :
             Column(mainAxisAlignment: MainAxisAlignment.start, children: [
               // --- Texts :
+              Row(children: [
+                Expanded(
+                  child: Text(
+                    Faker().lorem.sentence(),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                ),
+              ]),
               Text(Faker().lorem.sentences(3).join(' '), maxLines: 4, overflow: TextOverflow.ellipsis),
 
               // --- Actions :

@@ -21,14 +21,14 @@ class Env {
   /// Local API local url
   // static const String API_LOCAL_URL = "http://10.0.2.2";
   // static const String API_LOCAL_URL = "https://cfc-media.org";
-  static const String API_LOCAL_URL = "http://192.168.206.126:80";
+  static const String API_LOCAL_URL = "http://192.168.213.140:80";
 
   /// API real url.
   static const String API_URL = DEBUG ? API_LOCAL_URL : "";
 
   static const String APP_ICON_ASSET = "lib/assets/icons/LOGO_CFC_512.png";
 
-  static const String API_SESSION_TOKEN_NAME = 'cfc_u_log_tok';
+  static const String API_SESSION_TOKEN_NAME = '5076ff2e-f192-4504-8fa7-da16a5c83df0';
 
   /// Database version.
   static const int APP_DATABSE_VERSION = 1;
@@ -38,4 +38,6 @@ class Env {
 
   /// Background service ID.
   static const String APP_BACKGROUND_SERVICE_NAME = 'CFC_BACKGROUND_FOREGROUND_SERVICE';
+
+  static const String NOTIFICATION_STORE_NAME = "60749d8c-9482-4e34-8c92-d75b8aec129c";
 }

@@ -2,7 +2,7 @@ import 'package:cfc_christ/classes/c_misc_class.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
 import 'package:cfc_christ/configs/c_styled_text_tags.dart';
 import 'package:cfc_christ/model_view/auth/register_mv.dart';
-import 'package:cfc_christ/views/layouts/empty_layout.dart';
+import 'package:cfc_christ/views/layouts/default_layout.dart';
 import 'package:cfc_christ/views/widgets/c_modal_widget.dart';
 import 'package:cfc_christ/views/widgets/c_snackbar_widget.dart';
 import 'package:flutter/cupertino.dart';

@@ -7,7 +7,7 @@ import 'package:cfc_christ/configs/c_styled_text_tags.dart';
 import 'package:cfc_christ/model_view/user_mv.dart';
 import 'package:cfc_christ/theme/c_transition_thme.dart';
 import 'package:cfc_christ/views/components/c_find_couple_component.dart';
-import 'package:cfc_christ/views/layouts/empty_layout.dart';
+import 'package:cfc_christ/views/layouts/default_layout.dart';
 import 'package:cfc_christ/views/screens/app/contactus_screen.dart';
 import 'package:cfc_christ/views/screens/user/user_profile_details_screen.dart';
 import 'package:cfc_christ/views/widgets/c_modal_widget.dart';

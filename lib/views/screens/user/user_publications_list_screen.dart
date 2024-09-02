@@ -2,7 +2,7 @@ import 'package:cfc_christ/configs/c_constants.dart';
 import 'package:cfc_christ/views/components/c_com_card_list_component.dart';
 import 'package:cfc_christ/views/components/c_echo_card_list_component.dart';
 import 'package:cfc_christ/views/components/c_enseignement_card_list_component.dart';
-import 'package:cfc_christ/views/layouts/empty_layout.dart';
+import 'package:cfc_christ/views/layouts/default_layout.dart';
 import 'package:flutter/material.dart';
 
 class UserPublicationsListScreen extends StatefulWidget {

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cfc_christ/classes/c_image_handler_class.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
 import 'package:cfc_christ/env.dart';
+import 'package:cfc_christ/model_view/notification_mv.dart';
 import 'package:cfc_christ/model_view/user_mv.dart';
 import 'package:cfc_christ/services/validable/c_s_validable.dart';
 import 'package:cfc_christ/states/c_default_state.dart';
@@ -100,7 +101,7 @@ class _HomeScreenPartialDrawerState extends State<HomeScreenPartialDrawer> {
 
             // --- Profile :
             const SizedBox(height: CConstants.GOLDEN_SIZE),
-            InkWell(
+            GestureAnimator(
               child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
                 Padding(
                   padding: const EdgeInsets.only(right: CConstants.GOLDEN_SIZE),
@@ -180,11 +181,15 @@ class _HomeScreenPartialDrawerState extends State<HomeScreenPartialDrawer> {
         leading: const Icon(CupertinoIcons.calendar),
         onTap: () => context.pushNamed(AppPastoralCalendarScreen.routeName),
       ),
-      ListTile(
-        title: const Text("9 : Notifications"),
-        leading: const Icon(CupertinoIcons.bell),
-        onTap: () => context.pushNamed(NotificationsScreen.routeName),
-      ),
+      Builder(builder: (context) {
+        int count = NotificationMv.count();
+        return ListTile(
+          title: const Text("Notifications"),
+          leading: const Icon(CupertinoIcons.bell),
+          trailing: count > 0 ? Badge.count(count: count) : null,
+          onTap: () => context.pushNamed(NotificationsScreen.routeName),
+        );
+      }),
       ListTile(
         title: const Text("CFC à proximité"),
         leading: const Icon(CupertinoIcons.map_pin_ellipse),

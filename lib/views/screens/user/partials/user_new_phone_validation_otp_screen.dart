@@ -3,7 +3,7 @@ import 'package:cfc_christ/configs/c_constants.dart';
 import 'package:cfc_christ/model_view/auth/login_mv.dart';
 import 'package:cfc_christ/theme/c_transition_thme.dart';
 import 'package:cfc_christ/views/components/c_otp_component.dart';
-import 'package:cfc_christ/views/layouts/empty_layout.dart';
+import 'package:cfc_christ/views/layouts/default_layout.dart';
 import 'package:cfc_christ/views/widgets/c_snackbar_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

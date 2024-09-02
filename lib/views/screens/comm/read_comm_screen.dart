@@ -1,7 +1,9 @@
 import 'package:cfc_christ/configs/c_constants.dart';
 import 'package:cfc_christ/views/components/c_audio_player_widget_component.dart';
 import 'package:cfc_christ/views/components/c_comments_view_handler_component.dart';
-import 'package:cfc_christ/views/layouts/empty_layout.dart';
+import 'package:cfc_christ/views/layouts/default_layout.dart';
+import 'package:cfc_christ/views/widgets/c_tts_reader_widget.dart';
+import 'package:faker/faker.dart' hide Image;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -113,8 +115,28 @@ class _ReadCommScreenState extends State<ReadCommScreen> {
           ),
           const Divider(),
 
+          // TTS reader :
+          Row(children: [
+            const Spacer(),
+            Text('Lecture à voix synthétique', style: Theme.of(context).textTheme.labelSmall),
+            CTtsReaderWidget(
+              text: () =>  """Et il revint vers le renard. 
+              Adieu, Adieu, dit le renard. Voici mon secret. Il est très simple. on ne voit bien qu’avec le cœur.
+L'essentiel est invisible pour les yeux.
+
+L'essentiel est invisible pour les yeux, répéta le petit prince, afin de se souvenir.
+C’est le temps que tu as perdu pour ta rose qui fait ta rose si importante.
+C’est le temps quej’ai perdu pour ma rose..., fit le petit prince, afin de se souvenir.
+Les hommes ont oublié cette vérité, dit le renard.
+Mais tu ne dois pas l’oublier. Tu deviens responsable pour toujours de ce que tu as apprivoisé.
+Tu es responsable de ta rose...
+je suis responsable de ma rose... », répéta le petit prince, afin de se souvenir.
+""",
+            ),
+          ]),
+
           // --- TEXT BODY :
-          const SizedBox(height: CConstants.GOLDEN_SIZE * 2),
+          // const SizedBox(height: CConstants.GOLDEN_SIZE * 1),
           SelectableText(
             "data data Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam "
             "data data Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam "
@@ -132,6 +154,11 @@ class _ReadCommScreenState extends State<ReadCommScreen> {
                 ),
           ),
 
+          // --- AUDIO :
+          const SizedBox(height: CConstants.GOLDEN_SIZE * 2),
+          Text("Écouter en audio", style: Theme.of(context).textTheme.titleMedium),
+          const CAudioPlayerWidgetComponent(),
+
           // --- POSTER :
           const SizedBox(height: CConstants.GOLDEN_SIZE * 3),
           Row(children: [
@@ -144,7 +171,7 @@ class _ReadCommScreenState extends State<ReadCommScreen> {
               children: [
                 Text("Publié par le frère", style: Theme.of(context).textTheme.labelMedium),
                 Text(
-                  "Publié par le frère",
+                  Faker().person.name(),
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ],
@@ -172,11 +199,6 @@ class _ReadCommScreenState extends State<ReadCommScreen> {
               ),
             ),
           ]),
-
-          // --- AUDIO :
-          const SizedBox(height: CConstants.GOLDEN_SIZE * 3),
-          Text("Écouter en audio", style: Theme.of(context).textTheme.titleMedium),
-          const CAudioPlayerWidgetComponent(),
 
           // --- COMMENTS :
           const SizedBox(height: CConstants.GOLDEN_SIZE * 3),

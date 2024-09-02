@@ -15,5 +15,6 @@ class TcColorScheme {
     // secondary: Color(0xFF0A2642),
     secondary: CConstants.PRIMARY_COLOR,
     primary: CConstants.PRIMARY_COLOR,
+    surface: Color.fromARGB(255, 6, 12, 17),
   );
 }

@@ -142,7 +142,7 @@ class _UserPartialProfilePhotoComponentState extends State<UserPartialProfilePho
   }
 
   void cropperAndUpload(XFile xfile) {
-    CImageCropper(context, path: xfile.path, squareGrid: true, onCropped: (tempPath) async {
+    CImageCropper(path: xfile.path, squareGrid: true, onCropped: (tempPath) async {
       if (tempPath != null) {
         var data = FormData.fromMap({
           CConstants.IMAGE_UPLOAD_NAME: await MultipartFile.fromFile(
