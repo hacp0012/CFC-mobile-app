@@ -36,6 +36,8 @@ class CSNotification {
     AwesomeNotifications().initialize(
       // null, // "C:\Users\princ\OneDrive\Bureau\CODES\CCLOUD\CFC\mobile\android\app\src\main\ic_launcher-playstore.png"
       // "ressource://drawable/res_logo_cfc_512.png",
+      // "ressource://drawable-xxxhdpi/ic_stat_1000020826.png",
+      // "ressource://drawable/res_ly8k5xr98q9i606rbapt0xqp7m.xml",
       // "asset://${Env.APP_ICON_ASSET}",
       null,
       [

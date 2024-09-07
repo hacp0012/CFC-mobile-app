@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:cfc_christ/classes/c_form_validator.dart';
 import 'package:cfc_christ/classes/c_misc_class.dart';
 import 'package:cfc_christ/model_view/auth/login_mv.dart';
@@ -36,13 +34,103 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var q = MediaQuery.sizeOf(context);
+    // var q = MediaQuery.sizeOf(context);
 
     return DefaultLayout(
       transparentStatusBar: true,
       child: Scaffold(
         body: Center(
-          child: Stack(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                backgroundColor: CMiscClass.whenBrightnessOf<Color>(context, dark: CConstants.LIGHT_COLOR),
+                radius: CConstants.GOLDEN_SIZE * 9,
+                child: Image.asset('lib/assets/icons/LOGO_CFC_512.png'),
+              ).animate().fadeIn(duration: 500.ms),
+
+              // Text.
+              Text('Connexion', style: Theme.of(context).textTheme.headlineMedium).animate().fadeIn(duration: 500.ms),
+
+              // Form.
+              const SizedBox(height: CConstants.GOLDEN_SIZE),
+              Padding(
+                padding: const EdgeInsets.all(CConstants.GOLDEN_SIZE * 2),
+                child: Column(
+                  children: [
+                    Text(
+                      "Entrez votre numéro de téléphone que vous aviez renseigné au départ, "
+                      "si vous êtes déjà utilisateur de cette application. Si vous êtes nouveau, cliquez "
+                      "sur le lien indiqué en bas pour vous inscrire",
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
+
+                    // Fields.
+                    const SizedBox(height: CConstants.GOLDEN_SIZE * 3),
+                    Form(
+                      key: _formKey,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownMenu(
+                                onSelected: (value) => loginFieldsData['phone_code'] = value ?? '',
+                                dropdownMenuEntries: MiscDataHandlerMv.countriesCodes.map((element) {
+                                  return DropdownMenuEntry(
+                                    value: "${element['code']}",
+                                    label: "${element['country']} ${element['code']}",
+                                  );
+                                }).toList(),
+                                initialSelection: loginFieldsData['phone_code'],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: CConstants.GOLDEN_SIZE),
+                          Expanded(
+                            flex: 2,
+                            child: TextFormField(
+                              validator: CFormValidator([CFormValidator.required()]).validate,
+                              decoration: const InputDecoration(hintText: "Numéro de téléphone"),
+                              keyboardType: TextInputType.phone,
+                              onChanged: (value) => loginFieldsData['phone_number'] = value,
+                              textInputAction: TextInputAction.done,
+                              onFieldSubmitted: (value) => startProcess(),
+                              inputFormatters: [
+                                TextInputMask(mask: '999-999-999', placeholder: '_', maxPlaceHolders: 9),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // Redirect to register.
+                    Row(children: [
+                      const Spacer(),
+                      TextButton(
+                        onPressed: () => context.pushNamed(RegisterScreen.routeName),
+                        child: const Text("Nouveau? Cliquez ici pour vous inscrire"),
+                      )
+                    ]),
+
+                    // Actions.
+                    const SizedBox(height: CConstants.GOLDEN_SIZE * 3),
+                    Row(children: [
+                      // TextButton(onPressed: () {}, child: const Text("Recommencer")),
+                      const Spacer(),
+                      ElevatedButton(
+                        onPressed: () => startProcess(),
+                        child: const Text("Poursuivre"),
+                      ),
+                    ])
+                  ],
+                ),
+              ),
+            ],
+          ),
+          /*Stack(
             fit: StackFit.expand,
             children: [
               Stack(fit: StackFit.expand, children: [
@@ -149,7 +237,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ]),
             ],
-          ),
+          ),*/
         ),
       ),
     );

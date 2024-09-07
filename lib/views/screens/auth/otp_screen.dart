@@ -144,7 +144,7 @@ class _OtpScreeState extends State<OtpScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("Installation des donnés utilisateur", style: Theme.of(context).textTheme.titleMedium),
+            Text("Installation des données utilisateur", style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: CConstants.GOLDEN_SIZE),
             LinearProgressIndicator(borderRadius: BorderRadius.circular(CConstants.GOLDEN_SIZE / 2)),
           ],
@@ -159,7 +159,7 @@ class _OtpScreeState extends State<OtpScreen> {
         "Impossible de télécharger les données utilisateurs. "
         "Veuillez recommencer le processus et vérifier votre connexion internet.",
       ),
-    );
+    );// 897090000
   }
 
   void _openHomeScreen() => CSBoot.openSession(context);

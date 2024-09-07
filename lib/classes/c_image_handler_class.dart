@@ -65,7 +65,7 @@ class CImageHandlerClass {
       }
 
       prev() {
-        if (cursor > 1) {
+        if ((cursor + 1) > 1) {
           pageController.animateToPage(cursor - 1, duration: const Duration(milliseconds: 801), curve: Curves.ease);
         }
       }
@@ -73,18 +73,16 @@ class CImageHandlerClass {
       CModalWidget.fullscreen(
         context: context,
         child: Stack(children: [
-          Positioned.fill(
-            child: Expanded(
-              child: PageView(
-                controller: pageController,
-                onPageChanged: (index) => cursor = index,
-                children: imageProviders.map<InteractiveViewer>((image) {
-                  if (image == null) {
-                    return InteractiveViewer(child: const Image(image: AssetImage(Env.APP_ICON_ASSET)));
-                  }
-                  return InteractiveViewer(child: userFile ? Image.file(File(image)) : Image(image: image));
-                }).toList(),
-              ),
+          Expanded(
+            child: PageView(
+              controller: pageController,
+              onPageChanged: (index) => cursor = index,
+              children: imageProviders.map<InteractiveViewer>((image) {
+                if (image == null) {
+                  return InteractiveViewer(child: const Image(image: AssetImage(Env.APP_ICON_ASSET)));
+                }
+                return InteractiveViewer(child: userFile ? Image.file(File(image)) : Image(image: image));
+              }).toList(),
             ),
           ),
           Positioned(
@@ -100,11 +98,11 @@ class CImageHandlerClass {
               const SizedBox(width: CConstants.GOLDEN_SIZE),
               const IconButton.filledTonal(onPressed: null, icon: Icon(CupertinoIcons.down_arrow)),
               IconButton.filledTonal(
-                onPressed: imageProviders.isEmpty || cursor <= 1 ? null : prev,
+                onPressed: prev,
                 icon: const Icon(CupertinoIcons.chevron_compact_left),
               ),
               IconButton.filledTonal(
-                onPressed: imageProviders.isEmpty || cursor >= imageProviders.length ? null : next,
+                onPressed: next,
                 icon: const Icon(CupertinoIcons.chevron_compact_right),
               ),
               const SizedBox(width: CConstants.GOLDEN_SIZE),

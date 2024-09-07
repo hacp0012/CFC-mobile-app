@@ -7,9 +7,9 @@ class TcTextInput {
     isDense: true,
     filled: true,
     fillColor: TcColorScheme.light.primaryContainer,
-    contentPadding: const EdgeInsets.all(5.4),
+    // contentPadding: const EdgeInsets.all(5.4),
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS / 2),
+      borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS),
       borderSide: BorderSide.none,
       gapPadding: 1.0,
     ),
@@ -22,8 +22,8 @@ class TcTextInput {
 
   static InputDecorationTheme dark = InputDecorationTheme(
     isDense: true,
-    border: OutlineInputBorder(borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS / 2)),
-    contentPadding: const EdgeInsets.all(5.4),
+    border: OutlineInputBorder(borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS)),
+    // contentPadding: const EdgeInsets.all(5.4),
     hintStyle: const TextStyle(
       fontSize: (CConstants.GOLDEN_SIZE * 2) - 3,
       fontWeight: FontWeight.w300,

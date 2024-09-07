@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:cfc_christ/configs/c_api.dart';
+import 'package:cfc_christ/views/widgets/c_snackbar_widget.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 
 class TeachingMv {
   // READING ---------------------------------------------------------------------------------------------------------------->
@@ -18,6 +20,15 @@ class TeachingMv {
   pushLikeToggle(String teachingId) {}
 
   // EDITING ---------------------------------------------------------------------------------------------------------------->
+  void getListOfPublisheds(Function(List) onFinish, [Function(dynamic error)? onFailed]) {
+    CApi.request.get('/teaching/quest/edit.getlist.RrOWXRfKOjauvSpc7y').then(
+      (res) {
+        return onFinish.call(res.data);
+      },
+      onError: (e) => onFailed?.call(e),
+    );
+  }
+
   update(String teachingId, String title, String newText) {}
 
   updateDocument(String teachingId, String documentPath) {}
@@ -30,7 +41,17 @@ class TeachingMv {
 
   updateImage(String teachingId, String imagePath) {}
 
-  remove(String teachingId, String imagePath) {}
+  Future<Map> remove(String teachId) async {
+    var data = await CApi.request.post('/teaching/quest/edit.delete.jq0zdulQMkM4PQ84Fb', data: {'id': teachId});
+
+    return data.data as Map;
+  }
+
+  Future<Map> toggleHide(String teachId) async {
+    var data = await CApi.request.post('/teaching/quest/edit.toggle.visibility.NAhLlRZW3g3Fbh30dZ', data: {'id': teachId});
+
+    return data.data as Map;
+  }
 
   // PUBLISHING ------------------------------------------------------------------------------------------------------------->
   post(
@@ -67,7 +88,7 @@ class TeachingMv {
 
     CApi.request.post('/teaching/quest/hYEVGEpbMC1K40FBcb', data: formData).then((response) {
       if (response.data['state'] == 'STORED') {
-        File(imagePath).delete();
+        if (File(imagePath).existsSync()) File(imagePath).delete();
 
         onFinish.call();
       }
@@ -82,7 +103,7 @@ class TeachingMv {
 
     CApi.request.post('/teaching/quest/IUWI1vWLpVmeAzCmSR', data: formData).then((response) {
       if (response.data['state'] == 'STORED') {
-        File(audioPath).delete();
+        // File(audioPath).delete();
 
         onFinish.call();
       }
@@ -97,8 +118,11 @@ class TeachingMv {
 
     CApi.request.post('/teaching/quest/hoXiIFCRIzaMiLCd36', data: formData).then((response) {
       if (response.data['state'] == 'STORED') {
-        File(documentPath).delete();
+        // File(documentPath).delete();
 
+        onFinish.call();
+      } else {
+        CSnackbarWidget.direct(const Text("Format du document incorrect"), defaultDuration: true);
         onFinish.call();
       }
     }, onError: (error) => onFinish.call());

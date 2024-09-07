@@ -16,6 +16,7 @@ import 'package:cfc_christ/views/screens/app/invite_friend_screen.dart';
 import 'package:cfc_christ/views/screens/app/leave_notice_screen.dart';
 import 'package:cfc_christ/views/screens/notification/notifications_screen.dart';
 import 'package:cfc_christ/views/screens/user/profile_screen.dart';
+import 'package:cfc_christ/views/screens/user/user_publications_list_screen.dart';
 import 'package:cfc_christ/views/screens/user/validable_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -162,6 +163,12 @@ class _HomeScreenPartialDrawerState extends State<HomeScreenPartialDrawer> {
       //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS)),
       //   onTap: () => context.pushNamed(ProfileScreen.routeName),
       // ),
+      ListTile(
+        title: const Text("Mes publications"),
+        leading: const Icon(CupertinoIcons.news),
+        onTap: () => context.pushNamed(UserPublicationsListScreen.routeName),
+      ),
+      const SizedBox(height: CConstants.GOLDEN_SIZE * 2),
       if (validableCount > 0)
         ListTile(
           title: const Text("Demande d'approbation"),

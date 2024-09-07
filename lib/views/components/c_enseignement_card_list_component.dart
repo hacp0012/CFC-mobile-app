@@ -23,25 +23,23 @@ class CEnseignementCardListComponent extends StatelessWidget {
       child: GestureAnimator(
         child: Padding(
           padding: const EdgeInsets.all(CConstants.GOLDEN_SIZE),
-          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Badge(
-              isLabelVisible: isInFavorite,
-              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              padding: const EdgeInsets.symmetric(horizontal: 1.0),
-              label: const Icon(CupertinoIcons.heart, size: 12),
-              offset: const Offset(3.0, 0.0),
-              child: const CircleAvatar(
-                radius: CConstants.GOLDEN_SIZE * 2,
-                backgroundImage: AssetImage('lib/assets/pictures/church_logo.jpg'),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            // --> User state :
+            Row(children: [
+              Badge(
+                isLabelVisible: isInFavorite,
+                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                padding: const EdgeInsets.symmetric(horizontal: 1.0),
+                label: const Icon(CupertinoIcons.heart, size: 12),
+                offset: const Offset(3.0, 0.0),
+                child: const CircleAvatar(
+                  radius: CConstants.GOLDEN_SIZE * 2,
+                  backgroundImage: AssetImage('lib/assets/pictures/church_logo.jpg'),
+                ),
               ),
-            ),
-
-            // --- Conconst const taints :
-            const SizedBox(width: 9.0),
-            Expanded(
-              child: Column(children: [
-                Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  const SizedBox(width: CConstants.GOLDEN_SIZE / 2),
+              const SizedBox(width: CConstants.GOLDEN_SIZE),
+              Expanded(
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   if (showTypeLabel == false)
                     const Icon(CupertinoIcons.book, size: 18)
                   else
@@ -64,90 +62,84 @@ class CEnseignementCardListComponent extends StatelessWidget {
                         ),
                       ),
                     ),
-
-                  // --- Secondary :
-                  const SizedBox(width: CConstants.GOLDEN_SIZE),
-                  Expanded(
-                    child: Text(
-                      'Pool de ${Faker().company.name()}',
-                      style: Theme.of(context).textTheme.labelSmall,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-
-                  // --- State badget :
-                  // const Spacer(),
-                  // Text("17 avr 2024", style: Theme.of(context).textTheme.labelSmall),
-                ]),
-
-                // --- Texts :
-                Row(children: [
-                  Expanded(
-                    child: Text(
-                      Faker().lorem.sentence(),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.titleSmall,
-                    ),
+                  Text(
+                    'Pool de ${Faker().company.name()}',
+                    style: Theme.of(context).textTheme.labelSmall,
                   ),
                 ]),
+              ),
+            ]),
 
-                const ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(CConstants.DEFAULT_RADIUS)),
-                  child: Image(
-                    image: AssetImage('lib/assets/pictures/pray_hand.jpg'),
-                    fit: BoxFit.cover,
-                    height: CConstants.GOLDEN_SIZE * 17,
-                    width: double.infinity,
-                  ),
-                ),
-
-                Text(
-                  Faker().lorem.sentences(4).join(' '),
-                  maxLines: 5,
-                  overflow: TextOverflow.ellipsis,
-                  // style: Theme.of(context).textTheme.bodyMedium,
-                ),
-
-                // --- Actions :
-                Padding(
-                  padding: const EdgeInsets.only(top: 9.0),
-                  child: FittedBox(
-                    child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                      Row(children: [
-                        const Icon(CupertinoIcons.clock, size: 16),
-                        const SizedBox(width: CConstants.GOLDEN_SIZE / 2),
-                        Text("il y a 15 mins", style: Theme.of(context).textTheme.labelSmall)
-                      ]),
-
-                      // --- VIEWS :
-                      const SizedBox(width: CConstants.GOLDEN_SIZE),
-                      Row(children: [
-                        const Icon(CupertinoIcons.eye, size: 16),
-                        const SizedBox(width: CConstants.GOLDEN_SIZE / 2),
-                        Text("29 vues", style: Theme.of(context).textTheme.labelSmall)
-                      ]),
-
-                      // --- LIKES :
-                      const SizedBox(width: CConstants.GOLDEN_SIZE),
-                      Row(children: [
-                        const Icon(CupertinoIcons.hand_thumbsup, size: 16),
-                        const SizedBox(width: CConstants.GOLDEN_SIZE / 2),
-                        Text("8 j'aims", style: Theme.of(context).textTheme.labelSmall)
-                      ]),
-
-                      // --- COMMENTS :
-                      const SizedBox(width: CConstants.GOLDEN_SIZE),
-                      Row(children: [
-                        const Icon(CupertinoIcons.chat_bubble_2, size: 16),
-                        const SizedBox(width: CConstants.GOLDEN_SIZE / 2),
-                        Text("4 Commentaires", style: Theme.of(context).textTheme.labelSmall)
-                      ]),
-                    ]),
+            // --> Conconst const taints :
+            const SizedBox(width: 9.0),
+            Column(children: [
+              // --- Texts :
+              Row(children: [
+                Expanded(
+                  child: Text(
+                    Faker().lorem.sentence(),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.titleSmall,
                   ),
                 ),
               ]),
-            ),
+
+              const ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(CConstants.DEFAULT_RADIUS)),
+                child: Image(
+                  image: AssetImage('lib/assets/pictures/pray_hand.jpg'),
+                  fit: BoxFit.cover,
+                  height: CConstants.GOLDEN_SIZE * 17,
+                  width: double.infinity,
+                ),
+              ),
+
+              Text(
+                Faker().lorem.sentences(4).join(' '),
+                maxLines: 5,
+                overflow: TextOverflow.ellipsis,
+                // style: Theme.of(context).textTheme.bodyMedium,
+              ),
+
+              // --- Actions :
+              Padding(
+                padding: const EdgeInsets.only(top: 9.0),
+                child: FittedBox(
+                  child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                    Row(children: [
+                      const Icon(CupertinoIcons.clock, size: 16),
+                      const SizedBox(width: CConstants.GOLDEN_SIZE / 2),
+                      Text("il y a 15 mins", style: Theme.of(context).textTheme.labelSmall)
+                    ]),
+
+                    // --- VIEWS :
+                    const SizedBox(width: CConstants.GOLDEN_SIZE),
+                    Row(children: [
+                      const Icon(CupertinoIcons.eye, size: 16),
+                      const SizedBox(width: CConstants.GOLDEN_SIZE / 2),
+                      Text("29 vues", style: Theme.of(context).textTheme.labelSmall)
+                    ]),
+
+                    // --- LIKES :
+                    const SizedBox(width: CConstants.GOLDEN_SIZE),
+                    Row(children: [
+                      const Icon(CupertinoIcons.hand_thumbsup, size: 16),
+                      const SizedBox(width: CConstants.GOLDEN_SIZE / 2),
+                      Text("8 j'aims", style: Theme.of(context).textTheme.labelSmall)
+                    ]),
+
+                    // --- COMMENTS :
+                    const SizedBox(width: CConstants.GOLDEN_SIZE),
+                    Row(children: [
+                      const Icon(CupertinoIcons.chat_bubble_2, size: 16),
+                      const SizedBox(width: CConstants.GOLDEN_SIZE / 2),
+                      Text("4 Commentaires", style: Theme.of(context).textTheme.labelSmall)
+                    ]),
+                  ]),
+                ),
+              ),
+            ]),
           ]),
         ),
         onTap: () => context.pushNamed(ReadTeachingScreen.routeName),

@@ -25,6 +25,7 @@ class _CAudioReaderWidgetState extends State<CAudioReaderWidget> {
   // INITIALIZERS ----------------------------------------------------------------------------------------------------------->
   @override
   void initState() {
+    debugPrint("Initlized -->-----------------------------------");
     audioPalyer.source = widget.audioSource;
 
     audioPalyer.player.processingStateStream.listen((state) {

@@ -1,6 +1,8 @@
 import 'package:cfc_christ/services/notification/c_s_notification.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+enum CSPermissionName { camera, notification, audio, media, microphone, notificationPolicy }
+
 class CSPermissions {
   /// Start checking and asking for permissions.
   static void startAsking() async {
@@ -71,6 +73,46 @@ class CSPermissions {
 
     CSNotification.permissionInitilize();
   }
+
+  static Future<bool> status() async {
+    var cameraStatus = await Permission.camera.status;
+    var accessNotificationsStatus = await Permission.notification.status;
+    var accessNotificationsPolicyStatus = await Permission.accessNotificationPolicy.status;
+    var audioStatus = await Permission.audio.status;
+    var mediaStatus = await Permission.mediaLibrary.status;
+    var microStatus = await Permission.microphone.status;
+
+    if (cameraStatus.isGranted &&
+        accessNotificationsStatus.isGranted &&
+        accessNotificationsPolicyStatus.isGranted &&
+        audioStatus.isGranted &&
+        mediaStatus.isGranted &&
+        microStatus.isGranted) return true;
+
+    return false;
+  }
+
+  static statusOf(CSPermissionName name) async {
+    var cameraStatus = await Permission.camera.status;
+    var accessNotificationsStatus = await Permission.notification.status;
+    var accessNotificationsPolicyStatus = await Permission.accessNotificationPolicy.status;
+    var mediaLocation = await Permission.accessMediaLocation.status;
+    var audioStatus = await Permission.audio.status;
+    var mediaStatus = await Permission.mediaLibrary.status;
+    var microStatus = await Permission.microphone.status;
+
+    if (cameraStatus.isGranted &&
+        accessNotificationsStatus.isGranted &&
+        accessNotificationsPolicyStatus.isGranted &&
+        audioStatus.isGranted &&
+        mediaStatus.isGranted &&
+        mediaLocation.isGranted &&
+        microStatus.isGranted) return true;
+
+    return false;
+  }
+
+  static request(CSPermissionName permission) async {}
 
   static void recheck() {}
 }

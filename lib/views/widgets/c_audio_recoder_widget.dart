@@ -220,6 +220,7 @@ class _CAudioRecoderWidgetState extends State<CAudioRecoderWidget> {
       setState(() {
         fileName = result.xFiles.first.name;
         audioFilePath = result.xFiles.first.path;
+        widget.onFinish?.call(audioFilePath);
         audioRecorder.actionState.value = CSAudioRecorderState.finished;
       });
     }

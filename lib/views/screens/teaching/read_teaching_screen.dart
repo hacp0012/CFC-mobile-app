@@ -1,4 +1,5 @@
 import 'package:cfc_christ/configs/c_constants.dart';
+import 'package:cfc_christ/services/c_s_audio_palyer.dart';
 import 'package:cfc_christ/services/c_s_tts.dart';
 import 'package:cfc_christ/views/components/c_comments_view_handler_component.dart';
 import 'package:cfc_christ/views/components/c_images_grid_group_view_component.dart';
@@ -6,6 +7,7 @@ import 'package:cfc_christ/views/layouts/default_layout.dart';
 import 'package:cfc_christ/views/widgets/c_audio_reader_widget.dart';
 import 'package:cfc_christ/views/widgets/c_tts_reader_widget.dart';
 import 'package:faker/faker.dart' hide Image;
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -174,10 +176,18 @@ Il n’y en a qu’un.
           // --- AUDIO :
           const SizedBox(height: CConstants.GOLDEN_SIZE * 2),
           Text("Écouter en audio", style: Theme.of(context).textTheme.titleMedium),
-          const CAudioReaderWidget(
-            audioSource:
-                "/data/user/0/com.cfc.christ.app.mobile/cache/file_picker/1724927134014/02 - Ayra Starr - Goodbye (Warm Up).mp3",
+          TextButton(
+            onPressed: () async {
+              var file = await FilePicker.platform.pickFiles(dialogTitle: "POUR TESTE", type: FileType.audio);
+
+              setState(() {
+                var demoAudioFile = file?.xFiles.first.path;
+                if (demoAudioFile != null) CSAudioPalyer.inst.source = "file://$demoAudioFile";
+              });
+            },
+            child: const Text("Sélectionnez un fichier audio ici (pour tester)"),
           ),
+          const CAudioReaderWidget(audioSource: 'audioFile'),
 
           // --- POSTER :
           const SizedBox(height: CConstants.GOLDEN_SIZE * 3),

@@ -139,6 +139,7 @@ class Assets {
   static const String screensErrorScreen = 'lib/views/screens/error_screen.dart';
   static const String screensIndexScreen = 'lib/views/screens/index_screen.dart';
   static const String screensOffileAlertScreen = 'lib/views/screens/offile_alert_screen.dart';
+  static const String screensPermissionsScreen = 'lib/views/screens/permissions_screen.dart';
   static const String screensPresentationScreen = 'lib/views/screens/presentation_screen.dart';
   static const String screensSplashScreen = 'lib/views/screens/splash_screen.dart';
   static const String servicesCSAudioPalyer = 'lib/services/c_s_audio_palyer.dart';

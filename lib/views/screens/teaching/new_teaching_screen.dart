@@ -58,6 +58,8 @@ class _NewTeachingScreenState extends State<NewTeachingScreen> {
 
   Map publishModeStates = {'text': null, 'picture': null, 'document': null, 'audio': null, 'finishing': null};
 
+  PageController pageController = PageController(initialPage: 0);
+
   // INITIALIZERS ----------------------------------------------------------------------------------------------------------->
   @override
   void initState() {
@@ -92,308 +94,328 @@ class _NewTeachingScreenState extends State<NewTeachingScreen> {
         ),
 
         // --- Body :
-        body: Builder(builder: (context) {
-          if (isInPushingMode) {
-            Map<dynamic, Widget> stateIcons = {
-              null: const Icon(CupertinoIcons.minus),
-              false: const SizedBox(
-                height: CConstants.GOLDEN_SIZE * 2,
-                width: CConstants.GOLDEN_SIZE * 2,
-                child: CircularProgressIndicator(strokeCap: StrokeCap.round),
-              ),
-              true: const Icon(CupertinoIcons.checkmark_alt, color: Colors.green),
-            };
-
-            return Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: CConstants.MAX_CONTAINER_WIDTH - 63),
-                child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  WidgetAnimator(
-                    atRestEffect: WidgetRestingEffects.bounce(),
-                    child: Icon(
-                      Icons.upload,
-                      size: CConstants.GOLDEN_SIZE * 9,
-                      color: Theme.of(context).colorScheme.primaryContainer,
+        body: PageView(
+          controller: pageController,
+          physics: const NeverScrollableScrollPhysics(),
+          children: [
+            // --- MAIN VIEW --- :
+            ListView(padding: const EdgeInsets.symmetric(horizontal: CConstants.GOLDEN_SIZE), children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: CConstants.GOLDEN_SIZE),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(CConstants.DEFAULT_RADIUS / 2)),
+                  child: Form(
+                    key: titleTextFieldKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: TextFormField(
+                      controller: textEditingControllerTitle,
+                      validator: CFormValidator([CFormValidator.required(message: "Un titre est requis")]).validate,
+                      onChanged: (value) => draftInstance.keep('title', value),
+                      decoration: const InputDecoration(
+                        isCollapsed: false,
+                        hintText: "Entrer le titre de l'enseignement",
+                        labelText: "Titre de l'enseignement",
+                        border: InputBorder.none,
+                        prefixIcon: Icon(CupertinoIcons.bookmark_fill),
+                      ),
                     ),
                   ),
-                  Text("En cour de publication", style: Theme.of(context).textTheme.titleMedium),
+                ),
+              ),
 
-                  // --
-                  const SizedBox(height: CConstants.GOLDEN_SIZE * 3),
-                  Row(children: [
-                    stateIcons[publishModeStates['text']] ?? const Text("--"),
-                    const SizedBox(width: CConstants.GOLDEN_SIZE),
-                    const Text("Creation de la publication"),
-                  ]),
+              // --- Heading image :
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: CConstants.GOLDEN_SIZE),
+                child: Column(children: [
+                  Visibility(
+                    visible: selectHeadPicture != null,
+                    child: Animate(
+                      effects: [FadeEffect(duration: 1.seconds)],
+                      child: GestureAnimator(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxHeight: CConstants.GOLDEN_SIZE * 27),
+                          child: ClipRRect(
+                            borderRadius: const BorderRadius.all(Radius.circular(CConstants.DEFAULT_RADIUS)),
+                            child: Image.file(File(selectHeadPicture ?? '')),
+                          ),
+                        ),
+                        onTap: () => CImageHandlerClass.show(context, [selectHeadPicture], userFile: true),
+                      ),
+                    ),
+                  ),
 
-                  // --
-                  const SizedBox(height: CConstants.GOLDEN_SIZE),
-                  Row(children: [
-                    stateIcons[publishModeStates['picture']] ?? const Text("--"),
-                    const SizedBox(width: CConstants.GOLDEN_SIZE),
-                    const Text("Téléversement de l'image d'entête"),
-                  ]),
-
-                  // --
-                  const SizedBox(height: CConstants.GOLDEN_SIZE),
-                  Row(children: [
-                    stateIcons[publishModeStates['document']] ?? const Text("--"),
-                    const SizedBox(width: CConstants.GOLDEN_SIZE),
-                    const Text("Téléversement du document attaché"),
-                  ]),
-
-                  // --
-                  const SizedBox(height: CConstants.GOLDEN_SIZE),
-                  Row(children: [
-                    stateIcons[publishModeStates['audio']] ?? const Text("--"),
-                    const SizedBox(width: CConstants.GOLDEN_SIZE),
-                    const Text("Téléversement du fichier audio"),
-                  ]),
-
-                  // --
-                  const SizedBox(height: CConstants.GOLDEN_SIZE),
-                  Row(children: [
-                    stateIcons[publishModeStates['finishing']] ?? const Text("--"),
-                    const SizedBox(width: CConstants.GOLDEN_SIZE),
-                    const Text("Finalisation"),
-                  ]),
+                  // --- Photo button.
+                  Padding(
+                    padding: const EdgeInsets.only(top: CConstants.GOLDEN_SIZE / 2),
+                    child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      FilledButton.tonalIcon(
+                        onPressed: headPictureSelectorAndCropper,
+                        label: const Text("Image d'entête"),
+                        style: const ButtonStyle(visualDensity: VisualDensity.compact),
+                        icon: const Icon(CupertinoIcons.photo),
+                      ),
+                      const SizedBox(width: CConstants.GOLDEN_SIZE),
+                      Visibility(
+                        visible: selectHeadPicture != null,
+                        child: IconButton(
+                          onPressed: () => setState(() => selectHeadPicture = null),
+                          style: const ButtonStyle(visualDensity: VisualDensity.compact),
+                          icon: const Icon(CupertinoIcons.xmark),
+                        ).animate(effects: CTransitionsTheme.model_1),
+                      ),
+                    ]),
+                  ),
                 ]),
               ),
-            ).animate(effects: CTransitionsTheme.model_1);
-          }
 
-          // -- DEFAULT --
-          return ListView(padding: const EdgeInsets.symmetric(horizontal: CConstants.GOLDEN_SIZE), children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: CConstants.GOLDEN_SIZE),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(CConstants.DEFAULT_RADIUS / 2)),
-                child: Form(
-                  key: titleTextFieldKey,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  child: TextFormField(
-                    controller: textEditingControllerTitle,
-                    validator: CFormValidator([CFormValidator.required(message: "Un titre est requis")]).validate,
-                    onChanged: (value) => draftInstance.keep('title', value),
-                    decoration: const InputDecoration(
-                      isCollapsed: false,
-                      hintText: "Entrer le titre de l'enseignement",
-                      labelText: "Titre de l'enseignement",
-                      border: InputBorder.none,
-                      prefixIcon: Icon(CupertinoIcons.bookmark_fill),
-                    ),
+              // --- Visibilite :
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: CConstants.GOLDEN_SIZE),
+                child: Row(children: [
+                  const Icon(CupertinoIcons.globe),
+                  const SizedBox(width: CConstants.GOLDEN_SIZE),
+                  Expanded(
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      const Text("Visibilité"),
+                      Text(
+                        "La visibilité de cette article sera à la portée défini par votre "
+                        "responsabilité sur le niveau du pool, de la communauté locale ou "
+                        "du noyau d'affermissement dont vous avez un rôle.",
+                        style: Theme.of(context).textTheme.labelSmall,
+                      ),
+                    ]),
                   ),
-                ),
+                ]),
               ),
-            ),
 
-            // --- Heading image :
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: CConstants.GOLDEN_SIZE),
-              child: Column(children: [
-                Visibility(
-                  visible: selectHeadPicture != null,
-                  child: Animate(
-                    effects: [FadeEffect(duration: 1.seconds)],
-                    child: GestureAnimator(
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxHeight: CConstants.GOLDEN_SIZE * 27),
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.all(Radius.circular(CConstants.DEFAULT_RADIUS)),
-                          child: Image.file(File(selectHeadPicture ?? '')),
-                        ),
-                      ),
-                      onTap: () => CImageHandlerClass.show(context, [selectHeadPicture], userFile: true),
-                    ),
-                  ),
-                ),
-
-                // --- Photo button.
-                Padding(
-                  padding: const EdgeInsets.only(top: CConstants.GOLDEN_SIZE / 2),
-                  child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    FilledButton.tonalIcon(
-                      onPressed: headPictureSelectorAndCropper,
-                      label: const Text("Image d'entête"),
-                      style: const ButtonStyle(visualDensity: VisualDensity.compact),
-                      icon: const Icon(CupertinoIcons.photo),
-                    ),
-                    const SizedBox(width: CConstants.GOLDEN_SIZE),
-                    Visibility(
-                      visible: selectHeadPicture != null,
-                      child: IconButton(
-                        onPressed: () => setState(() => selectHeadPicture = null),
-                        style: const ButtonStyle(visualDensity: VisualDensity.compact),
-                        icon: const Icon(CupertinoIcons.xmark),
-                      ).animate(effects: CTransitionsTheme.model_1),
-                    ),
-                  ]),
-                ),
-              ]),
-            ),
-
-            // --- Visibilite :
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: CConstants.GOLDEN_SIZE),
-              child: Row(children: [
-                const Icon(CupertinoIcons.globe),
-                const SizedBox(width: CConstants.GOLDEN_SIZE),
-                Expanded(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    const Text("Visibilité"),
-                    Text(
-                      "La visibilité de cette article sera à la portée défini par votre "
-                      "responsabilité sur le niveau du pool, de la communauté locale ou "
-                      "du noyau d'affermissement dont vous avez un rôle.",
-                      style: Theme.of(context).textTheme.labelSmall,
-                    ),
-                  ]),
-                ),
-              ]),
-            ),
-
-            // --- Date and Verse :
-            Padding(
-              padding: const EdgeInsets.only(top: CConstants.GOLDEN_SIZE),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS / 2),
-                child: Form(
-                  key: dateVerseTextFieldKey,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  child: Row(children: [
-                    // --- Teaching date :
-                    Expanded(
-                      flex: 3,
-                      child: TextFormField(
-                        controller: textEditingControllerDate,
-                        validator: CFormValidator([CFormValidator.date(message: "Ex. jj/mm/aaaa")]).validate,
-                        onChanged: (value) => draftInstance.keep('date', value),
-                        keyboardType: TextInputType.datetime,
-                        inputFormatters: [TextInputMask(mask: '99/99/9999', placeholder: '-', maxPlaceHolders: 8)],
-                        decoration: const InputDecoration(
-                          isCollapsed: false,
-                          hintText: "00/00/2024",
-                          labelText: "Date de prédication",
-                          border: InputBorder.none,
-                          prefixIcon: Icon(CupertinoIcons.calendar),
-                          prefixIconConstraints: BoxConstraints(minWidth: CConstants.GOLDEN_SIZE * 4),
-                        ),
-                      ),
-                    ),
-
-                    // --- Biblic verse :
-                    const SizedBox(width: CConstants.GOLDEN_SIZE),
-                    Expanded(
-                      flex: 4,
-                      child: TextFormField(
-                        controller: textEditingControllerVerse,
-                        // validator: CFormValidator([CFormValidator.date()]).validate,
-                        onChanged: (value) => draftInstance.keep('verse', value),
-                        decoration: const InputDecoration(
-                          isCollapsed: false,
-                          hintText: "Versé ...",
-                          labelText: "Versé biblique",
-                          border: InputBorder.none,
-                          prefixIcon: Icon(CupertinoIcons.book),
-                          prefixIconConstraints: BoxConstraints(minWidth: CConstants.GOLDEN_SIZE * 4),
-                        ),
-                      ),
-                    ),
-                  ]),
-                ),
-              ),
-            ),
-
-            // --- Predicator :
-            Padding(
-              padding: const EdgeInsets.only(top: CConstants.GOLDEN_SIZE),
-              child: Form(
-                key: predicatorTextFieldKey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
+              // --- Date and Verse :
+              Padding(
+                padding: const EdgeInsets.only(top: CConstants.GOLDEN_SIZE),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS / 2),
-                  child: TextFormField(
-                    controller: textEditingControllerPredicator,
-                    validator:
-                        CFormValidator([CFormValidator.required(message: "Un nom d'un prédicateur est requise")]).validate,
-                    onChanged: (value) => draftInstance.keep('predicator', value),
-                    decoration: const InputDecoration(
-                      isCollapsed: false,
-                      hintText: "Entrer le nom du prédicateur",
-                      labelText: "Prédicateur de l'enseignement",
-                      border: InputBorder.none,
-                      prefixIcon: Icon(CupertinoIcons.person_alt),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            // --- Attache FIle :
-            CDocumentSelectFileWidget(onSelect: (filePath) => setState(() => attachedDocument = filePath)),
-
-            // --- Text body :
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: CConstants.GOLDEN_SIZE),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(CConstants.DEFAULT_RADIUS / 2)),
-                child: Form(
-                  key: teachingTextFieldKey,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  child: TextFormField(
-                    controller: textEditingControllerTeaching,
-                    validator: CFormValidator([
-                      CFormValidator.required(
-                        message: "Un tout petit texte descriptif de votre enseignement est nécessaire.",
+                  child: Form(
+                    key: dateVerseTextFieldKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: Row(children: [
+                      // --- Teaching date :
+                      Expanded(
+                        flex: 3,
+                        child: TextFormField(
+                          controller: textEditingControllerDate,
+                          validator: CFormValidator([CFormValidator.date(message: "Ex. jj/mm/aaaa")]).validate,
+                          onChanged: (value) => draftInstance.keep('date', value),
+                          keyboardType: TextInputType.datetime,
+                          inputFormatters: [TextInputMask(mask: '99/99/9999', placeholder: '-', maxPlaceHolders: 8)],
+                          decoration: const InputDecoration(
+                            isCollapsed: false,
+                            hintText: "00/00/2024",
+                            labelText: "Date de prédication",
+                            border: InputBorder.none,
+                            prefixIcon: Icon(CupertinoIcons.calendar),
+                            prefixIconConstraints: BoxConstraints(minWidth: CConstants.GOLDEN_SIZE * 4),
+                          ),
+                        ),
                       ),
-                      CFormValidator.min(9),
-                    ]).validate,
-                    onChanged: (value) => draftInstance.keep('teaching', value),
-                    decoration: const InputDecoration(
-                      labelText: "Enseignement en texte (obligatoire)",
-                      hintText: "Écrivez le cours de vôtre enseignement ici ... Juste quelques lignes ou plus",
-                      border: InputBorder.none,
-                      hintMaxLines: 2,
-                      helperMaxLines: 2,
-                      errorMaxLines: 2,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      prefixIcon: Icon(CupertinoIcons.t_bubble),
-                      prefixIconConstraints: BoxConstraints(minWidth: CConstants.GOLDEN_SIZE * 4),
-                      constraints: BoxConstraints(maxHeight: CConstants.GOLDEN_SIZE * 36),
-                    ),
-                    maxLines: null,
-                    keyboardType: TextInputType.multiline,
+
+                      // --- Biblic verse :
+                      const SizedBox(width: CConstants.GOLDEN_SIZE),
+                      Expanded(
+                        flex: 4,
+                        child: TextFormField(
+                          controller: textEditingControllerVerse,
+                          // validator: CFormValidator([CFormValidator.date()]).validate,
+                          onChanged: (value) => draftInstance.keep('verse', value),
+                          decoration: const InputDecoration(
+                            isCollapsed: false,
+                            hintText: "Versé ...",
+                            labelText: "Versé biblique",
+                            border: InputBorder.none,
+                            prefixIcon: Icon(CupertinoIcons.book),
+                            prefixIconConstraints: BoxConstraints(minWidth: CConstants.GOLDEN_SIZE * 4),
+                          ),
+                        ),
+                      ),
+                    ]),
                   ),
                 ),
               ),
-            ),
 
-            // --- TTS reader button :
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: CConstants.GOLDEN_SIZE),
-              child: CTtsReaderWidget(text: () => textEditingControllerTeaching.text, buttonText: "Ecouter les textes écrit"),
-            ),
-
-            // --- Simple reccorder text indicator.
-            Padding(
-              padding: const EdgeInsets.only(top: CConstants.GOLDEN_SIZE),
-              child: Text(
-                "Enregistrer un enseignant audio ou envoyer un document audio pré-enregistrés",
-                style: Theme.of(context).textTheme.labelSmall,
+              // --- Predicator :
+              Padding(
+                padding: const EdgeInsets.only(top: CConstants.GOLDEN_SIZE),
+                child: Form(
+                  key: predicatorTextFieldKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS / 2),
+                    child: TextFormField(
+                      controller: textEditingControllerPredicator,
+                      validator:
+                          CFormValidator([CFormValidator.required(message: "Un nom d'un prédicateur est requise")]).validate,
+                      onChanged: (value) => draftInstance.keep('predicator', value),
+                      decoration: const InputDecoration(
+                        isCollapsed: false,
+                        hintText: "Entrer le nom du prédicateur",
+                        labelText: "Prédicateur de l'enseignement",
+                        border: InputBorder.none,
+                        prefixIcon: Icon(CupertinoIcons.person_alt),
+                      ),
+                    ),
+                  ),
+                ),
               ),
-            ),
 
-            // --- Audio reccorder :
-            CAudioRecoderWidget(onFinish: (String? path) => setState(() => audioFilePath = path)),
+              // --- Attache FIle :
+              CDocumentSelectFileWidget(onSelect: (filePath) => setState(() => attachedDocument = filePath)),
 
-            const SizedBox(height: CConstants.GOLDEN_SIZE * 7),
-          ]);
-        }),
+              // --- Text body :
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: CConstants.GOLDEN_SIZE),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(CConstants.DEFAULT_RADIUS / 2)),
+                  child: Form(
+                    key: teachingTextFieldKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: TextFormField(
+                      controller: textEditingControllerTeaching,
+                      validator: CFormValidator([
+                        CFormValidator.required(
+                          message: "Un tout petit texte descriptif de votre enseignement est nécessaire.",
+                        ),
+                        CFormValidator.min(9),
+                      ]).validate,
+                      onChanged: (value) => draftInstance.keep('teaching', value),
+                      decoration: const InputDecoration(
+                        labelText: "Enseignement en texte (obligatoire)",
+                        hintText: "Écrivez le cours de vôtre enseignement ici ... Juste quelques lignes ou plus",
+                        border: InputBorder.none,
+                        hintMaxLines: 2,
+                        helperMaxLines: 2,
+                        errorMaxLines: 2,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        prefixIcon: Icon(CupertinoIcons.t_bubble),
+                        prefixIconConstraints: BoxConstraints(minWidth: CConstants.GOLDEN_SIZE * 4),
+                        constraints: BoxConstraints(maxHeight: CConstants.GOLDEN_SIZE * 36),
+                      ),
+                      maxLines: null,
+                      keyboardType: TextInputType.multiline,
+                    ),
+                  ),
+                ),
+              ),
+
+              // --- TTS reader button :
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: CConstants.GOLDEN_SIZE),
+                child:
+                    CTtsReaderWidget(text: () => textEditingControllerTeaching.text, buttonText: "Ecouter les textes écrit"),
+              ),
+
+              // --- Simple reccorder text indicator.
+              Padding(
+                padding: const EdgeInsets.only(top: CConstants.GOLDEN_SIZE),
+                child: Text(
+                  "Enregistrer un enseignant audio ou envoyer un document audio pré-enregistrés",
+                  style: Theme.of(context).textTheme.labelSmall,
+                ),
+              ),
+
+              // --- Audio reccorder :
+              CAudioRecoderWidget(onFinish: (String? path) => setState(() => audioFilePath = path)),
+
+              const SizedBox(height: CConstants.GOLDEN_SIZE * 7),
+            ]),
+
+            // --- POST --- :
+            Builder(builder: (context) {
+              // if (isInPushingMode) {
+              Map<dynamic, Widget> stateIcons = {
+                null: const Icon(CupertinoIcons.minus),
+                false: const SizedBox(
+                  height: CConstants.GOLDEN_SIZE * 2,
+                  width: CConstants.GOLDEN_SIZE * 2,
+                  child: CircularProgressIndicator(strokeCap: StrokeCap.round),
+                ),
+                true: const Icon(CupertinoIcons.checkmark_alt, color: Colors.green),
+              };
+
+              return Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: CConstants.MAX_CONTAINER_WIDTH - 63),
+                  child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    WidgetAnimator(
+                      atRestEffect: WidgetRestingEffects.bounce(),
+                      child: Icon(
+                        Icons.upload,
+                        size: CConstants.GOLDEN_SIZE * 9,
+                        color: Theme.of(context).colorScheme.primaryContainer,
+                      ),
+                    ),
+                    Text("En cour de publication", style: Theme.of(context).textTheme.titleMedium),
+
+                    // --
+                    const SizedBox(height: CConstants.GOLDEN_SIZE * 3),
+                    Row(children: [
+                      stateIcons[publishModeStates['text']] ?? const Text("--"),
+                      const SizedBox(width: CConstants.GOLDEN_SIZE),
+                      const Text("Creation de la publication"),
+                    ]),
+
+                    // --
+                    const SizedBox(height: CConstants.GOLDEN_SIZE),
+                    Row(children: [
+                      stateIcons[publishModeStates['picture']] ?? const Text("--"),
+                      const SizedBox(width: CConstants.GOLDEN_SIZE),
+                      const Text("Téléversement de l'image d'entête"),
+                    ]),
+
+                    // --
+                    const SizedBox(height: CConstants.GOLDEN_SIZE),
+                    Row(children: [
+                      stateIcons[publishModeStates['document']] ?? const Text("--"),
+                      const SizedBox(width: CConstants.GOLDEN_SIZE),
+                      const Text("Téléversement du document attaché"),
+                    ]),
+
+                    // --
+                    const SizedBox(height: CConstants.GOLDEN_SIZE),
+                    Row(children: [
+                      stateIcons[publishModeStates['audio']] ?? const Text("--"),
+                      const SizedBox(width: CConstants.GOLDEN_SIZE),
+                      const Text("Téléversement du fichier audio"),
+                    ]),
+
+                    // --
+                    const SizedBox(height: CConstants.GOLDEN_SIZE),
+                    Row(children: [
+                      stateIcons[publishModeStates['finishing']] ?? const Text("--"),
+                      const SizedBox(width: CConstants.GOLDEN_SIZE),
+                      const Text("Finalisation"),
+                    ]),
+                  ]),
+                ),
+              ).animate(effects: CTransitionsTheme.model_1);
+            }),
+          ],
+        ),
       ),
     );
   }
 
   // METHODS ---------------------------------------------------------------------------------------------------------------->
+  void pageMan(bool isInPushingMode) {
+    if (isInPushingMode) {
+      setState(() {
+        isInPushingMode = false;
+        pageController.animateToPage(1, duration: 801.ms, curve: Curves.ease);
+      });
+    } else {
+      setState(() {
+        isInPushingMode = false;
+        pageController.animateToPage(0, duration: 801.ms, curve: Curves.ease);
+      });
+    }
+  }
 
   void headPictureSelectorAndCropper() async {
     FilePickerResult? filePickerResult = await FilePicker.platform.pickFiles(type: FileType.image);
@@ -464,7 +486,7 @@ class _NewTeachingScreenState extends State<NewTeachingScreen> {
   }
 
   _publish() {
-    setState(() => isInPushingMode = true);
+    pageMan(true);
 
     // Start :
     _pubText();
@@ -491,7 +513,7 @@ class _NewTeachingScreenState extends State<NewTeachingScreen> {
         );
 
         setState(() {
-          isInPushingMode = false;
+          pageMan(false);
           publishModeStates['text'] = null;
         });
 

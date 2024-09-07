@@ -12,6 +12,7 @@ import 'package:cfc_christ/views/screens/app/search_screen.dart';
 import 'package:cfc_christ/views/screens/home/home_screen.dart';
 import 'package:cfc_christ/views/screens/index_screen.dart';
 import 'package:cfc_christ/views/screens/offile_alert_screen.dart';
+import 'package:cfc_christ/views/screens/permissions_screen.dart';
 import 'package:cfc_christ/views/screens/presentation_screen.dart';
 import 'package:cfc_christ/views/screens/splash_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -33,6 +34,11 @@ final appRoutes = [
         path: OffileAlertScreen.routePath,
         name: OffileAlertScreen.routeName,
         builder: (context, state) => const OffileAlertScreen(),
+      ),
+      GoRoute(
+        path: PermissionsScreen.routePath,
+        name: PermissionsScreen.routeName,
+        builder: (context, state) => const PermissionsScreen(),
       ),
       GoRoute(
         path: IndexScreen.routePath,

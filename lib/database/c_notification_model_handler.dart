@@ -68,7 +68,7 @@ class CNotificationModelHandler {
     CApi.request.post('/feature/notification/request/handler', data: data).then(
       (res) {
         debugPrint('[DOWNLOADING NOTIFICATIONS] -------------------------->');
-        if ((res.data as List).isNotEmpty) {
+        if (res.data is List && (res.data as List).isNotEmpty) {
           _sayThenks();
 
           _store(res.data);
@@ -80,7 +80,9 @@ class CNotificationModelHandler {
           // );
         }
       },
-      onError: (error) {},
+      onError: (error) {
+        debugPrint('Notification error : --> ------------------------------------------------');
+      },
     );
   }
 

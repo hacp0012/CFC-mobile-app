@@ -6,6 +6,7 @@ import 'package:cfc_christ/database/app_preferences.dart';
 import 'package:cfc_christ/database/models/user_model.dart';
 import 'package:cfc_christ/env.dart';
 import 'package:cfc_christ/model_view/favorites_mv.dart';
+import 'package:cfc_christ/model_view/notification_mv.dart';
 import 'package:cfc_christ/services/c_s_draft.dart';
 import 'package:cfc_christ/services/c_s_tts.dart';
 import 'package:cfc_christ/views/screens/user/user_uncomfirmed_home_screen.dart';
@@ -100,6 +101,7 @@ class LoginMv {
     CAppPreferences().updateLoginToken();
     CAppPreferences().instance?.remove(CSTts.configsStoreKey);
     FavoritesMv().cleanCache();
+    NotificationMv.clear();
     CSDraft.cleanAll();
   }
 }

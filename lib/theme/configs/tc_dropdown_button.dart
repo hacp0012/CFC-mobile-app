@@ -8,13 +8,13 @@ class TcDropdownButton {
       isDense: true,
       filled: true,
       fillColor: TcColorScheme.light.primaryContainer,
-      contentPadding: const EdgeInsets.symmetric(horizontal: CConstants.GOLDEN_SIZE / 2),
+      // contentPadding: const EdgeInsets.symmetric(horizontal: CConstants.GOLDEN_SIZE / 2),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS / 2),
+        borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS),
         borderSide: BorderSide.none,
         gapPadding: 1.0,
       ),
-      constraints: const BoxConstraints(maxHeight: CConstants.GOLDEN_SIZE * 4),
+      constraints: const BoxConstraints(maxHeight: CConstants.GOLDEN_SIZE * 5.4),
     ),
     menuStyle: MenuStyle(
       padding: WidgetStateProperty.all(const EdgeInsets.all(CConstants.GOLDEN_SIZE / 2)),
@@ -31,8 +31,8 @@ class TcDropdownButton {
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS / 2)),
       isDense: true,
-      contentPadding: const EdgeInsets.symmetric(horizontal: CConstants.GOLDEN_SIZE / 2),
-      constraints: const BoxConstraints(maxHeight: CConstants.GOLDEN_SIZE * 4),
+      // contentPadding: const EdgeInsets.symmetric(horizontal: CConstants.GOLDEN_SIZE / 2),
+      constraints: const BoxConstraints(maxHeight: CConstants.GOLDEN_SIZE * 5.4),
     ),
     menuStyle: MenuStyle(
       padding: WidgetStateProperty.all(const EdgeInsets.all(CConstants.GOLDEN_SIZE / 2)),

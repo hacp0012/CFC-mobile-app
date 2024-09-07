@@ -12,6 +12,38 @@ class CMiscClass {
   }
 
   static PrintableDateHandler date(DateTime dateTime) => PrintableDateHandler(dateTime);
+
+  static String numberAbrev(double number) {
+    String symbole = '';
+
+    if (number < 1e3) {
+      symbole = '';
+    } else if (number < 1e6) {
+      symbole = 'K';
+      number /= 1e3;
+    } else if (number < 1e9) {
+      symbole = 'M';
+      number /= 1e6;
+    } else {
+      symbole = 'B';
+      number /= 1e9;
+    }
+
+    String numberStr = number.toString();
+    List<String> splited = numberStr.split(RegExp(r'[\.]'));
+
+    if (splited.length == 2) {
+      String first = splited[1][0];
+
+      if (first != '0') {
+        numberStr = [splited[0], first].join('.');
+      } else {
+        numberStr = splited[0];
+      }
+    }
+
+    return "$numberStr$symbole";
+  }
 }
 
 class PrintableDateHandler {

@@ -504,7 +504,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           builder: (context) => AlertDialog(
             title: const Text("Registration error verif"),
             // content: Text(error.toString()),
-            content: Text(inputDatas.toString()),
+            content: Text(error.toString()),
           ),
         );
       },

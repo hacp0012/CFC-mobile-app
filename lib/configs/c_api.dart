@@ -4,6 +4,7 @@ import 'package:cfc_christ/env.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_file_store/dio_cache_interceptor_file_store.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_cache_manager_dio/flutter_cache_manager_dio.dart';
 
 /// API request handler.
@@ -15,6 +16,7 @@ class CApi {
     baseUrl: '${Env.API_URL}/api/v1',
     headers: {'Accept': 'application/json'},
     receiveDataWhenStatusError: true,
+    validateStatus: (status) => kDebugMode,
   ));
 
   static CacheOptions cacheOptions = CacheOptions(

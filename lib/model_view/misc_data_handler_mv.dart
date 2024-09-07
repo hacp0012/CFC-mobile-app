@@ -11,8 +11,11 @@ class MiscDataHandlerMv {
     // Launch in background if ressource exist.
     if (CAppPreferences().instance?.get(storeKey) != null) {
       () {
-        _download(onError: onError, onFinish: onFinish);
+        _download(onError: onError, onFinish: (response) {});
       }();
+
+      // Dpn wait.
+      onFinish?.call(null);
     } else {
       // Wait until loading finish.
       _download(onFinish: onFinish, onError: onError);

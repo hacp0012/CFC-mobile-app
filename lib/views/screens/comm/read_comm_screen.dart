@@ -1,9 +1,11 @@
 import 'package:cfc_christ/configs/c_constants.dart';
-import 'package:cfc_christ/views/components/c_audio_player_widget_component.dart';
+import 'package:cfc_christ/services/c_s_audio_palyer.dart';
 import 'package:cfc_christ/views/components/c_comments_view_handler_component.dart';
 import 'package:cfc_christ/views/layouts/default_layout.dart';
+import 'package:cfc_christ/views/widgets/c_audio_reader_widget.dart';
 import 'package:cfc_christ/views/widgets/c_tts_reader_widget.dart';
 import 'package:faker/faker.dart' hide Image;
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +20,16 @@ class ReadCommScreen extends StatefulWidget {
 }
 
 class _ReadCommScreenState extends State<ReadCommScreen> {
+  // DATAS -->--------------------------------------------------------------------------------------------------------------->
+  String? demoAudioFile;
+
+  // INITIALIZER -->--------------------------------------------------------------------------------------------------------->
+  @override
+  void setState(VoidCallback fn) {
+    super.setState(fn);
+  }
+
+  // VIEW -->---------------------------------------------------------------------------------------------------------------->
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
@@ -68,10 +80,32 @@ class _ReadCommScreenState extends State<ReadCommScreen> {
           ]),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: CConstants.GOLDEN_SIZE),
-            child: SelectableText(
-              "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam "
-              "text text",
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.bold),
+            child: Row(
+              children: [
+                Flexible(
+                  child: SelectableText(
+                    "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam "
+                    "text text",
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                ),
+
+                // TTS reader :
+                CTtsReaderWidget.icon(
+                  text: () => """Et il revint vers le renard. 
+              Adieu, Adieu, dit le renard. Voici mon secret. Il est très simple. on ne voit bien qu’avec le cœur.
+L'essentiel est invisible pour les yeux.
+
+L'essentiel est invisible pour les yeux, répéta le petit prince, afin de se souvenir.
+C’est le temps que tu as perdu pour ta rose qui fait ta rose si importante.
+C’est le temps quej’ai perdu pour ma rose..., fit le petit prince, afin de se souvenir.
+Les hommes ont oublié cette vérité, dit le renard.
+Mais tu ne dois pas l’oublier. Tu deviens responsable pour toujours de ce que tu as apprivoisé.
+Tu es responsable de ta rose...
+je suis responsable de ma rose... », répéta le petit prince, afin de se souvenir.
+""",
+                )
+              ],
             ),
           ),
           FittedBox(
@@ -115,28 +149,8 @@ class _ReadCommScreenState extends State<ReadCommScreen> {
           ),
           const Divider(),
 
-          // TTS reader :
-          Row(children: [
-            const Spacer(),
-            Text('Lecture à voix synthétique', style: Theme.of(context).textTheme.labelSmall),
-            CTtsReaderWidget(
-              text: () =>  """Et il revint vers le renard. 
-              Adieu, Adieu, dit le renard. Voici mon secret. Il est très simple. on ne voit bien qu’avec le cœur.
-L'essentiel est invisible pour les yeux.
-
-L'essentiel est invisible pour les yeux, répéta le petit prince, afin de se souvenir.
-C’est le temps que tu as perdu pour ta rose qui fait ta rose si importante.
-C’est le temps quej’ai perdu pour ma rose..., fit le petit prince, afin de se souvenir.
-Les hommes ont oublié cette vérité, dit le renard.
-Mais tu ne dois pas l’oublier. Tu deviens responsable pour toujours de ce que tu as apprivoisé.
-Tu es responsable de ta rose...
-je suis responsable de ma rose... », répéta le petit prince, afin de se souvenir.
-""",
-            ),
-          ]),
-
           // --- TEXT BODY :
-          // const SizedBox(height: CConstants.GOLDEN_SIZE * 1),
+          const SizedBox(height: CConstants.GOLDEN_SIZE * 1),
           SelectableText(
             "data data Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam "
             "data data Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam "
@@ -157,7 +171,18 @@ je suis responsable de ma rose... », répéta le petit prince, afin de se souve
           // --- AUDIO :
           const SizedBox(height: CConstants.GOLDEN_SIZE * 2),
           Text("Écouter en audio", style: Theme.of(context).textTheme.titleMedium),
-          const CAudioPlayerWidgetComponent(),
+          TextButton(
+            onPressed: () async {
+              var file = await FilePicker.platform.pickFiles(dialogTitle: "POUR TESTE", type: FileType.audio);
+
+              setState(() {
+                demoAudioFile = file?.xFiles.first.path;
+                if (demoAudioFile != null) CSAudioPalyer.inst.source = "file://$demoAudioFile";
+              });
+            },
+            child: const Text("Sélectionnez un fichier audio ici (pour tester)"),
+          ),
+          CAudioReaderWidget(audioSource: demoAudioFile ?? 'audioFile'),
 
           // --- POSTER :
           const SizedBox(height: CConstants.GOLDEN_SIZE * 3),
@@ -208,4 +233,6 @@ je suis responsable de ma rose... », répéta le petit prince, afin de se souve
       ),
     );
   }
+
+  // METHOS -->-------------------------------------------------------------------------------------------------------------->
 }

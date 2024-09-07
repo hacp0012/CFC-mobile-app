@@ -11,8 +11,11 @@ class PcnDataHandlerMv {
     // Launch in background if ressource exist.
     if (CAppPreferences().instance?.getString(storeKey) != null) {
       () async {
-        _download(onError: onError, onFinish: onFinish);
+        _download(onError: onError, onFinish: (response) {});
       }();
+
+      // Dpn wait.
+      onFinish?.call(null);
     } else {
       // Wait until loading finish.
       _download(onFinish: onFinish, onError: onError);

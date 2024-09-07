@@ -3,7 +3,6 @@ import 'package:cfc_christ/configs/c_constants.dart';
 import 'package:cfc_christ/services/c_s_boot.dart';
 import 'package:cfc_christ/views/layouts/default_layout.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:widget_and_text_animator/widget_and_text_animator.dart';
@@ -51,10 +50,10 @@ class _SplashScreenState extends State<SplashScreen> {
                   // --- Logo :
                   WidgetAnimator(
                     incomingEffect: WidgetTransitionEffects.incomingSlideInFromBottom(duration: const Duration(seconds: 1)),
-                    atRestEffect: WidgetRestingEffects.bounce(),
+                    // atRestEffect: WidgetRestingEffects.bounce(),
                     child: CircleAvatar(
                       backgroundColor: CMiscClass.whenBrightnessOf<Color>(context, dark: CConstants.LIGHT_COLOR),
-                      radius: CConstants.GOLDEN_SIZE * 10,
+                      radius: CConstants.GOLDEN_SIZE * 8,
                       // backgroundColor: CConstants.LIGHT_COLOR,
                       child: Image.asset(
                         'lib/assets/icons/LOGO_CFC_512.png',
@@ -72,10 +71,9 @@ class _SplashScreenState extends State<SplashScreen> {
                     child: const Text(
                       "CFC",
                       style: TextStyle(
-                        color: CConstants.PRIMARY_COLOR,
+                        color: Color(0xF8003EC9),
                         fontWeight: FontWeight.bold,
                         fontSize: CConstants.GOLDEN_SIZE * 5,
-                        fontFamily: 'Poppins',
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -139,18 +137,14 @@ class _SplashScreenState extends State<SplashScreen> {
     CSBoot(
       onFinish: () {
         if (loadingError == false) {
-          if (kDebugMode) {
-            print("APP LOADING FINISH *********");
-          }
+          debugPrint("APP LOADING FINISH *********");
 
           // Start first time launching process.
           CSBoot.isFirstTime(context);
         }
       },
       onFailed: () => setState(() {
-        if (kDebugMode) {
-          print("APP LOADING FAILED *********");
-        }
+        debugPrint("APP LOADING FAILED *********");
         loadingError = true;
         showProgressIndicator = false;
       }),

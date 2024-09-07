@@ -85,31 +85,31 @@ class _HomeScreenState extends State<HomeScreen> {
           automaticallyImplyLeading: false,
           titleSpacing: CConstants.GOLDEN_SIZE / 2,
           title: Row(children: [
-            // Builder(
-            //   builder: (context) => IconButton(
-            //     onPressed: () => Scaffold.of(context).openDrawer(),
-            //     icon: Row(children: [
-            //       const Icon(CupertinoIcons.ellipsis_vertical),
-            //       CircleAvatar(
-            //         backgroundColor: CMiscClass.whenBrightnessOf(context, dark: CConstants.LIGHT_COLOR),
-            //         child: Image.asset('lib/assets/icons/LOGO_CFC_512.png'),
-            //       ),
-            //     ]),
-            //   ),
-            // ),
-            PopupMenuButton(
-              itemBuilder: (context) => menuDrawerListItems().map((item) => PopupMenuItem(child: item)).toList(),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS)),
-              // onSelected: (value) => context.pop(),
-              child: Row(children: [
-                const Icon(CupertinoIcons.ellipsis_vertical),
-                CircleAvatar(
-                  backgroundColor: CMiscClass.whenBrightnessOf(context, dark: CConstants.LIGHT_COLOR),
-                  child: Image.asset('lib/assets/icons/LOGO_CFC_512.png'),
-                ),
-              ]),
+            Builder(
+              builder: (context) => IconButton(
+                onPressed: () => Scaffold.of(context).openDrawer(),
+                icon: Row(children: [
+                  const Icon(CupertinoIcons.ellipsis_vertical),
+                  CircleAvatar(
+                    backgroundColor: CMiscClass.whenBrightnessOf(context, dark: CConstants.LIGHT_COLOR),
+                    child: Image.asset('lib/assets/icons/LOGO_CFC_512.png'),
+                  ),
+                ]),
+              ),
             ),
-            const SizedBox(width: CConstants.GOLDEN_SIZE),
+            // PopupMenuButton(
+            //   itemBuilder: (context) => menuDrawerListItems().map((item) => PopupMenuItem(child: item)).toList(),
+            //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS)),
+            //   // onSelected: (value) => context.pop(),
+            //   child: Row(children: [
+            //     const Icon(CupertinoIcons.ellipsis_vertical),
+            //     CircleAvatar(
+            //       backgroundColor: CMiscClass.whenBrightnessOf(context, dark: CConstants.LIGHT_COLOR),
+            //       child: Image.asset('lib/assets/icons/LOGO_CFC_512.png'),
+            //     ),
+            //   ]),
+            // ),
+            // const SizedBox(width: CConstants.GOLDEN_SIZE),
             const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
