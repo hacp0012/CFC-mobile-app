@@ -22,7 +22,13 @@ class ComMv {
   // EDITING ---------------------------------------------------------------------------------------------------------------->
   void getListOfPublisheds(Function(List) onFinish, [Function(dynamic error)? onFailed]) {
     CApi.request.get('/com/quest/edit.getlist.d8CmMR0YTSeFFF6mUe').then(
-      (res) => onFinish.call(res.data),
+      (res) {
+        if (res.data is List) {
+          onFinish.call(res.data);
+        } else {
+          onFailed?.call('Conversion error');
+        }
+      },
       onError: (e) => onFailed?.call(e),
     );
   }
@@ -60,6 +66,7 @@ class ComMv {
     };
 
     CApi.request.post('/com/quest/meXRQbm0WQP6ZpAN5U', data: data).then((response) {
+      print(response.data);
       if (response.data['state'] == 'POSTED') {
         onFinish.call(response.data['id']);
       } else {

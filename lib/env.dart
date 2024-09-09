@@ -20,8 +20,8 @@ class Env {
 
   /// Local API local url
   // static const String API_LOCAL_URL = "http://10.0.2.2";
-  static const String API_LOCAL_URL = "https://cfc-media.org";
-  // static const String API_LOCAL_URL = "http://192.168.244.124:80";
+  // static const String API_LOCAL_URL = "https://cfc-media.org";
+  static const String API_LOCAL_URL = "http://192.168.244.124:80";
 
   /// API real url.
   static const String API_URL = DEBUG ? API_LOCAL_URL : "";

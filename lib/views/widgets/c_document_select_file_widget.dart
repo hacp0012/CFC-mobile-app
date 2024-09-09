@@ -42,12 +42,12 @@ class _CDocumentSelectFileWidgetState extends State<CDocumentSelectFileWidget> {
 
           // -- Action --
           if (selectedFile == null)
-            IconButton.filledTonal(onPressed: selectFile, icon: const Icon(CupertinoIcons.rectangle_paperclip)).animate(
-              effects: CTransitionsTheme.model_1,
-            )
+            IconButton.filledTonal(
+              onPressed: widget.onSelect == null ? null : selectFile,
+              icon: const Icon(CupertinoIcons.rectangle_paperclip),
+            ).animate(effects: CTransitionsTheme.model_1)
           else
-            IconButton(onPressed: unSelectFile, icon: const Icon(Icons.close)),
-
+            IconButton(onPressed: widget.onSelect == null ? null : unSelectFile, icon: const Icon(Icons.close)),
         ]),
       ),
     );
@@ -66,7 +66,7 @@ class _CDocumentSelectFileWidgetState extends State<CDocumentSelectFileWidget> {
   }
 
   void unSelectFile() => setState(() {
-    selectedFile = null;
-    widget.onSelect?.call(null);
-  });
+        selectedFile = null;
+        widget.onSelect?.call(null);
+      });
 }

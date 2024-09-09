@@ -112,7 +112,7 @@ class _UserFamilyHomeScreenState extends State<UserFamilyHomeScreen> {
         icon: const Icon(CupertinoIcons.exclamationmark_bubble),
         actionsAlignment: MainAxisAlignment.spaceBetween,
         content: StyledText(
-          text: "<bold>Shalom ${userData?['civility'] == 'F' ? "mon frère" : "ma sœur"} ${userData?['name']}.</bold> "
+          text: "<bold>Amen ${userData?['civility'] == 'F' ? "mon frère" : "ma sœur"} ${userData?['name']}.</bold> "
               '<br/>'
               '<br/>'
               "En deput de votre profil, vous n'avez pas le droit à cette partie "

@@ -23,7 +23,11 @@ class TeachingMv {
   void getListOfPublisheds(Function(List) onFinish, [Function(dynamic error)? onFailed]) {
     CApi.request.get('/teaching/quest/edit.getlist.RrOWXRfKOjauvSpc7y').then(
       (res) {
-        return onFinish.call(res.data);
+        if (res.data is List) {
+          onFinish.call(res.data);
+        } else {
+          onFailed?.call('Parse error');
+        }
       },
       onError: (e) => onFailed?.call(e),
     );

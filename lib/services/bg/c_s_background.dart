@@ -1,6 +1,7 @@
 import 'package:cfc_christ/database/app_preferences.dart';
 import 'package:cfc_christ/env.dart';
 import 'package:cfc_christ/services/notification/c_s_notification.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 
 class CSBackground {
@@ -24,8 +25,12 @@ class CSBackground {
   static void onStart(ServiceInstance service) async {
     // DartPluginRegistrant.ensureInitialized();
 
+      debugPrint("SERVICE STARTED --> ------------------------------------------");
     // ! KILL THIS SERVICE !
-    service.on(Env.APP_BACKGROUND_SERVICE_NAME).listen((event) => service.stopSelf());
+    service.on(Env.APP_BACKGROUND_SERVICE_NAME).listen((event) {
+      debugPrint("SERVICE KILLED --> ------------------------------------------");
+      service.stopSelf();
+    });
 
     // REGISTER METHODS
     CSBackground().methodsRegistration(service);

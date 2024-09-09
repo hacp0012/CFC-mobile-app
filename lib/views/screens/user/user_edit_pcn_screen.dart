@@ -222,7 +222,7 @@ class _UserEditPcnScreenState extends State<UserEditPcnScreen> {
                         Padding(
                           padding: const EdgeInsets.only(top: CConstants.GOLDEN_SIZE * 4),
                           child: Text(
-                            "Shalom ${userDate?['civility'] == 'F' ? 'frère' : 'sœur'} ${userDate?['name']}. "
+                            "Amen ${userDate?['civility'] == 'F' ? 'frère' : 'sœur'} ${userDate?['name']}. "
                             "Si vous apportez des modifications aux infirmations ci-dessus, ils devront être validé par "
                             "le responsable du Pool ou l'administrateur, après vérification auprès des membres de la "
                             "famille chrétienne dont vous avez indiqué vôtre appartenance.",

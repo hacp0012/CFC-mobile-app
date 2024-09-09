@@ -7,10 +7,12 @@ import 'package:cfc_christ/database/models/user_model.dart';
 import 'package:cfc_christ/env.dart';
 import 'package:cfc_christ/model_view/favorites_mv.dart';
 import 'package:cfc_christ/model_view/notification_mv.dart';
+import 'package:cfc_christ/services/bg/c_s_background.dart';
 import 'package:cfc_christ/services/c_s_draft.dart';
 import 'package:cfc_christ/services/c_s_tts.dart';
 import 'package:cfc_christ/views/screens/user/user_uncomfirmed_home_screen.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_cache_manager_dio/flutter_cache_manager_dio.dart';
 
 class LoginMv {
@@ -54,6 +56,9 @@ class LoginMv {
     // store token.
     if (response.data['state'] == 'LOGED') {
       storeTokenKey(response.data['token']);
+
+      FlutterBackgroundService().startService();
+      // FlutterBackgroundService().invoke('UPDATE_PREFERENCE_STORAGE');
       onFinish?.call();
     } else {
       onFailed?.call();
@@ -67,7 +72,7 @@ class LoginMv {
       onFinish?.call();
     }, onError: (error) {
       if (kDebugMode) {
-        print("USER DATA DOWNLOAD ERROR ---------------------------------------------");
+        print("USER DATA DOWNLOAD ERROR -->-----------------------------------");
         print(error);
       }
       onFailed?.call();
@@ -103,5 +108,6 @@ class LoginMv {
     FavoritesMv().cleanCache();
     NotificationMv.clear();
     CSDraft.cleanAll();
+    CSBackground.killService();
   }
 }

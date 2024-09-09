@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:card_loading/card_loading.dart';
 import 'package:cfc_christ/classes/c_misc_class.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
@@ -7,6 +9,7 @@ import 'package:cfc_christ/model_view/main/echo_mv.dart';
 import 'package:cfc_christ/model_view/main/teaching_mv.dart';
 import 'package:cfc_christ/theme/c_transition_thme.dart';
 import 'package:cfc_christ/views/layouts/default_layout.dart';
+import 'package:cfc_christ/views/screens/comm/edit_comm_screen.dart';
 import 'package:cfc_christ/views/screens/comm/new_comm_screen.dart';
 import 'package:cfc_christ/views/screens/echo/new_echo_screen.dart';
 import 'package:cfc_christ/views/screens/teaching/new_teaching_screen.dart';
@@ -212,7 +215,7 @@ class _UserPublicationsListScreenState extends State<UserPublicationsListScreen>
                                 ),
                                 TextButton.icon(
                                   style: const ButtonStyle(foregroundColor: WidgetStatePropertyAll(Colors.red)),
-                                  onPressed: () => echoRemove(element['echo']['id']),
+                                  onPressed: () => echoLazyRemove(element['echo']['id']),
                                   icon: echoProcessPlug == 'REMOVE_${element['echo']['id']}'
                                       ? const SizedBox(
                                           height: 13.5,
@@ -355,7 +358,7 @@ class _UserPublicationsListScreenState extends State<UserPublicationsListScreen>
                                 ),
                                 TextButton.icon(
                                   style: const ButtonStyle(foregroundColor: WidgetStatePropertyAll(Colors.red)),
-                                  onPressed: () => comRemove(element['com']['id']),
+                                  onPressed: () => comLazyRemove(element['com']['id']),
                                   icon: comProcessPlug == 'REMOVE_${element['com']['id']}'
                                       ? const SizedBox(
                                           height: 13.5,
@@ -507,7 +510,7 @@ class _UserPublicationsListScreenState extends State<UserPublicationsListScreen>
                                 ),
                                 TextButton.icon(
                                   style: const ButtonStyle(foregroundColor: WidgetStatePropertyAll(Colors.red)),
-                                  onPressed: () => teachRemove(element['teaching']['id']),
+                                  onPressed: () => teachLazyRemove(element['teaching']['id']),
                                   icon: teachProcessPlug == 'REMOVE_${element['teaching']['id']}'
                                       ? const SizedBox(
                                           height: 13.5,
@@ -645,8 +648,23 @@ class _UserPublicationsListScreenState extends State<UserPublicationsListScreen>
     }
   }
 
+  void comLazyRemove(String id) {
+    Timer timer = Timer(5.seconds, () => comRemove(id));
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text("Suppression du communiqué"),
+        duration: 5.seconds,
+        // backgroundColor: Colors.red,
+        action: SnackBarAction(label: "Annuler", onPressed: () => timer.cancel()),
+      ),
+    );
+  }
+
   void comOpen(String id) {
     setState(() => comProcessPlug = null);
+
+    context.pushNamed(EditCommScreen.routeName, extra: {'com_id': id});
   }
 
   // --> TEACH -----------------------------------------------:
@@ -714,6 +732,18 @@ class _UserPublicationsListScreenState extends State<UserPublicationsListScreen>
             onError: (e) => setState(() => teachProcessPlug = null),
           );
     }
+  }
+
+  void teachLazyRemove(String id) {
+    Timer timer = Timer(5.seconds, () => teachRemove(id));
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text("Suppression du communiqué"),
+        duration: 5.seconds,
+        action: SnackBarAction(label: "Annuler", onPressed: () => timer.cancel()),
+      ),
+    );
   }
 
   void teachOpen(String id) {
@@ -784,6 +814,18 @@ class _UserPublicationsListScreenState extends State<UserPublicationsListScreen>
             onError: (e) => setState(() => echoProcessPlug = null),
           );
     }
+  }
+
+  void echoLazyRemove(String id) {
+    Timer timer = Timer(5.seconds, () => echoRemove(id));
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text("Suppression du communiqué"),
+        duration: 5.seconds,
+        action: SnackBarAction(label: "Annuler", onPressed: () => timer.cancel()),
+      ),
+    );
   }
 
   void echoOpen(String id) {

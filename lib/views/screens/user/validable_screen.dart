@@ -23,6 +23,14 @@ class _ValidableScreenState extends State<ValidableScreen> {
   int validableCount = 0;
   Map validableData = {};
 
+  // INITIALIZER ------------------------------------------------------------------------------------------------------------>
+  @override
+  void initState() {
+    super.initState();
+
+    donwloaddValidables();
+  }
+
   // INITIALIZER -------------------------------------------------------------------------------------------------------------
 
   // VIEW --------------------------------------------------------------------------------------------------------------------
@@ -92,4 +100,5 @@ class _ValidableScreenState extends State<ValidableScreen> {
   }
 
   // METHODES ----------------------------------------------------------------------------------------------------------------
+  void donwloaddValidables() => GetIt.I.get<CSValidable>().load();
 }

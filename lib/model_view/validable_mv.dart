@@ -28,11 +28,13 @@ class ValidableMv {
   static Future<Map> download() async {
     try {
       var responseData = await CApi.requestWithCache.get('/feature/validable/list');
+      debugPrint('[DOWNLOADING VALIDABLE] -->-----------------------------:');
       // print(responseData.data);
 
       return responseData.data;
     } catch (e) {
       debugPrint('Donwload Validable failed.');
+      if (kDebugMode) print(e);
     }
 
     return {};

@@ -149,6 +149,9 @@ class _Loader {
 
     // For downloading notifications.
     Timer.periodic(const Duration(minutes: 1), (timer) {
+      // Reaload data : because some times after logout or login, data stay same.
+      CAppPreferences().instance?.reload();
+
       if (CNotificationModelHandler().enabled) CNotificationModelHandler().download();
     });
 
@@ -606,7 +609,7 @@ class _Default {
       template['data']['type'] = 'DEFAULT';
       template['data']['group'] = 'DEFAULT';
       template['data']['notification'] = {
-        "title": "Shalom à vous cher camarade",
+        "title": "Amen à vous cher camarade",
         "body": "Ca ce fait longtemps que l'on ne vous est pas revues. "
             '\n\n'
             "Il y a beaucoup des choses qui ces sont passés à votre absence, nous vous sollicitons à visiter la "

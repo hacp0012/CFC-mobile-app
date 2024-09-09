@@ -167,7 +167,7 @@ class _UserResponsabilityScreenState extends State<UserResponsabilityScreen> {
                       const Text("A votre attention"),
                       StyledText(
                         text:
-                            "<italic><small>Shalom à vous. Si vous soumettez vos changements, vous aurez à attendre quelques temps "
+                            "<italic><small>Amen à vous. Si vous soumettez vos changements, vous aurez à attendre quelques temps "
                             "ou quelques jours, durée pour laquelle l'administrateur aura vérifié votre demande et "
                             "vous autorisera à jouer ce rôle. <italic>Mais sachez que, si une autre personne joué déjà ce rôle, "
                             "votre demande pourra être rejeté.</italic></small>"

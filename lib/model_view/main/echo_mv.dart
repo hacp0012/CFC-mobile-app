@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class EchoMv {
-   // READING ---------------------------------------------------------------------------------------------------------------->
+  // READING ---------------------------------------------------------------------------------------------------------------->
   get(String teachingId) {
     _getFromCache();
   }
@@ -22,7 +22,13 @@ class EchoMv {
   // EDITING ---------------------------------------------------------------------------------------------------------------->
   void getListOfPublisheds(Function(List) onFinish, [Function(dynamic error)? onFailed]) {
     CApi.request.get('/echo/quest/edit.getlist.giH8YUKxPAVr38DBIg').then(
-      (res) => onFinish.call(res.data),
+      (res) {
+        if (res.data is List) {
+          onFinish.call(res.data);
+        } else {
+          onFailed?.call('Parse error.');
+        }
+      },
       onError: (e) => onFailed?.call(e),
     );
   }
