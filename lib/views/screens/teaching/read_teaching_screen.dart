@@ -1,3 +1,4 @@
+import 'package:cfc_christ/classes/c_sections_types_enum.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
 import 'package:cfc_christ/services/c_s_audio_palyer.dart';
 import 'package:cfc_christ/services/c_s_tts.dart';
@@ -16,7 +17,9 @@ class ReadTeachingScreen extends StatefulWidget {
   static const String routeName = 'teaching.read';
   static const String routePath = 'read';
 
-  const ReadTeachingScreen({super.key});
+  const ReadTeachingScreen({super.key, this.teachId});
+
+  final String? teachId;
 
   @override
   State<ReadTeachingScreen> createState() => _ReadTeachingScreenState();
@@ -233,7 +236,7 @@ Il n’y en a qu’un.
           // --- COMMENTS :
           const SizedBox(height: CConstants.GOLDEN_SIZE * 3),
           Text("Laisser un commentaire", style: Theme.of(context).textTheme.titleMedium),
-          const CCommentsViewHandlerComponent(),
+          CCommentsViewHandlerComponent(section: CSectionsTypesEnum.teaching, id: widget.teachId ?? '---'),
         ]),
       ),
     );

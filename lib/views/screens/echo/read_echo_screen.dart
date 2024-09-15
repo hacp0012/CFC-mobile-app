@@ -1,3 +1,4 @@
+import 'package:cfc_christ/classes/c_sections_types_enum.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
 import 'package:cfc_christ/configs/c_styled_text_tags.dart';
 import 'package:cfc_christ/services/c_s_audio_palyer.dart';
@@ -10,19 +11,37 @@ import 'package:faker/faker.dart' hide Image;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:styled_text/widgets/styled_text.dart';
 
 class ReadEchoScreen extends StatefulWidget {
   static const String routeName = 'echo.read';
   static const String routePath = 'read';
 
-  const ReadEchoScreen({super.key});
+  const ReadEchoScreen({super.key, required this.echoId});
+
+  final String? echoId;
 
   @override
   State<ReadEchoScreen> createState() => _ReadEchoScreenState();
 }
 
 class _ReadEchoScreenState extends State<ReadEchoScreen> {
+  // DATA -->-----------------------------------------------------------------------------------------------------------------
+  Map echoData = {};
+  Map reactionsData = {};
+
+  bool favState = false;
+
+  // INITIALIZER -->----------------------------------------------------------------------------------------------------------
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.echoId == null) context.pop();
+  }
+
+  // VIEW -->-----------------------------------------------------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
@@ -69,53 +88,33 @@ class _ReadEchoScreenState extends State<ReadEchoScreen> {
           Row(children: [
             Expanded(child: Text(Faker().lorem.sentence(), style: Theme.of(context).textTheme.titleMedium)),
             // TTS reader :
-            CTtsReaderWidget.icon(
-              text: () => """soupira le renard.
-Mais le renard revint son idée. Ma vie est monotone. 
-Je chasse les poules, les hommes me chassent. 
-Toutes les poules se ressemblent, et tous les hommes se ressemblent. 
-Je m’ennuie donc un peu. Mais, si tu m’apprivoises, ma vie sera comme ensoleillée. 
-Je connaîtrai un bruit de pas qui sera différent de tous les autres. 
-Les autres pas me font rentrer sous terre. 
-Le tien m’appellera hors du terrier, comme une musique. 
-Et puis regarde! Tu vois, là—bas, les champs de blé? Je ne mange pas de pain. 
-Le blé pour moi est inutile. Les champs de blé ne me rappellent rien. 
-Et ça, c’est triste! Mais tu as des cheveux couleur d’or. 
-Alors ce sera merveilleux quand tu m’auras apprivoisé! 
-Le blé, qui est doré, me fera souvenir de toi. Etj’aimerai le bruit du vent dans le blé...»
-Le renard se tut et regarda longtemps le petit prince.
-S’il te plaît... apprivoise-moi, dit-il.
-""",
-            ),
+            CTtsReaderWidget.icon(text: () => ""),
           ]),
 
           // --- SMALL DESCRIPTIONS -->
           const SizedBox(height: CConstants.GOLDEN_SIZE),
           StyledText(
-            text: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
-                "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
-                "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod \n\n"
-                "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
-                "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
-                "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod \n\n"
-                "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod "
-                "tempor invidunt ut labore et dolore... ",
+            text: "Lorem ipsum ",
             tags: CStyledTextTags().tags,
           ),
 
+          // --- Download document -->
+          Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+            Expanded(
+              child: TextButton.icon(
+                onPressed: () {},
+                icon: const Icon(Icons.download, size: CConstants.GOLDEN_SIZE * 2),
+                label: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  const Text("Télécharger le document associé"),
+                  Text("document.ext", style: Theme.of(context).textTheme.labelSmall),
+                ]),
+                style: const ButtonStyle(visualDensity: VisualDensity.compact, alignment: Alignment.centerLeft),
+              ),
+            ),
+          ]),
+
           // --- AUDIO :
           const SizedBox(height: CConstants.GOLDEN_SIZE * 3),
-          TextButton(
-            onPressed: () async {
-              var file = await FilePicker.platform.pickFiles(dialogTitle: "POUR TESTE", type: FileType.audio);
-
-              setState(() {
-                var demoAudioFile = file?.xFiles.first.path;
-                if (demoAudioFile != null) CSAudioPalyer.inst.source = "file://$demoAudioFile";
-              });
-            },
-            child: const Text("Sélectionnez un fichier audio ici (pour tester)"),
-          ),
           const CAudioReaderWidget(audioSource: 'audioFile'),
 
           // --- LIKES AND COMMENT TEXT -->
@@ -146,19 +145,13 @@ S’il te plaît... apprivoise-moi, dit-il.
 
           // --- KIKES BUTTONS -->
           const Divider(indent: CConstants.GOLDEN_SIZE, endIndent: CConstants.GOLDEN_SIZE),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             TextButton.icon(
               onPressed: () {},
               icon: const Icon(CupertinoIcons.hand_thumbsup, size: CConstants.GOLDEN_SIZE * 2),
               label: const Text("J'aime"),
               style: const ButtonStyle(visualDensity: VisualDensity.compact),
             ),
-            // TextButton.icon(
-            //   onPressed: () {},
-            //   icon: const Icon(CupertinoIcons.chat_bubble, size: CConstants.GOLDEN_SIZE * 2),
-            //   label: const Text("Commenter"),
-            //   style: const ButtonStyle(visualDensity: VisualDensity.compact),
-            // ),
             TextButton.icon(
               onPressed: () {},
               icon: const Icon(CupertinoIcons.heart, size: CConstants.GOLDEN_SIZE * 2),
@@ -169,10 +162,25 @@ S’il te plaît... apprivoise-moi, dit-il.
 
           // --- COMMENTS :
           const SizedBox(height: CConstants.GOLDEN_SIZE * 3),
-          Text("Laisser un commentaire", style: Theme.of(context).textTheme.titleMedium),
-          const CCommentsViewHandlerComponent(),
+          Text("Commentaires", style: Theme.of(context).textTheme.titleMedium),
+          CCommentsViewHandlerComponent(section: CSectionsTypesEnum.echo, id: widget.echoId ?? '---'),
         ]),
       ),
     );
   }
+
+  // METHODS -->--------------------------------------------------------------------------------------------------------------
+  load() {}
+
+  loadReactions() {}
+
+  putAReadReaction() {}
+
+  likeThis() {}
+
+  loadFavState() {}
+
+  toggleFaveState() {}
+
+  openUserProfile(String userId) {}
 }

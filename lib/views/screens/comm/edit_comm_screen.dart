@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cfc_christ/classes/c_form_validator.dart';
 import 'package:cfc_christ/classes/c_image_handler_class.dart';
 import 'package:cfc_christ/classes/c_misc_class.dart';
@@ -10,6 +8,8 @@ import 'package:cfc_christ/model_view/user_mv.dart';
 import 'package:cfc_christ/services/c_s_draft.dart';
 import 'package:cfc_christ/theme/c_transition_thme.dart';
 import 'package:cfc_christ/views/layouts/default_layout.dart';
+import 'package:cfc_christ/views/screens/comm/read_comm_screen.dart';
+import 'package:cfc_christ/views/screens/user/user_comments_admin.dart';
 import 'package:cfc_christ/views/widgets/c_document_select_file_widget.dart';
 import 'package:cfc_christ/views/widgets/c_image_cropper.dart';
 import 'package:cfc_christ/views/widgets/c_snackbar_widget.dart';
@@ -125,8 +125,8 @@ class _EditCommScreenState extends State<EditCommScreen> {
           if (isInLoadingData) {
             return Center(
               child: Shimmer.fromColors(
-                baseColor: CConstants.PRIMARY_COLOR,
-                highlightColor: CConstants.LIGHT_COLOR,
+                baseColor: Theme.of(context).colorScheme.surfaceContainer,
+                highlightColor: CConstants.PRIMARY_COLOR,
                 child: StyledText(
                   text: "<bold>Chargement</bold>"
                       '<br/>'
@@ -159,7 +159,7 @@ class _EditCommScreenState extends State<EditCommScreen> {
                           constraints: const BoxConstraints(maxHeight: CConstants.GOLDEN_SIZE * 27),
                           child: ClipRRect(
                             borderRadius: const BorderRadius.all(Radius.circular(CConstants.DEFAULT_RADIUS)),
-                            child: Image.file(File(comData?['picture'] ?? '')),
+                            child: Image.network(CImageHandlerClass.byPid(comData?['picture'] ?? '---')),
                           ),
                         ),
                         onTap: () => CImageHandlerClass.show(context, [comData?['picture']]),
@@ -179,7 +179,7 @@ class _EditCommScreenState extends State<EditCommScreen> {
                       ),
                       const SizedBox(width: CConstants.GOLDEN_SIZE),
                       IconButton(
-                        onPressed: isInPushingMode ? null : removePicture,
+                        onPressed: (isInPushingMode || comData?['picture'] == null) ? null : removePicture,
                         style: const ButtonStyle(visualDensity: VisualDensity.compact),
                         icon: const Icon(CupertinoIcons.xmark),
                       ).animate(effects: CTransitionsTheme.model_1),
@@ -294,13 +294,13 @@ class _EditCommScreenState extends State<EditCommScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: CConstants.GOLDEN_SIZE),
                 child: Visibility(
-                  visible: false,
+                  visible: comData?['document']['pid'] == null,
                   replacement: Card(
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: CConstants.GOLDEN_SIZE),
                       child: ListTile(
                         title: const Text("Document :"),
-                        subtitle: const Text(" asda a da dsa s dsad s.pdf"),
+                        subtitle: Text(comData?['document']['name'] ?? "Aucun document."),
                         dense: true,
                         isThreeLine: true,
                         // trailing: GestureAnimator(child: const Icon(CupertinoIcons.xmark), onTap: () {},),
@@ -330,8 +330,6 @@ class _EditCommScreenState extends State<EditCommScreen> {
 
     CApi.request.get('/com/quest/edit.get.KRT7TBTvs5yGP2rUsy', data: {'com_id': widget.comId}).then(
       (res) {
-        print(res.data);
-
         if (res.data is Map && res.data['state'] == 'GETTED') {
           setState(() {
             commentsCounts = res.data['comments'] ?? 0;
@@ -417,28 +415,126 @@ class _EditCommScreenState extends State<EditCommScreen> {
   }
 
   void removePicture() {
-    if (selectHeadPicture != null) {
-      setState(() => selectHeadPicture = null);
-    } else {
-      // Remove.
+    if (comData?['picture'] != null) {
+      setState(() => isInPushingMode = true);
+
+      const String failedMessage = "La mises à jour a échou. Réessaye plus tard.";
+
+      Map data = {'pid': comData?['picture']};
+
+      CApi.request.delete('/com/quest/com.edit.relete.picture.0q69A65BL0f6LRRDDz', data: data).then(
+        (res) {
+          setState(() => isInPushingMode = false);
+          if (res.data is Map && res.data['success']) {
+            setState(() => comData?['picture'] = null);
+
+            CSnackbarWidget.direct(const Text('Document supprimé avec succès.'), defaultDuration: true);
+          } else {
+            CSnackbarWidget.direct(const Text(failedMessage), defaultDuration: true);
+          }
+        },
+        onError: (err) {
+          setState(() => isInPushingMode = false);
+          CSnackbarWidget.direct(const Text(failedMessage), defaultDuration: true);
+        },
+      );
     }
   }
 
   void updatePicture(String? filePath) {
     if (filePath != null) {
-      var data = FormData.fromMap({
+      const String failedMessage = "La mises à jour a échou. Réessaye plus tard.";
 
+      setState(() => isInPushingMode = true);
+
+      var data = FormData.fromMap({
+        'com_id': widget.comId,
+        'picture': MultipartFile.fromFileSync(filePath),
       });
 
-      CApi.request.post('/com/quest/...', data: data).then((res) {}, onError: (err) {},);
+      CApi.request.post('/com/quest/com.edit.update.picture.uCJPfanAYmhvQesGEG', data: data).then(
+        (res) {
+          setState(() => isInPushingMode = false);
+
+          if (res.data is Map && res.data['success']) {
+            setState(() => comData?['picture'] = res.data['pid']);
+
+            CSnackbarWidget.direct(const Text('Mises à jour avec succès.'), defaultDuration: true);
+          } else {
+            CSnackbarWidget.direct(const Text(failedMessage), defaultDuration: true);
+          }
+        },
+        onError: (err) {
+          setState(() => isInPushingMode = false);
+          CSnackbarWidget.direct(const Text(failedMessage), defaultDuration: true);
+        },
+      );
     }
   }
 
-  void removeDocument() {}
+  void removeDocument() {
+    setState(() => isInPushingMode = true);
 
-  void updateDocument(String? documentPath) {}
+    Map data = {'pid': comData?['document']['pid'] ?? '---'};
 
-  void showPost() {}
+    const String failedMessage = "La mises à jour a échou. Réessaye plus tard.";
 
-  void openCommentsMan() {}
+    CApi.request.delete('/com/quest/com.edit.delete.doc.6LUlI6O4yAnKXI2M1J', data: data).then(
+      (res) {
+        setState(() => isInPushingMode = false);
+
+        if (res.data is Map && res.data['success']) {
+          setState(() => comData?['document'] = {'name': null, 'pid': null});
+
+          CSnackbarWidget.direct(const Text('Document supprimé avec succès.'), defaultDuration: true);
+        } else {
+          CSnackbarWidget.direct(const Text(failedMessage), defaultDuration: true);
+        }
+      },
+      onError: (err) {
+        setState(() => isInPushingMode = false);
+        CSnackbarWidget.direct(const Text(failedMessage), defaultDuration: true);
+      },
+    );
+  }
+
+  void updateDocument(String? documentPath) {
+    setState(() => isInPushingMode = true);
+
+    var param = FormData.fromMap({
+      'com_id': widget.comId,
+      'document': MultipartFile.fromFileSync(documentPath ?? '---'),
+    });
+
+    String failedMessage = "La mises à jour a échou. Réessaye plus tard.";
+
+    CApi.request.post('/com/quest/com.edit.update.doc.1q2IIeqday1xSwRHZl', data: param).then(
+      (res) {
+        setState(() => isInPushingMode = false);
+
+        if (res.data is Map && res.data['state'] == 'UPDATED') {
+          setState(() {
+            comData?['document']['pid'] = res.data['pid'];
+            comData?['document']['name'] = "Document mises à jour";
+          });
+
+          CSnackbarWidget.direct(const Text("Mises à jour effectué avec succès."), defaultDuration: true);
+        } else {
+          CSnackbarWidget.direct(Text(failedMessage), defaultDuration: true);
+        }
+      },
+      onError: (err) {
+        setState(() => isInPushingMode = false);
+        CSnackbarWidget.direct(Text(failedMessage), defaultDuration: true);
+      },
+    );
+  }
+
+  void showPost() {
+    context.pushNamed(ReadCommScreen.routeName, extra: {'com_id': widget.comId});
+  }
+
+  void openCommentsMan() {
+    context.pushNamed(UserCommentsAdminScreen.routeName, extra: {'section_name': 'COM', 'id': widget.comId});
+  }
 }

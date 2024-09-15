@@ -1,3 +1,4 @@
+import 'package:cfc_christ/views/screens/teaching/edit_teaching_screen.dart';
 import 'package:cfc_christ/views/screens/teaching/new_teaching_screen.dart';
 import 'package:cfc_christ/views/screens/teaching/read_teaching_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -14,5 +15,12 @@ final List<GoRoute> teachingRoutes = [
       name: ReadTeachingScreen.routeName,
       builder: (context, state) => const ReadTeachingScreen(),
     ),
+    GoRoute(path: EditTeachingScreen.routePath, name: EditTeachingScreen.routeName, builder: (context, state) {
+     Map data = {};
+
+     if (state.extra is Map) data = state.extra as Map;
+
+     return EditTeachingScreen(teachId: data['teach_id']);
+    })
   ]),
 ];

@@ -1,3 +1,4 @@
+import 'package:cfc_christ/classes/c_sections_types_enum.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
 import 'package:cfc_christ/services/c_s_audio_palyer.dart';
 import 'package:cfc_christ/views/components/c_comments_view_handler_component.dart';
@@ -8,12 +9,15 @@ import 'package:faker/faker.dart' hide Image;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ReadCommScreen extends StatefulWidget {
   static const String routeName = 'comm.read';
   static const String routePath = 'read';
 
-  const ReadCommScreen({super.key});
+  const ReadCommScreen({super.key, this.comId});
+
+  final String? comId;
 
   @override
   State<ReadCommScreen> createState() => _ReadCommScreenState();
@@ -27,6 +31,13 @@ class _ReadCommScreenState extends State<ReadCommScreen> {
   @override
   void setState(VoidCallback fn) {
     super.setState(fn);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.comId == null) context.pop();
   }
 
   // VIEW -->---------------------------------------------------------------------------------------------------------------->
@@ -228,7 +239,7 @@ je suis responsable de ma rose... », répéta le petit prince, afin de se souve
           // --- COMMENTS :
           const SizedBox(height: CConstants.GOLDEN_SIZE * 3),
           Text("Laisser un commentaire", style: Theme.of(context).textTheme.titleMedium),
-          const CCommentsViewHandlerComponent(),
+          CCommentsViewHandlerComponent(section: CSectionsTypesEnum.com, id: widget.comId ?? '---'),
         ]),
       ),
     );

@@ -37,6 +37,7 @@ class CApi {
     String? authToken = CAppPreferences().loginToken;
 
     // API Authentication.
+    // _dio.interceptors.add(PrettyDioLogger(request: false, requestBody: false, enabled: kDebugMode));
     _dio.options.headers['Authorization'] = authToken != null ? 'Bearer $authToken' : null;
 
     return _dio;

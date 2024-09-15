@@ -66,7 +66,6 @@ class ComMv {
     };
 
     CApi.request.post('/com/quest/meXRQbm0WQP6ZpAN5U', data: data).then((response) {
-      print(response.data);
       if (response.data['state'] == 'POSTED') {
         onFinish.call(response.data['id']);
       } else {

@@ -11,7 +11,9 @@ import 'package:cfc_christ/theme/c_transition_thme.dart';
 import 'package:cfc_christ/views/layouts/default_layout.dart';
 import 'package:cfc_christ/views/screens/comm/edit_comm_screen.dart';
 import 'package:cfc_christ/views/screens/comm/new_comm_screen.dart';
+import 'package:cfc_christ/views/screens/echo/edit_echo_screen.dart';
 import 'package:cfc_christ/views/screens/echo/new_echo_screen.dart';
+import 'package:cfc_christ/views/screens/teaching/edit_teaching_screen.dart';
 import 'package:cfc_christ/views/screens/teaching/new_teaching_screen.dart';
 import 'package:cfc_christ/views/widgets/c_snackbar_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -607,7 +609,9 @@ class _UserPublicationsListScreenState extends State<UserPublicationsListScreen>
             comLoadingState = null;
           });
         }
-      }, (e) => setState(() => comLoadingState = null));
+      }, (e) => setState(() {
+        comLoadingState = null;
+      }));
     }
   }
 
@@ -748,6 +752,8 @@ class _UserPublicationsListScreenState extends State<UserPublicationsListScreen>
 
   void teachOpen(String id) {
     setState(() => teachLoadingState = null);
+
+    context.pushNamed(EditTeachingScreen.routeName, extra: {'teach_id': id});
   }
 
   // --> ECHO ------------------------------------------------:
@@ -830,5 +836,7 @@ class _UserPublicationsListScreenState extends State<UserPublicationsListScreen>
 
   void echoOpen(String id) {
     setState(() => echoProcessPlug = null);
+
+    context.pushNamed(EditEchoScreen.routeName, extra: {'echo_id': id});
   }
 }

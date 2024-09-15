@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class EchoMv {
   // READING ---------------------------------------------------------------------------------------------------------------->
-  get(String teachingId) {
+  get(String teachingId, Function() onFinish, Function onFailed) {
     _getFromCache();
   }
 

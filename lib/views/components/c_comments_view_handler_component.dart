@@ -1,11 +1,31 @@
 import 'package:cfc_christ/classes/c_misc_class.dart';
+import 'package:cfc_christ/classes/c_sections_types_enum.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 
-class CCommentsViewHandlerComponent extends StatelessWidget {
-  const CCommentsViewHandlerComponent({super.key});
+class CCommentsViewHandlerComponent extends StatefulWidget {
+  const CCommentsViewHandlerComponent({
+    super.key,
+    required this.section,
+    required this.id,
+    this.ownerId,
+  });
 
+  final CSectionsTypesEnum section;
+  final String id;
+  final String? ownerId;
+
+  @override
+  State<CCommentsViewHandlerComponent> createState() => _CCommentsViewHandlerComponentState();
+}
+
+class _CCommentsViewHandlerComponentState extends State<CCommentsViewHandlerComponent> {
+  // DATAS ------------------------------------------------------------------------------------------------------------------:
+
+  // INITIALIZER ------------------------------------------------------------------------------------------------------------:
+
+  // VIEW -------------------------------------------------------------------------------------------------------------------:
   @override
   Widget build(BuildContext context) {
     return Column(children: [
@@ -23,7 +43,7 @@ class CCommentsViewHandlerComponent extends StatelessWidget {
         TextButton(onPressed: () {}, child: const Text('POSTER')),
       ]),
       const SizedBox(height: CConstants.GOLDEN_SIZE * 2),
-      ...List<Widget>.generate(5, (int index) {
+      ...List<Widget>.generate(1, (int index) {
         return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           const Column(
             children: [
@@ -60,4 +80,15 @@ class CCommentsViewHandlerComponent extends StatelessWidget {
       }),
     ]);
   }
+
+  // METHODS ----------------------------------------------------------------------------------------------------------------:
+  load() {}
+
+  post() {}
+
+  // OWNLER --> -------------------------------- :
+  edit() {}
+
+  // ADMIN --> --------------------------------- :
+  remove() {}
 }

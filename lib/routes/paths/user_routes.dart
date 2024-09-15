@@ -3,6 +3,7 @@ import 'package:cfc_christ/routes/routes_transitions.dart';
 import 'package:cfc_christ/views/screens/user/partials/user_new_phone_validation_otp_screen.dart';
 import 'package:cfc_christ/views/screens/user/profile_screen.dart';
 import 'package:cfc_christ/views/screens/user/profile_setting_screen.dart';
+import 'package:cfc_christ/views/screens/user/user_comments_admin.dart';
 import 'package:cfc_christ/views/screens/user/user_delete_account_screen.dart';
 import 'package:cfc_christ/views/screens/user/user_edit_pcn_screen.dart';
 import 'package:cfc_christ/views/screens/user/user_favorits_screen.dart';
@@ -80,9 +81,24 @@ final List<GoRoute> userRoutes = [
       GoRoute(
         path: UserProfileDetailsScreen.routePath,
         name: UserProfileDetailsScreen.routeName,
-        builder: (context, state) => UserProfileDetailsScreen(grState: state),
+        // builder: (context, state) => UserProfileDetailsScreen(grState: state),
         pageBuilder: (context, state) => RoutesTransitions.fadeIn(context, state, UserProfileDetailsScreen(grState: state)),
       ),
+      GoRoute(
+        path: UserCommentsAdminScreen.routePath,
+        name: UserCommentsAdminScreen.routeName,
+        pageBuilder: (context, state) {
+          var data = {};
+
+          if (state.extra is Map)data = state.extra as Map;
+
+          return RoutesTransitions.slide(
+            context,
+            state,
+            UserCommentsAdminScreen(sectionName: data['section_name'], sectionId: data['id']),
+          );
+        },
+      )
     ],
   ),
   GoRoute(

@@ -93,6 +93,8 @@ dependencies:
   uuid: ^4.4.2
   fluttertoast: ^8.2.8
   another_audio_recorder: ^1.2.1
+  pretty_dio_logger: ^1.4.0
+  pretty_print_json: ^1.0.1
 
 dev_dependencies:
   flutter_test:

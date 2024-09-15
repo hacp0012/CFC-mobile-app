@@ -7,6 +7,7 @@ import 'package:cfc_christ/database/app_preferences.dart';
 import 'package:cfc_christ/env.dart';
 import 'package:cfc_christ/services/notification/c_s_notification.dart';
 import 'package:flutter/foundation.dart';
+import 'package:pretty_print_json/pretty_print_json.dart';
 
 class CNotificationModelHandler {
   final _appPreference = CAppPreferences().instance;
@@ -82,7 +83,7 @@ class CNotificationModelHandler {
       },
       onError: (error) {
         debugPrint('Notification error : --> ------------------------------------------------:ERROR');
-        if (kDebugMode) print(error);
+        if (kDebugMode) prettyPrintJson(error);
       },
     );
   }
