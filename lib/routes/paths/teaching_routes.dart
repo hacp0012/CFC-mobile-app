@@ -13,7 +13,13 @@ final List<GoRoute> teachingRoutes = [
     GoRoute(
       path: ReadTeachingScreen.routePath,
       name: ReadTeachingScreen.routeName,
-      builder: (context, state) => const ReadTeachingScreen(),
+      builder: (context, state) {
+        Map data = {};
+
+        if (state.extra is Map) data = state.extra as Map;
+
+        return ReadTeachingScreen(teachId: data['teach_id']);
+      },
     ),
     GoRoute(path: EditTeachingScreen.routePath, name: EditTeachingScreen.routeName, builder: (context, state) {
      Map data = {};

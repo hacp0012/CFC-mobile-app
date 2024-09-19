@@ -400,7 +400,15 @@ class _EditTeachingScreenState extends State<EditTeachingScreen> {
                 replacement: CAudioRecoderWidget(onFinish: updateAudio).animate(effects: CTransitionsTheme.model_1),
                 child: Column(children: [
                   CAudioReaderWidget(audioSource: CDocumentHandlerClass.byPid(teachData['audio'] ?? '---')),
-                  Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                    TextButton.icon(
+                      icon: const Icon(CupertinoIcons.refresh),
+                      style: const ButtonStyle(visualDensity: VisualDensity.compact),
+                      onPressed: isInPushingMode ? null : () {
+                        CSAudioPalyer.inst.source = CDocumentHandlerClass.byPid(teachData['audio'] ?? '---');
+                      },
+                      label: const Text("Recharger"),
+                    ),
                     FilledButton.icon(
                       icon: const Icon(CupertinoIcons.trash),
                       style: const ButtonStyle(visualDensity: VisualDensity.compact),
@@ -651,7 +659,9 @@ class _EditTeachingScreenState extends State<EditTeachingScreen> {
   }
 
   void openCommentsMan() {
-    context.pushNamed(ReadTeachingScreen.routeName, extra: {'section_name': 'TEACH', 'id': widget.teachId});
+    if (teachData['audio'] != null) CSAudioPalyer.inst.dispose();
+
+    context.pushNamed(ReadTeachingScreen.routeName, extra: {'section_name': 'TEACH', 'id': widget.teachId, 'admin': true});
   }
 
   void updateAudio(String? audioPath) {

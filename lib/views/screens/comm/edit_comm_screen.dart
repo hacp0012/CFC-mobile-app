@@ -535,6 +535,6 @@ class _EditCommScreenState extends State<EditCommScreen> {
   }
 
   void openCommentsMan() {
-    context.pushNamed(UserCommentsAdminScreen.routeName, extra: {'section_name': 'COM', 'id': widget.comId});
+    context.pushNamed(UserCommentsAdminScreen.routeName, extra: {'section_name': 'COM', 'id': widget.comId, 'admin': true});
   }
 }

@@ -132,6 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
             //   icon: const Icon(CupertinoIcons.bell),
             // ),
             Badge(
+              isLabelVisible: countNotifications > 0,
               label: countNotifications > 0
                   ? Text(countNotifications.toString())
                   : NotificationMv.count() > 0

@@ -20,7 +20,6 @@ import 'package:cfc_christ/views/screens/user/user_publications_list_screen.dart
 import 'package:cfc_christ/views/screens/user/validable_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager_dio/flutter_cache_manager_dio.dart';
 import 'package:go_router/go_router.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:widget_and_text_animator/widget_and_text_animator.dart';
@@ -109,14 +108,9 @@ class _HomeScreenPartialDrawerState extends State<HomeScreenPartialDrawer> {
                   // child: CircleAvatar(radius: CConstants.GOLDEN_SIZE * 4, child: Icon(CupertinoIcons.person)),
                   child: Hero(
                     tag: 'USER_PROFILE_PHOTO',
-                    child: CachedNetworkImage(
-                      cacheManager: DioCacheManager.instance,
-                      imageUrl: CImageHandlerClass.byPid(userData['photo']),
-                      placeholder: (context, url) => const Icon(CupertinoIcons.person),
-                      imageBuilder: (context, imageProvider) => CircleAvatar(
-                        radius: CConstants.GOLDEN_SIZE * 4,
-                        backgroundImage: imageProvider,
-                      ),
+                    child: CircleAvatar(
+                      radius: CConstants.GOLDEN_SIZE * 4,
+                      backgroundImage: CachedNetworkImageProvider(CImageHandlerClass.byPid(userData['photo'])),
                     ),
                   ),
                 ),

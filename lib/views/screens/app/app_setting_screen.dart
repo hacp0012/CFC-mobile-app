@@ -1,7 +1,10 @@
 import 'package:cfc_christ/configs/c_constants.dart';
+import 'package:cfc_christ/model_view/misc_data_handler_mv.dart';
+import 'package:cfc_christ/model_view/pcn_data_handler_mv.dart';
 import 'package:cfc_christ/services/c_s_tts.dart';
 import 'package:cfc_christ/states/c_default_state.dart';
 import 'package:cfc_christ/views/layouts/default_layout.dart';
+import 'package:cfc_christ/views/widgets/c_snackbar_widget.dart';
 import 'package:cfc_christ/views/widgets/c_tts_reader_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +21,11 @@ class AppSettingScreen extends WatchingStatefulWidget {
 }
 
 class _AppSettingScreenState extends State<AppSettingScreen> {
+  // DATAS ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // INITIALIZERS ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // VIEW ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   Map themeModeButtonIcon = <ThemeMode, IconData>{
     ThemeMode.light: CupertinoIcons.sun_max,
     ThemeMode.dark: CupertinoIcons.moon,
@@ -118,15 +126,45 @@ class _AppSettingScreenState extends State<AppSettingScreen> {
               },
             )),
           ]),
-          Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [const Text("Tester la voix "), CTtsReaderWidget(text: () => "Salut, dans la Famille Chrétienne.")]),
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            const Text("Tester la voix   "),
+            CTtsReaderWidget(
+              text: () => "Vous testez le moteur de synthèse vocale depuis l'application CFC (Famille Chrétienne).",
+            ),
+          ]),
+
+          // --- LOCAL DATAS :
+          const SizedBox(height: CConstants.GOLDEN_SIZE),
+          Text("Les Données locales", style: Theme.of(context).textTheme.titleMedium),
+
+          ListTile(
+            title: const Text("Mettre à jour"),
+            subtitle: const Text(
+              "les données des communautés local, "
+              "des pools, noyaux d'affermissement et autres donnés divers "
+              "(Nécessaire à l'usage de l'application).",
+            ),
+            trailing: IconButton(onPressed: updateLocalDatas, icon: const Icon(CupertinoIcons.refresh)),
+          ),
+
+          ListTile(
+            enabled: false,
+            title: const Text("Vider le Cache"),
+            subtitle: const Text(
+              "les données conserver dans le cache. "
+              "Toutes les Photos, Audios, Documents et textes des publications. Seront supprimé.",
+            ),
+            trailing: IconButton(
+              onPressed: null,
+              icon: Icon(CupertinoIcons.trash, color: Theme.of(context).colorScheme.error),
+            ),
+          ),
         ]),
       ),
     );
   }
 
-  // --- FUNCTIONS :
+  // METHODS /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   void toggleThemeMode() {
     setState(() {
       var mode = GetIt.I<CDefaultState>();
@@ -137,6 +175,24 @@ class _AppSettingScreenState extends State<AppSettingScreen> {
       } else {
         mode.setThemeMode(ThemeMode.light);
       }
+    });
+  }
+
+  void updateLocalDatas() {
+    _updateLocalPCN();
+
+    _updateLocalMiscDatas();
+  }
+
+  void _updateLocalPCN() {
+    PcnDataHandlerMv().download(onFinish: (responseData) {
+      CSnackbarWidget.direct(const Text("Donnés des PCN, mises à jours."), defaultDuration: true);
+    });
+  }
+
+  void _updateLocalMiscDatas() {
+    MiscDataHandlerMv().download(onFinish: (responseData) {
+      CSnackbarWidget.direct(const Text("Les donnés divers, sont mises à jours."), defaultDuration: true);
     });
   }
 }

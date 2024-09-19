@@ -79,7 +79,7 @@ class PcnDataHandlerMv {
   }
 
   /// Get pool by id.
-  /// return {nom, type, nom, label}
+  /// return {type, nom, label}
   static Map? getPool(String poolId) {
     for (Map pool in pools) {
       if (pool['id'] == poolId && pool['type'] == 'POOL') {

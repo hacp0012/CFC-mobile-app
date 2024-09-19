@@ -348,7 +348,15 @@ class _EditEchoScreenState extends State<EditEchoScreen> {
                 replacement: CAudioRecoderWidget(onFinish: updateAudio).animate(effects: CTransitionsTheme.model_1),
                 child: Column(children: [
                   CAudioReaderWidget(audioSource: CDocumentHandlerClass.byPid(echoData['audio'] ?? '---')),
-                  Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                    TextButton.icon(
+                      icon: const Icon(CupertinoIcons.refresh),
+                      style: const ButtonStyle(visualDensity: VisualDensity.compact),
+                      onPressed: isInPushingMode ? null : () {
+                        CSAudioPalyer.inst.source = CDocumentHandlerClass.byPid(echoData['audio'] ?? '---');
+                      },
+                      label: const Text("Recharger"),
+                    ),
                     FilledButton.icon(
                       icon: const Icon(CupertinoIcons.trash),
                       style: const ButtonStyle(visualDensity: VisualDensity.compact),
@@ -639,10 +647,12 @@ class _EditEchoScreenState extends State<EditEchoScreen> {
   }
 
   void showPost() {
+    if (echoData['audio'] != null) CSAudioPalyer.inst.dispose();
+
     context.pushNamed(ReadEchoScreen.routeName, extra: {'com_id': widget.echoId});
   }
 
   void openCommentsMan() {
-    context.pushNamed(UserCommentsAdminScreen.routeName, extra: {'section_name': 'ECHO', 'id': widget.echoId});
+    context.pushNamed(UserCommentsAdminScreen.routeName, extra: {'section_name': 'ECHO', 'id': widget.echoId, 'admin': true});
   }
 }

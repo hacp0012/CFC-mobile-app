@@ -9,13 +9,19 @@ final List<GoRoute> communicationsRoutes = [
     GoRoute(
       path: ReadCommScreen.routePath,
       name: ReadCommScreen.routeName,
-      builder: (context, state) => const ReadCommScreen(),
+      builder: (context, state) {
+        Map data = {};
+
+        if (state.extra is Map) data = state.extra as Map;
+
+        return ReadCommScreen(comId: data['com_id']);
+      },
     ),
     GoRoute(
       path: EditCommScreen.routePath,
       name: EditCommScreen.routeName,
       builder: (context, state) {
-        var comId = ((state.extra ?? []) as Map)['com_id'] as String?;
+        var comId = ((state.extra ?? {}) as Map)['com_id'] as String?;
 
         assert(comId is String, "You must provide [com_id] to open Editor.");
 

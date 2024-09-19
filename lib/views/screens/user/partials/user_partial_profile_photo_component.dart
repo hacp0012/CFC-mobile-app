@@ -13,7 +13,6 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager_dio/flutter_cache_manager_dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:watch_it/watch_it.dart';
@@ -52,16 +51,14 @@ class _UserPartialProfilePhotoComponentState extends State<UserPartialProfilePho
             backgroundColor: Theme.of(context).colorScheme.primaryContainer,
             child: Hero(
               tag: "USER_PROFILE_PHOTO",
-              child: CachedNetworkImage(
-                cacheManager: DioCacheManager.instance,
-                imageUrl: CImageHandlerClass.byPid(userData?['photo']),
-                imageBuilder: (context, imageProvider) {
-                  return CircleAvatar(
-                    radius: CConstants.GOLDEN_SIZE * 6,
-                    backgroundImage: userPhoto['loading'] ? null : imageProvider,
-                    child: userPhoto['loading'] ? const CircularProgressIndicator(strokeCap: StrokeCap.round) : null,
-                  );
-                },
+              child: CircleAvatar(
+                radius: CConstants.GOLDEN_SIZE * 6,
+                backgroundImage: userPhoto['loading']
+                    ? null
+                    : CachedNetworkImageProvider(
+                        CImageHandlerClass.byPid(userData?['photo']),
+                      ),
+                child: userPhoto['loading'] ? const CircularProgressIndicator(strokeCap: StrokeCap.round) : null,
               ),
             ),
           ),
@@ -142,31 +139,34 @@ class _UserPartialProfilePhotoComponentState extends State<UserPartialProfilePho
   }
 
   void cropperAndUpload(XFile xfile) {
-    CImageCropper(path: xfile.path, squareGrid: true, onCropped: (tempPath) async {
-      if (tempPath != null) {
-        var data = FormData.fromMap({
-          CConstants.IMAGE_UPLOAD_NAME: await MultipartFile.fromFile(
-            tempPath,
-            filename: xfile.name,
-            contentType: MediaType.parse(xfile.mimeType ?? 'image/jpeg'),
-          ),
-        });
+    CImageCropper(
+        path: xfile.path,
+        squareGrid: true,
+        onCropped: (tempPath) async {
+          if (tempPath != null) {
+            var data = FormData.fromMap({
+              CConstants.IMAGE_UPLOAD_NAME: await MultipartFile.fromFile(
+                tempPath,
+                filename: xfile.name,
+                contentType: MediaType.parse(xfile.mimeType ?? 'image/jpeg'),
+              ),
+            });
 
-        _s(() => userPhoto['loading'] = true);
-        CApi.request.post('/user/update/photo', data: data).then(
-          (response) {
-            if (response.data['state'] == 'STORED') {
-              _s(() => userData?['photo'] = response.data['pid']);
-              LoginMv().downloadAndInstallUserDatas();
-            }
-            _s(() => userPhoto['loading'] = false);
-          },
-          onError: (error) {
-            _s(() => userPhoto['loading'] = false);
-            _showSnackbar("Le téléversement n'a pas pût être effectué. Réessayer plus tard.");
-          },
-        );
-      }
-    });
+            _s(() => userPhoto['loading'] = true);
+            CApi.request.post('/user/update/photo', data: data).then(
+              (response) {
+                if (response.data['state'] == 'STORED') {
+                  _s(() => userData?['photo'] = response.data['pid']);
+                  LoginMv().downloadAndInstallUserDatas();
+                }
+                _s(() => userPhoto['loading'] = false);
+              },
+              onError: (error) {
+                _s(() => userPhoto['loading'] = false);
+                _showSnackbar("Le téléversement n'a pas pût être effectué. Réessayer plus tard.");
+              },
+            );
+          }
+        });
   }
 }

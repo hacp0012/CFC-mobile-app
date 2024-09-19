@@ -19,6 +19,13 @@ class CImageHandlerClass {
     return uri.toString();
   }
 
+  /// Get image http path by Public Id
+  static String userById(String? userId, {int scale = defaultScaleSize, String defaultImage = 'logos.logo'}) {
+    var uri = Uri.parse("${Env.API_URL}/api/v1/photo/user/$userId/$scale/$defaultImage");
+
+    return uri.toString();
+  }
+
   /// Download image
   static bool download(String url) {
     // TODO: implement image download handler.
