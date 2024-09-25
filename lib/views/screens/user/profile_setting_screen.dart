@@ -93,6 +93,7 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                         Text("Utilisateur", style: Theme.of(context).textTheme.titleMedium),
                         const SizedBox(height: CConstants.GOLDEN_SIZE),
                         TextFormField(
+                          textCapitalization: TextCapitalization.sentences,
                           validator: CFormValidator([CFormValidator.required()]).validate,
                           controller: nameInputController,
                           decoration: const InputDecoration(hintText: "Nom", labelText: "Nom"),
@@ -100,6 +101,7 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                         ),
                         const SizedBox(height: CConstants.GOLDEN_SIZE),
                         TextFormField(
+                          textCapitalization: TextCapitalization.sentences,
                           validator: CFormValidator([CFormValidator.required()]).validate,
                           controller: fullnameInputController,
                           decoration: const InputDecoration(hintText: "Nom complet", labelText: "Nom complet"),
@@ -109,6 +111,9 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                         Row(children: [
                           Expanded(
                             child: TextFormField(
+                              onTap: _datePicker,
+                              readOnly: true,
+                              textCapitalization: TextCapitalization.sentences,
                               decoration: const InputDecoration(hintText: "Date de naissance"),
                               validator: CFormValidator([CFormValidator.required()]).validate,
                               controller: brithDateInputController,
@@ -159,7 +164,7 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                               dropdownMenuEntries: MiscDataHandlerMv.countriesCodes.map((element) {
                                 return DropdownMenuEntry(
                                   value: element?['code'] ?? '243',
-                                  label: "${element?["country"]} ${element?['code'] ?? 'non trouver'}",
+                                  label: "${element?['code'] ?? 'non trouver'}",
                                 );
                               }).toList(),
                             ),
@@ -167,6 +172,7 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
                           const SizedBox(width: CConstants.GOLDEN_SIZE),
                           Expanded(
                             child: TextFormField(
+                              textCapitalization: TextCapitalization.sentences,
                               controller: phoneNumberInputController,
                               validator: CFormValidator([CFormValidator.required()]).validate,
                               decoration: const InputDecoration(hintText: "000-000-000", labelText: 'Téléphone'),
@@ -320,7 +326,7 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
 
   void userSaveData() {
     if (_userFormKey.currentState!.validate()) {
-      if (brithDateInputController.text.replaceAll(RegExp(r"[\-/]"), '').length == 8) {
+      // if (brithDateInputController.text.replaceAll(RegExp(r"[\-/]"), '').length == 8) {
         Map data = {
           'name': nameInputController.text,
           'fullname': fullnameInputController.text,
@@ -344,9 +350,9 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
             );
           },
         );
-      } else {
+      /*} else {
         CSnackbarWidget(context, content: const Text("Date de naissance incomplet"), defaultDuration: true);
-      }
+      }*/
     }
   }
 
@@ -379,5 +385,21 @@ class _ProfileSettingScreenState extends State<ProfileSettingScreen> {
       backgroundColor: color ?? Theme.of(context).colorScheme.error,
       defaultDuration: true,
     );
+  }
+
+  void _datePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.parse(userData?['d_naissance']),
+      firstDate: DateTime(1944),
+      lastDate: DateTime.now(),
+      helpText: "Date de naissance",
+    ).then((selected) {
+      if (selected != null) {
+        brithDateInputController.text = "${selected.day}/${selected.month}/${selected.year}";
+        userData?['d_naissance'] = selected.toIso8601String();
+      }
+    });
+
   }
 }

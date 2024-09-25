@@ -23,7 +23,9 @@ class CImagesGridGroupViewComponent extends StatelessWidget {
           if (pictures.length == 1) {
             return GestureAnimator(
               child: Image(
-                image: CachedNetworkImageProvider(CImageHandlerClass.byPid(pictures[0], scale: 45)),
+                image: CachedNetworkImageProvider(
+                  CImageHandlerClass.byPid(pictures[0], scale: 45, defaultImage: 'images.image_1'),
+                ),
                 fit: BoxFit.cover,
                 width: double.infinity,
               ),
@@ -38,6 +40,7 @@ class CImagesGridGroupViewComponent extends StatelessWidget {
                     image: CachedNetworkImageProvider(CImageHandlerClass.byPid(pictures[0], scale: 36)),
                     fit: BoxFit.cover,
                     height: double.infinity,
+                    width: double.infinity,
                   ),
                   onTap: () => CImageHandlerClass.show(context, [...pictures.map((e) => e)], startAt: 0),
                 ),
@@ -50,6 +53,7 @@ class CImagesGridGroupViewComponent extends StatelessWidget {
                     image: CachedNetworkImageProvider(CImageHandlerClass.byPid(pictures[1], scale: 36)),
                     fit: BoxFit.cover,
                     height: double.infinity,
+                    width: double.infinity,
                   ),
                   onTap: () => CImageHandlerClass.show(context, [...pictures.map((e) => e)], startAt: 1),
                 ),
@@ -64,6 +68,7 @@ class CImagesGridGroupViewComponent extends StatelessWidget {
                     image: CachedNetworkImageProvider(CImageHandlerClass.byPid(pictures[0], scale: 36)),
                     fit: BoxFit.cover,
                     height: double.infinity,
+                    width: double.infinity,
                   ),
                   onTap: () => CImageHandlerClass.show(context, [...pictures.map((e) => e)], startAt: 0),
                 ),
@@ -77,10 +82,10 @@ class CImagesGridGroupViewComponent extends StatelessWidget {
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(maxHeight: (180 / 2) - 1.5),
                         child: Image(
-                            image: CachedNetworkImageProvider(CImageHandlerClass.byPid(pictures[1], scale: 27)),
-                            fit: BoxFit.cover,
-                            height: double.infinity,
-                            width: double.infinity,
+                          image: CachedNetworkImageProvider(CImageHandlerClass.byPid(pictures[1], scale: 27)),
+                          fit: BoxFit.cover,
+                          height: double.infinity,
+                          width: double.infinity,
                         ),
                       ),
                       onTap: () => CImageHandlerClass.show(context, [...pictures.map((e) => e)], startAt: 1),
@@ -96,7 +101,7 @@ class CImagesGridGroupViewComponent extends StatelessWidget {
                           width: double.infinity,
                         ),
                       ),
-                        onTap: () => CImageHandlerClass.show(context, [...pictures.map((e) => e)], startAt: 2),
+                      onTap: () => CImageHandlerClass.show(context, [...pictures.map((e) => e)], startAt: 2),
                     ),
                   ],
                 ),
@@ -125,10 +130,10 @@ class CImagesGridGroupViewComponent extends StatelessWidget {
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(maxHeight: (180 / 2) - 1.5),
                         child: Image(
-                            image: CachedNetworkImageProvider(CImageHandlerClass.byPid(pictures[1], scale: 27)),
-                            fit: BoxFit.cover,
-                            height: double.infinity,
-                            width: double.infinity,
+                          image: CachedNetworkImageProvider(CImageHandlerClass.byPid(pictures[1], scale: 27)),
+                          fit: BoxFit.cover,
+                          height: double.infinity,
+                          width: double.infinity,
                         ),
                       ),
                       onTap: () => CImageHandlerClass.show(context, [...pictures.map((e) => e)], startAt: 1),

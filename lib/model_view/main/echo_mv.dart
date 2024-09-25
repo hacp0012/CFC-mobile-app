@@ -4,6 +4,7 @@ import 'package:cfc_christ/configs/c_api.dart';
 import 'package:cfc_christ/views/widgets/c_snackbar_widget.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:pretty_print_json/pretty_print_json.dart';
 
 class EchoMv {
   // READING ---------------------------------------------------------------------------------------------------------------->
@@ -70,12 +71,16 @@ class EchoMv {
     };
 
     CApi.request.post('/echo/quest/tSUr7URWYyIaxa4nCN', data: data).then((response) {
+      prettyPrintJson(response.data);
       if (response.data['state'] == 'POSTED') {
         onFinish.call(response.data['id']);
       } else {
         onFailed.call();
       }
-    }, onError: (e) => onFailed.call());
+    }, onError: (e) {
+      prettyPrintJson(e);
+      onFailed.call();
+    });
   }
 
   postPicture(String pubId, String imagePath, void Function() onFinish, void Function() onFailed) {
@@ -84,7 +89,7 @@ class EchoMv {
       'picture': MultipartFile.fromFileSync(imagePath),
     });
 
-    CApi.request.post('/teaching/quest/jXHh0IbqrGJQe2XxkH', data: formData).then((response) {
+    CApi.request.post('/echo/quest/jXHh0IbqrGJQe2XxkH', data: formData).then((response) {
       if (response.data['state'] == 'STORED') {
         if (File(imagePath).existsSync()) File(imagePath).delete();
 
@@ -92,7 +97,10 @@ class EchoMv {
       } else if (response.data['state'] == 'FAILED') {
         onFailed.call();
       }
-    }, onError: (error) => onFinish.call());
+    }, onError: (error) {
+      prettyPrintJson(error);
+      onFinish.call();
+    });
   }
 
   sendAudio(String pubId, String audioPath, void Function() onFinish) {

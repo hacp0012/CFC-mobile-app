@@ -4,6 +4,7 @@ import 'package:cfc_christ/configs/c_api.dart';
 import 'package:cfc_christ/views/widgets/c_snackbar_widget.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:pretty_print_json/pretty_print_json.dart';
 
 class TeachingMv {
   // READING ---------------------------------------------------------------------------------------------------------------->
@@ -74,8 +75,11 @@ class TeachingMv {
       'date': date,
       'predicator': predicator,
     };
+    prettyPrintJson(data);
 
     CApi.request.post('/teaching/quest/6P25iKiAj3KlIXXkrs', data: data).then((response) {
+      // TODO: http response...
+      prettyPrintJson(response.data);
       if (response.data['state'] == 'POSTED') {
         onFinish.call(response.data['id']);
       } else {
@@ -96,7 +100,9 @@ class TeachingMv {
 
         onFinish.call();
       }
-    }, onError: (error) => onFinish.call());
+    }, onError: (error) {
+      onFinish.call();
+    });
   }
 
   sendAudio(String pubId, String audioPath, void Function() onFinish) {

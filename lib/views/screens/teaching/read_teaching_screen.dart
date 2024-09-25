@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cfc_christ/classes/c_document_handler_class.dart';
 import 'package:cfc_christ/classes/c_image_handler_class.dart';
 import 'package:cfc_christ/classes/c_misc_class.dart';
 import 'package:cfc_christ/classes/c_sections_types_enum.dart';
@@ -6,6 +7,7 @@ import 'package:cfc_christ/configs/c_api.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
 import 'package:cfc_christ/configs/c_styled_text_tags.dart';
 import 'package:cfc_christ/model_view/pcn_data_handler_mv.dart';
+import 'package:cfc_christ/model_view/user_mv.dart';
 import 'package:cfc_christ/services/c_s_tts.dart';
 import 'package:cfc_christ/theme/c_transition_thme.dart';
 import 'package:cfc_christ/views/components/c_comments_view_handler_component.dart';
@@ -17,6 +19,7 @@ import 'package:cfc_christ/views/widgets/c_tts_reader_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:styled_text/styled_text.dart';
@@ -35,6 +38,7 @@ class ReadTeachingScreen extends StatefulWidget {
 }
 
 class _ReadTeachingScreenState extends State<ReadTeachingScreen> {
+  var userData = UserMv.data;
   Map teachData = {};
   Map reactionsData = {};
   Map posterData = {};
@@ -44,6 +48,8 @@ class _ReadTeachingScreenState extends State<ReadTeachingScreen> {
   bool isInMainLoading = true;
 
   String teachLevel = '';
+
+  var markdownReaderController = ScrollController();
 
   // DATA ------------------------------------------------------------------------------------------------------------------->
 
@@ -64,6 +70,8 @@ class _ReadTeachingScreenState extends State<ReadTeachingScreen> {
   @override
   void dispose() {
     CSTts.inst.dispose();
+    markdownReaderController.dispose();
+
     super.dispose();
   }
 
@@ -99,7 +107,7 @@ class _ReadTeachingScreenState extends State<ReadTeachingScreen> {
                     padding: const EdgeInsets.all(CConstants.GOLDEN_SIZE),
                     child: Shimmer.fromColors(
                       baseColor: Theme.of(context).colorScheme.surface,
-                      highlightColor: Theme.of(context).colorScheme.surfaceContainer,
+                      highlightColor: Theme.of(context).colorScheme.primaryContainer.withAlpha(6),
                       child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                         Card(child: SizedBox(height: 9.0 * 3, width: double.infinity)),
                         SizedBox(height: 9.0),
@@ -162,9 +170,8 @@ class _ReadTeachingScreenState extends State<ReadTeachingScreen> {
                     ]),
 
                     // --- Heading image :
-                    const SizedBox(height: CConstants.GOLDEN_SIZE * 1),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: CConstants.GOLDEN_SIZE),
+                      padding: const EdgeInsets.only(top: CConstants.GOLDEN_SIZE),
                       child: Animate(
                         effects: [FadeEffect(duration: 1.seconds)],
                         child: CImagesGridGroupViewComponent(pictures: [teachData['picture'] ?? '---']),
@@ -178,7 +185,7 @@ class _ReadTeachingScreenState extends State<ReadTeachingScreen> {
                           Expanded(
                             child: SelectableText(
                               teachData['title'] ?? '...',
-                              style: Theme.of(context).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.bold),
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 18),
                             ),
                           ),
 
@@ -276,18 +283,30 @@ class _ReadTeachingScreenState extends State<ReadTeachingScreen> {
                     ]),
 
                     const SizedBox(height: CConstants.GOLDEN_SIZE * 1),
-                    SelectableText(
+                    /*SelectableText(
                       teachData['text'] ?? '...',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontFamily: CConstants.FONT_FAMILY_PRIMARY,
                             fontWeight: FontWeight.normal,
                           ),
-                    ),
+                    ),*/
+                    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                      Expanded(
+                        child: SelectionArea(
+                          child: MarkdownBody(
+                            data: teachData['text'] ?? '...',
+                            selectable: false,
+                            styleSheetTheme: MarkdownStyleSheetBaseTheme.platform,
+                          ),
+                        ),
+                      ),
+                    ]),
 
                     // --- Download document -->
                     const SizedBox(height: CConstants.GOLDEN_SIZE),
                     Visibility(
-                      visible: teachData['document'] != null,
+                      // TODO: Role ...
+                      visible: teachData['document'] != null && userData?['role']?['role'] == 'COMMUNICATION_MANAGER',
                       child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                         Expanded(
                           child: TextButton.icon(
@@ -308,7 +327,8 @@ class _ReadTeachingScreenState extends State<ReadTeachingScreen> {
 
                     // --- AUDIO :
                     const SizedBox(height: CConstants.GOLDEN_SIZE * 2),
-                    if (teachData['audio'] != null) CAudioReaderWidget(audioSource: teachData['audio'] ?? '---'),
+                    if (teachData['audio'] != null)
+                      CAudioReaderWidget(audioSource: CDocumentHandlerClass.byPid(teachData['audio'] ?? '---')),
 
                     // --- POSTER :
                     const SizedBox(height: CConstants.GOLDEN_SIZE * 3),
@@ -342,9 +362,9 @@ class _ReadTeachingScreenState extends State<ReadTeachingScreen> {
                         Expanded(
                           child: Column(mainAxisSize: MainAxisSize.min, children: [
                             if ((reactionsData['likes']?['count'] ?? 0) == 1)
-                              const Text("Une personnee aime cet écho")
+                              const Text("Une personnee aime cet enseignement")
                             else
-                              Text("${(reactionsData['likes']?['count'] ?? 0)} personnes aiment cet écho"),
+                              Text("${(reactionsData['likes']?['count'] ?? 0)} personnes aiment cet enseignement"),
                             TextButton.icon(
                               onPressed: isInLoadingReactions ? null : likeThis,
                               icon: Icon(

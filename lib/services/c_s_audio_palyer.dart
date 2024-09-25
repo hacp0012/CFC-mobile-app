@@ -13,6 +13,9 @@ class CSAudioPalyer {
   final player = AudioPlayer();
   double volume = 1.0;
 
+  String? playerSectionId;
+  bool showBottomPlayer = false;
+
   ValueNotifier<CSAudioPlayerState> playState = ValueNotifier(CSAudioPlayerState.stopped);
 
   String? _source;
@@ -63,10 +66,10 @@ class CSAudioPalyer {
   void dispose() async {
     if (_source == null) return;
 
-    player.stop();
-    player.setSpeed(1.0);
+    // player.stop();
+    // player.setSpeed(1.0);
     speed = 1;
-    _source = null;
+    // _source = null;
     playState.removeListener(() {});
   }
 }

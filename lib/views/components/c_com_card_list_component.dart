@@ -1,20 +1,28 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cfc_christ/classes/c_image_handler_class.dart';
 import 'package:cfc_christ/classes/c_misc_class.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
+import 'package:cfc_christ/model_view/pcn_data_handler_mv.dart';
 import 'package:cfc_christ/views/screens/comm/read_comm_screen.dart';
-import 'package:faker/faker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
 class CComCardListComponent extends StatelessWidget {
-  const CComCardListComponent({super.key, this.showTypeLabel = false, this.isInFavorite = false});
+  const CComCardListComponent({super.key, required this.comData, this.showTypeLabel = false, this.isInFavorite = false});
 
   final bool isInFavorite;
   final bool showTypeLabel;
+  final Map comData;
 
   @override
   Widget build(BuildContext context) {
+    // DATAS -----------------------------------------------------------------------------------------------------------------
+    Map com = comData['com'];
+    Map reactions = comData['reactions'];
+
+    // COMPONENT -------------------------------------------------------------------------------------------------------------
     return GestureAnimator(
       child: Card(
         borderOnForeground: false,
@@ -29,81 +37,110 @@ class CComCardListComponent extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 1.0),
                 label: const Icon(CupertinoIcons.heart, size: 12),
                 offset: const Offset(-3.0, 0.0),
-                child: const CircleAvatar(
+                child: CircleAvatar(
                   radius: CConstants.GOLDEN_SIZE * 2,
-                  backgroundImage: AssetImage('lib/assets/pictures/pray_wonam.jpg'),
+                  backgroundImage: CachedNetworkImageProvider(CImageHandlerClass.userById(com['published_by'])),
                 ),
               ),
 
               const SizedBox(width: 9.0),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 if (showTypeLabel == false)
-                  const Icon(CupertinoIcons.news, size: 18)
-                else
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: CConstants.GOLDEN_SIZE - 6,
-                      horizontal: CConstants.GOLDEN_SIZE - 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.amber.shade200,
-                      borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS),
-                    ),
-                    child: Text(
-                      'COMMUNIQUER',
-                      style: TextStyle(
-                        fontSize: 9,
-                        fontWeight: FontWeight.bold,
-                        color: CMiscClass.whenBrightnessOf(context, dark: Colors.black),
-                        // fontFamily: CConstants.FONT_FAMILY_PRIMARY,
+                  Row(
+                    children: [
+                      const Icon(CupertinoIcons.news, size: 18),
+                      const SizedBox(width: CConstants.GOLDEN_SIZE),
+                      Text(
+                        CMiscClass.date(DateTime.parse(com['created_at'])).ago(),
+                        style: Theme.of(context).textTheme.labelSmall,
                       ),
-                    ),
+                    ],
+                  )
+                else
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: CConstants.GOLDEN_SIZE - 6,
+                          horizontal: CConstants.GOLDEN_SIZE - 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.amber.shade200,
+                          borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS),
+                        ),
+                        child: Text(
+                          'COMMUNIQUER',
+                          style: TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                            color: CMiscClass.whenBrightnessOf(context, dark: Colors.black),
+                            // fontFamily: CConstants.FONT_FAMILY_PRIMARY,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(width: CConstants.GOLDEN_SIZE / 2),
+                    Text(
+                      CMiscClass.date(DateTime.parse(com['created_at'])).ago(),
+                      style: Theme.of(context).textTheme.labelSmall,
+                    )
+                    ]
                   ),
 
                 // --- Secondary :
                 // const SizedBox(width: CConstants.GOLDEN_SIZE),
-                Text('Pool de ${Faker().company.name()}', style: Theme.of(context).textTheme.labelSmall),
+                Text(_managePCN(com['visibility']), style: Theme.of(context).textTheme.labelSmall),
                 // Text('Publié le 27 aout 2024', style: Theme.of(context).textTheme.labelSmall),
-                Row(children: [
-                  const Icon(CupertinoIcons.clock, size: 12),
-                  const SizedBox(width: CConstants.GOLDEN_SIZE / 2),
-                  Text("il y a 15 mins", style: Theme.of(context).textTheme.labelSmall)
-                ]),
+
+                // if (showTypeLabel)
+                //   Row(children: [
+                //     const Icon(CupertinoIcons.clock, size: 12),
+                //     const SizedBox(width: CConstants.GOLDEN_SIZE / 2),
+                //     Text(
+                //       CMiscClass.date(DateTime.parse(com['created_at'])).ago(),
+                //       style: Theme.of(context).textTheme.labelSmall,
+                //     )
+                //   ]),
               ]),
 
               // --- State badget :
               const Spacer(),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: CConstants.GOLDEN_SIZE - 6,
-                  horizontal: CConstants.GOLDEN_SIZE - 4,
+              if (com['status'] != 'NONE')
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: CConstants.GOLDEN_SIZE - 6,
+                    horizontal: CConstants.GOLDEN_SIZE - 4,
+                  ),
+                  decoration: BoxDecoration(
+                    // color: Colors.greenAccent.shade100, // Green.
+                    // color: Colors.red.shade100, // Red.
+                    color: Colors.black, // Black.
+                    borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS),
+                  ),
+                  child: Text(
+                    com['status'] == 'INWAIT' ? 'Prévu' : 'Réalisé',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Colors.white),
+                  ),
                 ),
-                decoration: BoxDecoration(
-                  // color: Colors.greenAccent.shade100, // Green.
-                  // color: Colors.red.shade100, // Red.
-                  color: Colors.black, // Black.
-                  borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS),
-                ),
-                child: Text("Prévu", style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Colors.white)),
-              ),
             ]),
 
             // --- Conconst const taints :
-            Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               // --- Texts :
               Row(children: [
                 Expanded(
                   child: Text(
-                    Faker().lorem.sentence(),
+                    com['title'],
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                 ),
               ]),
-              Text(Faker().lorem.sentences(3).join(' '), maxLines: 4, overflow: TextOverflow.ellipsis),
+              const SizedBox(height: CConstants.GOLDEN_SIZE),
+              Text(CMiscClass.remeveMarkdownSymboles(com['text']), maxLines: 4, overflow: TextOverflow.ellipsis),
 
-              // --- Actions :
+              // --- Reactions :
               Padding(
                 padding: const EdgeInsets.only(top: 9.0),
                 child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
@@ -118,7 +155,10 @@ class CComCardListComponent extends StatelessWidget {
                   Row(children: [
                     const Icon(CupertinoIcons.eye, size: 16),
                     const SizedBox(width: CConstants.GOLDEN_SIZE / 2),
-                    Text("29 vues", style: Theme.of(context).textTheme.labelSmall)
+                    Text(
+                      "${CMiscClass.numberAbrev((reactions['views']['count'] as int).toDouble())} vues",
+                      style: Theme.of(context).textTheme.labelSmall,
+                    )
                   ]),
 
                   // --- LIKES :
@@ -126,7 +166,10 @@ class CComCardListComponent extends StatelessWidget {
                   Row(children: [
                     const Icon(CupertinoIcons.hand_thumbsup, size: 16),
                     const SizedBox(width: CConstants.GOLDEN_SIZE / 2),
-                    Text("8 j'aims", style: Theme.of(context).textTheme.labelSmall)
+                    Text(
+                      "${CMiscClass.numberAbrev((reactions['likes']['count'] as int).toDouble())} j'aims",
+                      style: Theme.of(context).textTheme.labelSmall,
+                    )
                   ]),
 
                   // --- COMMENTS :
@@ -134,7 +177,10 @@ class CComCardListComponent extends StatelessWidget {
                   Row(children: [
                     const Icon(CupertinoIcons.chat_bubble_2, size: 16),
                     const SizedBox(width: CConstants.GOLDEN_SIZE / 2),
-                    Text("4 Commentaires", style: Theme.of(context).textTheme.labelSmall)
+                    Text(
+                      "${CMiscClass.numberAbrev((reactions['comments']['count'] as int).toDouble())}  Commentaires",
+                      style: Theme.of(context).textTheme.labelSmall,
+                    )
                   ]),
                 ]),
               ),
@@ -142,7 +188,28 @@ class CComCardListComponent extends StatelessWidget {
           ]),
         ),
       ),
-      onTap: () => context.pushNamed(ReadCommScreen.routeName),
+      onTap: () => context.pushNamed(ReadCommScreen.routeName, extra: {'com_id': com['id']}),
     );
+  }
+
+  // METHODS ---------------------------------------------------------------------------------------------------------------
+  String _managePCN(Map? visibility) {
+    Map? data = {};
+
+    switch (visibility?['level']) {
+      case 'pool':
+        data = PcnDataHandlerMv.getPool(visibility?['level_id']);
+        break;
+      case 'com_loc':
+        data = PcnDataHandlerMv.getCom(visibility?['level_id']);
+        break;
+      case 'noyau_af':
+        data = PcnDataHandlerMv.getNa(visibility?['level_id']);
+        break;
+    }
+
+    if (data != null) return "Pool de ${data['nom']}";
+
+    return "PCN inconu";
   }
 }

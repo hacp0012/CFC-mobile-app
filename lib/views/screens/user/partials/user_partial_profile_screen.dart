@@ -7,7 +7,6 @@ import 'package:cfc_christ/services/validable/c_s_validable.dart';
 import 'package:cfc_christ/views/screens/family/user_family_home_screen.dart';
 import 'package:cfc_christ/views/screens/user/partials/user_partial_profile_photo_component.dart';
 import 'package:cfc_christ/views/screens/user/user_edit_pcn_screen.dart';
-import 'package:cfc_christ/views/screens/user/user_favorits_screen.dart';
 import 'package:cfc_christ/views/screens/user/user_publications_list_screen.dart';
 import 'package:cfc_christ/views/screens/user/user_responsability_screen.dart';
 import 'package:cfc_christ/views/screens/user/validable_screen.dart';
@@ -158,13 +157,13 @@ class _UserPartialProfileScreenState extends State<UserPartialProfileScreen> {
           ),
         ),
         const SizedBox(width: CConstants.GOLDEN_SIZE * 2),
-        InkWell(
-          onTap: () => context.pushNamed(UserFavoritsScreen.routeName),
-          child: Text(
-            "🩷 Mes favoris",
-            style: TextStyle(color: Theme.of(context).colorScheme.primary),
-          ),
-        ),
+        // InkWell(
+        //   onTap: () => context.pushNamed(UserFavoritsScreen.routeName),
+        //   child: Text(
+        //     "🩷 Mes favoris",
+        //     style: TextStyle(color: Theme.of(context).colorScheme.primary),
+        //   ),
+        // ),
       ]),
       const Padding(padding: EdgeInsets.symmetric(horizontal: 9.0), child: Divider(thickness: 0.5)),
 
@@ -186,7 +185,7 @@ class _UserPartialProfileScreenState extends State<UserPartialProfileScreen> {
       ),
       ListTile(
         leading: const Icon(CupertinoIcons.person_2),
-        title: const Text("Ma fimille"),
+        title: const Text("Ma famille"),
         subtitle: const Text("Gérer mon couple, mes enfants et les enfants dont je suis parrain."),
         onTap: () => context.pushNamed(UserFamilyHomeScreen.routeName),
       ),

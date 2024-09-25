@@ -3,8 +3,7 @@ import 'package:cfc_christ/database/c_database.dart';
 import 'package:cfc_christ/env.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
-import 'package:dio_cache_interceptor_file_store/dio_cache_interceptor_file_store.dart';
-import 'package:flutter/foundation.dart';
+import 'package:dio_cache_interceptor_sembast_storage/dio_cache_interceptor_sembast_storage.dart';
 import 'package:flutter_cache_manager_dio/flutter_cache_manager_dio.dart';
 
 /// API request handler.
@@ -16,18 +15,20 @@ class CApi {
     baseUrl: '${Env.API_URL}/api/v1',
     headers: {'Accept': 'application/json'},
     receiveDataWhenStatusError: true,
-    validateStatus: (status) => kDebugMode,
+    validateStatus: (status) => true, // kDebugMode,
   ));
 
   static CacheOptions cacheOptions = CacheOptions(
     // store: MemCacheStore(maxEntrySize: 7340032, maxSize: 1024000000),
     // store: DbCacheStore(databasePath: CDatabase().dbPath ?? '', databaseName: "dioDbCacheStore"),
-    store: FileCacheStore(CDatabase().tempDir ?? ''),
-    policy: CachePolicy.request,
+    // store: FileSto (CDatabase().tempDir ?? ''),
+    store: SembastCacheStore(storePath: CDatabase().tempDir ?? ''),
+    policy: CachePolicy.refreshForceCache,
     keyBuilder: CacheOptions.defaultCacheKeyBuilder,
+    priority: CachePriority.high,
     allowPostMethod: true,
-    hitCacheOnErrorExcept: [], // For offline behavior.
-    // maxStale: const Duration(days: 7),
+    hitCacheOnErrorExcept: [401, 403], // For offline behavior.
+    maxStale: const Duration(days: 18),
     // hitCacheOnErrorExcept: [401, 403],
   );
 

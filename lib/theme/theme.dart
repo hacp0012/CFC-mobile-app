@@ -3,6 +3,7 @@ import 'package:cfc_christ/theme/configs/rc_color_sheme.dart';
 import 'package:cfc_christ/theme/configs/t_c_dialog.dart';
 import 'package:cfc_christ/theme/configs/tc_appbar.dart';
 import 'package:cfc_christ/theme/configs/tc_button.dart';
+import 'package:cfc_christ/theme/configs/tc_card.dart';
 import 'package:cfc_christ/theme/configs/tc_drawer.dart';
 import 'package:cfc_christ/theme/configs/tc_dropdown_button.dart';
 import 'package:cfc_christ/theme/configs/tc_list_tile.dart';
@@ -38,6 +39,7 @@ class CTheme {
     buttonTheme: TcButton.light,
     dividerTheme: const DividerThemeData(space: 1.0),
     dialogTheme: TCDialog.light,
+    cardTheme: TcCard.light,
   );
 
   static ThemeData dark = ThemeData(
@@ -60,5 +62,6 @@ class CTheme {
     dividerTheme: const DividerThemeData(space: 1.0),
     dialogTheme: TCDialog.dark,
     progressIndicatorTheme: const ProgressIndicatorThemeData(color: CConstants.LIGHT_COLOR),
+    cardTheme: TcCard.dark,
   );
 }

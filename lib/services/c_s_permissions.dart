@@ -77,15 +77,15 @@ class CSPermissions {
   static Future<bool> status() async {
     var cameraStatus = await Permission.camera.status;
     var accessNotificationsStatus = await Permission.notification.status;
-    var accessNotificationsPolicyStatus = await Permission.accessNotificationPolicy.status;
-    var audioStatus = await Permission.audio.status;
+    // var accessNotificationsPolicyStatus = await Permission.accessNotificationPolicy.status;
+    // var audioStatus = await Permission.audio.status;
     var mediaStatus = await Permission.mediaLibrary.status;
     var microStatus = await Permission.microphone.status;
 
     if (cameraStatus.isGranted &&
         accessNotificationsStatus.isGranted &&
-        accessNotificationsPolicyStatus.isGranted &&
-        audioStatus.isGranted &&
+        // accessNotificationsPolicyStatus.isGranted &&
+        // audioStatus.isGranted && // Not obligatory
         mediaStatus.isGranted &&
         microStatus.isGranted) return true;
 
@@ -95,16 +95,16 @@ class CSPermissions {
   static statusOf(CSPermissionName name) async {
     var cameraStatus = await Permission.camera.status;
     var accessNotificationsStatus = await Permission.notification.status;
-    var accessNotificationsPolicyStatus = await Permission.accessNotificationPolicy.status;
+    // var accessNotificationsPolicyStatus = await Permission.accessNotificationPolicy.status;
     var mediaLocation = await Permission.accessMediaLocation.status;
-    var audioStatus = await Permission.audio.status;
+    // var audioStatus = await Permission.audio.status;
     var mediaStatus = await Permission.mediaLibrary.status;
     var microStatus = await Permission.microphone.status;
 
     if (cameraStatus.isGranted &&
         accessNotificationsStatus.isGranted &&
-        accessNotificationsPolicyStatus.isGranted &&
-        audioStatus.isGranted &&
+        // accessNotificationsPolicyStatus.isGranted &&
+        // audioStatus.isGranted &&
         mediaStatus.isGranted &&
         mediaLocation.isGranted &&
         microStatus.isGranted) return true;

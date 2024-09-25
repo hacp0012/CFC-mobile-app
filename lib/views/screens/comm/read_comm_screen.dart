@@ -10,10 +10,10 @@ import 'package:cfc_christ/views/components/c_comments_view_handler_component.da
 import 'package:cfc_christ/views/components/c_images_grid_group_view_component.dart';
 import 'package:cfc_christ/views/layouts/default_layout.dart';
 import 'package:cfc_christ/views/screens/user/user_profile_details_screen.dart';
-import 'package:cfc_christ/views/widgets/c_tts_reader_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:widget_and_text_animator/widget_and_text_animator.dart';
@@ -90,7 +90,7 @@ class _ReadCommScreenState extends State<ReadCommScreen> {
                       padding: const EdgeInsets.all(CConstants.GOLDEN_SIZE),
                       child: Shimmer.fromColors(
                         baseColor: Theme.of(context).colorScheme.surface,
-                        highlightColor: Theme.of(context).colorScheme.surfaceContainer,
+                        highlightColor: Theme.of(context).colorScheme.primaryContainer.withAlpha(6),
                         child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Card(child: SizedBox(height: 9.0 * 3, width: double.infinity)),
                           SizedBox(height: 9.0),
@@ -169,7 +169,7 @@ class _ReadCommScreenState extends State<ReadCommScreen> {
                               borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS),
                             ),
                             child: Text(
-                              comData['status'] == '' ? "Prévu" : 'Réalisé',
+                              comData['status'] == 'INWAIT' ? "Prévu" : 'Réalisé',
                               style: Theme.of(context).textTheme.labelMedium?.copyWith(color: Colors.black),
                             ),
                           ),
@@ -189,12 +189,12 @@ class _ReadCommScreenState extends State<ReadCommScreen> {
                             Expanded(
                               child: SelectableText(
                                 comData['title'] ?? '...',
-                                style: Theme.of(context).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.bold),
+                                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 18),
                               ),
                             ),
 
                             // TTS reader :
-                            CTtsReaderWidget.icon(text: () => comData['text'] ?? '')
+                            /*CTtsReaderWidget.icon(text: () => comData['text'] ?? '')*/
                           ],
                         ),
                       ),
@@ -242,10 +242,15 @@ class _ReadCommScreenState extends State<ReadCommScreen> {
 
                       // --- TEXT BODY :
                       const SizedBox(height: CConstants.GOLDEN_SIZE * 1),
-                      SelectableText(
-                        comData['text'] ?? '...',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
+                      // SelectableText(
+                      //   comData['text'] ?? '...',
+                      //   style: Theme.of(context).textTheme.bodyMedium,
+                      // ),
+
+                      Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                        Expanded(
+                            child: SelectionArea(child: MarkdownBody(data: comData['text'] ?? '...', selectable: false))),
+                      ]),
 
                       // --- Download document -->
                       const SizedBox(height: CConstants.GOLDEN_SIZE),
@@ -301,7 +306,7 @@ class _ReadCommScreenState extends State<ReadCommScreen> {
                           Expanded(
                             child: Column(mainAxisSize: MainAxisSize.min, children: [
                               if ((reactionsData['likes']?['count'] ?? 0) == 1)
-                                const Text("Une personnee aime cet écho")
+                                const Text("Une personnee aime cet communiqué")
                               else
                                 Text("${(reactionsData['likes']?['count'] ?? 0)} personnes aiment cet écho"),
                               TextButton.icon(

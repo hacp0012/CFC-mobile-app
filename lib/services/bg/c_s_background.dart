@@ -13,10 +13,10 @@ class CSBackground {
       iosConfiguration: IosConfiguration(),
       androidConfiguration: AndroidConfiguration(
         onStart: onStart,
-        autoStart: false, // ! The start is set in notification service permission.
+        autoStart: true, // ! The start is set in notification service permission.
         autoStartOnBoot: true,
         isForegroundMode: false,
-        foregroundServiceType: AndroidForegroundType.dataSync,
+        foregroundServiceTypes: [AndroidForegroundType.dataSync],
       ),
     );
   }

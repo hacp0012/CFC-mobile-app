@@ -19,7 +19,6 @@ import 'package:cfc_christ/views/widgets/c_snackbar_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:go_router/go_router.dart';
 import 'package:styled_text/styled_text.dart';
 
@@ -106,7 +105,10 @@ class _UserPublicationsListScreenState extends State<UserPublicationsListScreen>
           // --> BODY
           body: PageView(
             controller: pageController,
-            onPageChanged: (index) => tabController.animateTo(index, duration: 900.ms, curve: Curves.ease),
+            onPageChanged: (index) {
+              setState(() =>tabIndex = index);
+              tabController.animateTo(index, duration: 900.ms, curve: Curves.ease);
+            },
             children: [
               // --> Echo :
               RefreshIndicator(
@@ -541,7 +543,27 @@ class _UserPublicationsListScreenState extends State<UserPublicationsListScreen>
           ),
 
           // --> Floating button :
-          floatingActionButton: SpeedDial(
+          floatingActionButton: FloatingActionButton.extended(
+            icon: const Icon(CupertinoIcons.add),
+            label: Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.start, children: [
+              const Text("Nouveau"),
+              Text(
+                {0: "écho", 1: "communiqué", 2: "enseignement"}[tabIndex] ?? '',
+                style: Theme.of(context).textTheme.labelSmall,
+              ),
+            ]),
+            onPressed: () {
+              if (tabIndex == 0) {
+                context.pushNamed(NewEchoScreen.routeName);
+              } else if (tabIndex == 1) {
+                context.pushNamed(NewCommScreen.routeName);
+              } else if (tabIndex == 2) {
+                context.pushNamed(NewTeachingScreen.routeName);
+              }
+            },
+          ),
+
+          /*floatingActionButton: SpeedDial(
             // visible: showFloatingActionButton,
             shape: const StadiumBorder(),
             activeIcon: CupertinoIcons.xmark,
@@ -568,7 +590,7 @@ class _UserPublicationsListScreenState extends State<UserPublicationsListScreen>
                 onTap: () => context.pushNamed(NewTeachingScreen.routeName),
               ),
             ],
-          ),
+          ),*/
         ),
       ),
     );
@@ -609,9 +631,10 @@ class _UserPublicationsListScreenState extends State<UserPublicationsListScreen>
             comLoadingState = null;
           });
         }
-      }, (e) => setState(() {
-        comLoadingState = null;
-      }));
+      },
+          (e) => setState(() {
+                comLoadingState = null;
+              }));
     }
   }
 

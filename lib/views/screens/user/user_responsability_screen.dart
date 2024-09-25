@@ -143,9 +143,9 @@ class _UserResponsabilityScreenState extends State<UserResponsabilityScreen> {
                           initialSelection: userData?['role']?['level'],
                           onSelected: (value) => setedData['level'] = value,
                           dropdownMenuEntries: const [
-                            DropdownMenuEntry(value: 'POOL', label: "Pool"),
-                            DropdownMenuEntry(value: 'COM', label: "Communauté locale"),
-                            DropdownMenuEntry(value: 'NA', label: "Noyau d'affermissement"),
+                            DropdownMenuEntry(value: 'pool', label: "Pool"),
+                            DropdownMenuEntry(value: 'com_loc', label: "Communauté locale"),
+                            DropdownMenuEntry(value: 'noyau_af', label: "Noyau d'affermissement"),
                           ],
                         ),
                       ),
@@ -248,6 +248,7 @@ class _UserResponsabilityScreenState extends State<UserResponsabilityScreen> {
           LoginMv().downloadAndInstallUserDatas(onFinish: () {
             _s(() {
               userData = UserMv.data;
+              viewState = 1;
               _initView();
             });
           }, onFailed: () {

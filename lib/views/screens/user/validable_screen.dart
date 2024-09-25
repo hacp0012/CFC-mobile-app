@@ -75,8 +75,8 @@ class _ValidableScreenState extends State<ValidableScreen> {
                               text: "Vous n'avez aucune demande d'approbation. "
                                   '<br/>'
                                   '<br/>'
-                                  "Les demandes d'approbations sont envoyés par des personnes "
-                                  "désirent devenir votre partenaire, votre enfant ou autres.",
+                                  "Les demandes d'approbations sont envoyés par des utilisateurs "
+                                  "qui indiquent être votre frère/sœur, votre enfant ou filleul.",
                               tags: CStyledTextTags().tags,
                             ),
                           ],

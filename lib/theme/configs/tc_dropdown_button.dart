@@ -11,7 +11,7 @@ class TcDropdownButton {
       // contentPadding: const EdgeInsets.symmetric(horizontal: CConstants.GOLDEN_SIZE / 2),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS),
-        borderSide: BorderSide.none,
+        // borderSide: BorderSide.none,
         gapPadding: 1.0,
       ),
       constraints: const BoxConstraints(maxHeight: CConstants.GOLDEN_SIZE * 5.4),
@@ -29,7 +29,7 @@ class TcDropdownButton {
 
   static DropdownMenuThemeData dark = DropdownMenuThemeData(
     inputDecorationTheme: InputDecorationTheme(
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS / 2)),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS)),
       isDense: true,
       // contentPadding: const EdgeInsets.symmetric(horizontal: CConstants.GOLDEN_SIZE / 2),
       constraints: const BoxConstraints(maxHeight: CConstants.GOLDEN_SIZE * 5.4),

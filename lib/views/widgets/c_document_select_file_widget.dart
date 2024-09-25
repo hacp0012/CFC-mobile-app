@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
 class CDocumentSelectFileWidget extends StatefulWidget {
   const CDocumentSelectFileWidget({super.key, required this.onSelect});
@@ -34,10 +35,13 @@ class _CDocumentSelectFileWidgetState extends State<CDocumentSelectFileWidget> {
           // Pan
           const SizedBox(width: CConstants.GOLDEN_SIZE),
           Expanded(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Text("Attacher un document : .docx, .doc ou .txt"),
-              Text(selectedFile?.name ?? 'Aucun document sélectionné', style: Theme.of(context).textTheme.labelMedium),
-            ]),
+            child: GestureAnimator(
+              onTap: selectedFile == null && widget.onSelect != null ? selectFile : null,
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Text("Attacher un document : docx, doc, pfd ou txt"),
+                Text(selectedFile?.name ?? 'Aucun document sélectionné', style: Theme.of(context).textTheme.labelMedium),
+              ]),
+            ),
           ),
 
           // -- Action --
@@ -57,7 +61,7 @@ class _CDocumentSelectFileWidgetState extends State<CDocumentSelectFileWidget> {
   Future<void> selectFile() async {
     FilePickerResult? filePicker = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['doc', 'docx', 'txt'],
+      allowedExtensions: ['doc', 'docx', 'txt', 'pdf'],
     );
 
     setState(() => selectedFile = filePicker?.xFiles.first);

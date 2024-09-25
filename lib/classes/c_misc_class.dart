@@ -44,6 +44,13 @@ class CMiscClass {
 
     return "$numberStr$symbole";
   }
+
+  /// Rmove all markdown spacial characters : * _ \n
+  static String remeveMarkdownSymboles(String text) {
+    String newText = text.replaceAll(RegExp(r"[_\*]"), '');
+
+    return newText;
+  }
 }
 
 class PrintableDateHandler {

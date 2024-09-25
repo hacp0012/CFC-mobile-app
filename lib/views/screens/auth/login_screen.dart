@@ -60,9 +60,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   children: [
                     Text(
-                      "Entrez votre numéro de téléphone que vous aviez renseigné au départ, "
-                      "si vous êtes déjà utilisateur de cette application. Si vous êtes nouveau, cliquez "
-                      "sur le lien indiqué en bas pour vous inscrire",
+                      "Veillez entrer le numéro de téléphone que vous aviez renseigné lors de la création de votre compte. "
+                      "Si vous êtes nouveau, cliquez sur le lien ci-dessous pour vous inscrire",
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.labelMedium,
                     ),
@@ -80,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 dropdownMenuEntries: MiscDataHandlerMv.countriesCodes.map((element) {
                                   return DropdownMenuEntry(
                                     value: "${element['code']}",
-                                    label: "${element['country']} ${element['code']}",
+                                    label: "${element['code']}",
                                   );
                                 }).toList(),
                                 initialSelection: loginFieldsData['phone_code'],
@@ -91,6 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Expanded(
                             flex: 2,
                             child: TextFormField(
+                              textCapitalization: TextCapitalization.sentences,
                               validator: CFormValidator([CFormValidator.required()]).validate,
                               decoration: const InputDecoration(hintText: "Numéro de téléphone"),
                               keyboardType: TextInputType.phone,

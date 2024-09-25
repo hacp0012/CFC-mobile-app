@@ -5,7 +5,6 @@ import 'package:cfc_christ/views/layouts/default_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -48,48 +47,27 @@ class _SplashScreenState extends State<SplashScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // --- Logo :
-                  WidgetAnimator(
-                    incomingEffect: WidgetTransitionEffects.incomingSlideInFromBottom(duration: const Duration(seconds: 1)),
-                    // atRestEffect: WidgetRestingEffects.bounce(),
-                    child: CircleAvatar(
-                      backgroundColor: CMiscClass.whenBrightnessOf<Color>(context, dark: CConstants.LIGHT_COLOR),
-                      radius: CConstants.GOLDEN_SIZE * 8,
-                      // backgroundColor: CConstants.LIGHT_COLOR,
-                      child: Image.asset(
-                        'lib/assets/icons/LOGO_CFC_512.png',
-                        width: CConstants.GOLDEN_SIZE * 27,
-                        height: CConstants.GOLDEN_SIZE * 27,
-                      ),
+                  CircleAvatar(
+                    backgroundColor: CMiscClass.whenBrightnessOf<Color>(context, dark: CConstants.LIGHT_COLOR),
+                    radius: CConstants.GOLDEN_SIZE * 8,
+                    // backgroundColor: CConstants.LIGHT_COLOR,
+                    child: Image.asset(
+                      'lib/assets/icons/LOGO_CFC_512.png',
+                      width: CConstants.GOLDEN_SIZE * 27,
+                      height: CConstants.GOLDEN_SIZE * 27,
                     ),
                   ),
 
                   // --- Logo Title :
-                  WidgetAnimator(
-                    incomingEffect: WidgetTransitionEffects.incomingSlideInFromBottom(
-                      duration: const Duration(milliseconds: 1350),
-                    ),
-                    child: const Text(
-                      "CFC",
-                      style: TextStyle(
-                        color: Color(0xF8003EC9),
-                        fontWeight: FontWeight.bold,
-                        fontSize: CConstants.GOLDEN_SIZE * 5,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
+                  const SizedBox(height: CConstants.GOLDEN_SIZE),
+                  Image.asset('lib/assets/icons/b_CFC.png', height: CConstants.GOLDEN_SIZE * 5),
 
                   // --- Message :
                   FittedBox(
-                    child: WidgetAnimator(
-                      incomingEffect: WidgetTransitionEffects.incomingSlideInFromBottom(
-                        duration: const Duration(milliseconds: 1602),
-                      ),
-                      child: Text(
-                        "Communauté Famille Chrétienne",
-                        style: Theme.of(context).textTheme.bodyLarge,
-                        textAlign: TextAlign.center,
-                      ),
+                    child: Text(
+                      "Communauté Famille Chrétienne",
+                      style: Theme.of(context).textTheme.bodyLarge,
+                      textAlign: TextAlign.center,
                     ),
                   ),
 
@@ -122,17 +100,19 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                 ],
               ),
-            ),
+            ).animate().fadeIn(duration: 900.ms),
           ),
         ),
       ),
     );
   }
 
-// FUNCTIONS ----------------------- >
+// FUNCTIONS --------------------------------------------------------------------------------------------------------------- >
   void start() {
-    loadingError = false;
-    showProgressIndicator = true;
+    setState(() {
+      loadingError = false;
+      showProgressIndicator = true;
+    });
 
     CSBoot(
       onFinish: () {

@@ -10,6 +10,6 @@ class TcAppbar {
   );
 
   static AppBarTheme dark = const AppBarTheme(
-    color: Color(0xFF2E2F33),
+    color: Color.fromARGB(255, 33, 45, 61),
   );
 }

@@ -101,6 +101,7 @@ class _NewEchoScreenState extends State<NewEchoScreen> {
                     child: TextFormField(
                       controller: textEditingControllerTitle,
                       validator: CFormValidator([CFormValidator.required(message: "Un titre est requis")]).validate,
+                      textCapitalization: TextCapitalization.sentences,
                       onChanged: (value) => draftInstance.keep('title', value),
                       decoration: const InputDecoration(
                         isCollapsed: false,
@@ -155,6 +156,7 @@ class _NewEchoScreenState extends State<NewEchoScreen> {
                     key: teachingTextFieldKey,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     child: TextFormField(
+                      textCapitalization: TextCapitalization.sentences,
                       controller: textEditingControllerTeaching,
                       validator: CFormValidator([
                         CFormValidator.required(

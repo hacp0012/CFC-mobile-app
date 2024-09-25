@@ -239,6 +239,7 @@ class _EditEchoScreenState extends State<EditEchoScreen> {
                             autovalidateMode: AutovalidateMode.onUserInteraction,
                             child: TextFormField(
                               controller: textEditingControllerTitle,
+                              textCapitalization: TextCapitalization.sentences,
                               validator: CFormValidator([CFormValidator.required(message: "Un titre est requis")]).validate,
                               onChanged: (value) => draftInstance.keep('title', value),
                               decoration: const InputDecoration(
@@ -262,6 +263,7 @@ class _EditEchoScreenState extends State<EditEchoScreen> {
                             key: comTextFieldKkey,
                             autovalidateMode: AutovalidateMode.onUserInteraction,
                             child: TextFormField(
+                              textCapitalization: TextCapitalization.sentences,
                               controller: textEditingControllerCom,
                               validator: CFormValidator([
                                 CFormValidator.required(
@@ -649,7 +651,7 @@ class _EditEchoScreenState extends State<EditEchoScreen> {
   void showPost() {
     if (echoData['audio'] != null) CSAudioPalyer.inst.dispose();
 
-    context.pushNamed(ReadEchoScreen.routeName, extra: {'com_id': widget.echoId});
+    context.pushNamed(ReadEchoScreen.routeName, extra: {'echo_id': widget.echoId});
   }
 
   void openCommentsMan() {

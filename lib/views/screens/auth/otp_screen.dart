@@ -71,7 +71,7 @@ class _OtpScreeState extends State<OtpScreen> {
                         width: CConstants.GOLDEN_SIZE * 36,
                         child: Text(
                           "Nous avons envoyé un code de vérification sur votre "
-                          "numéro de téléphone ($phoneCode) $phoneNumber, saisissez-le sur le champs "
+                          "numéro de téléphone ($phoneCode) $phoneNumber, saisissez-le dans les champs "
                           "ci-dessous pour confirmer et poursuivre, ou "
                           "cliquez sur le bouton ci-dessous pour modifier le "
                           "numéro de téléphone [$_otp]",

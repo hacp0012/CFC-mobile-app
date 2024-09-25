@@ -5,7 +5,6 @@ import 'package:cfc_christ/classes/c_misc_class.dart';
 import 'package:cfc_christ/classes/c_sections_types_enum.dart';
 import 'package:cfc_christ/configs/c_api.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
-import 'package:cfc_christ/configs/c_styled_text_tags.dart';
 import 'package:cfc_christ/model_view/pcn_data_handler_mv.dart';
 import 'package:cfc_christ/theme/c_transition_thme.dart';
 import 'package:cfc_christ/views/components/c_comments_view_handler_component.dart';
@@ -17,9 +16,9 @@ import 'package:cfc_christ/views/widgets/c_tts_reader_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:styled_text/widgets/styled_text.dart';
 import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
 class ReadEchoScreen extends StatefulWidget {
@@ -166,7 +165,12 @@ class _ReadEchoScreenState extends State<ReadEchoScreen> {
                   // --- Title -->
                   const SizedBox(height: CConstants.GOLDEN_SIZE),
                   Row(children: [
-                    Expanded(child: Text(echoData['title'] ?? '--', style: Theme.of(context).textTheme.titleMedium)),
+                    Expanded(
+                      child: Text(
+                        echoData['title'] ?? '--',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 18),
+                      ),
+                    ),
                     // TTS reader :
                     CTtsReaderWidget.icon(text: () => echoData['text']),
                   ]),
@@ -205,10 +209,14 @@ class _ReadEchoScreenState extends State<ReadEchoScreen> {
 
                   // --- SMALL DESCRIPTIONS -->
                   const SizedBox(height: CConstants.GOLDEN_SIZE * 2),
-                  StyledText(
-                    text: echoData['text'],
-                    tags: CStyledTextTags().tags,
-                  ),
+                  // StyledText(
+                  //   text: echoData['text'],
+                  //   tags: CStyledTextTags().tags,
+                  // ),
+
+                  Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                    Expanded(child: SelectionArea(child: MarkdownBody(data: echoData['text'] ?? '---', selectable: false))),
+                  ]),
 
                   // --- Download document -->
                   const SizedBox(height: CConstants.GOLDEN_SIZE),

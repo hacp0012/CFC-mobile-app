@@ -157,11 +157,13 @@ class _HomeScreenPartialDrawerState extends State<HomeScreenPartialDrawer> {
       //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS)),
       //   onTap: () => context.pushNamed(ProfileScreen.routeName),
       // ),
-      ListTile(
-        title: const Text("Mes publications"),
-        leading: const Icon(CupertinoIcons.news),
-        onTap: () => context.pushNamed(UserPublicationsListScreen.routeName),
-      ),
+      // TODO: User role :
+      if (userData['role']?['role'] == 'COMMUNICATION_MANAGER')
+        ListTile(
+          title: const Text("Mes publications"),
+          leading: const Icon(CupertinoIcons.news),
+          onTap: () => context.pushNamed(UserPublicationsListScreen.routeName),
+        ),
       const SizedBox(height: CConstants.GOLDEN_SIZE * 2),
       if (validableCount > 0)
         ListTile(

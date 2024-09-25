@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cfc_christ/classes/c_image_handler_class.dart';
 import 'package:cfc_christ/classes/c_misc_class.dart';
+import 'package:cfc_christ/model_view/pcn_data_handler_mv.dart';
 import 'package:cfc_christ/views/screens/teaching/read_teaching_screen.dart';
-import 'package:faker/faker.dart' hide Color, Image;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
@@ -8,13 +10,24 @@ import 'package:go_router/go_router.dart';
 import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
 class CEnseignementCardListComponent extends StatelessWidget {
-  const CEnseignementCardListComponent({super.key, this.showTypeLabel = false, this.isInFavorite = false});
-
+  const CEnseignementCardListComponent({
+    super.key,
+    required this.teachData,
+    this.showTypeLabel = false,
+    this.isInFavorite = false,
+  });
+  // DATAS -------------------------------------------------------------------------------------------------------------------
   final bool isInFavorite;
   final bool showTypeLabel;
+  final Map teachData;
 
+  // COMPONENT ---------------------------------------------------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
+    Map teach = teachData['teach'];
+    Map reactions = teachData['reactions'];
+    Map poster = teachData['poster'];
+
     return Card(
       // color: Colors.white,
       borderOnForeground: false,
@@ -32,9 +45,9 @@ class CEnseignementCardListComponent extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 1.0),
                 label: const Icon(CupertinoIcons.heart, size: 12),
                 offset: const Offset(3.0, 0.0),
-                child: const CircleAvatar(
+                child: CircleAvatar(
                   radius: CConstants.GOLDEN_SIZE * 2,
-                  backgroundImage: AssetImage('lib/assets/pictures/church_logo.jpg'),
+                  backgroundImage: CachedNetworkImageProvider(CImageHandlerClass.userById(poster['id'])),
                 ),
               ),
               const SizedBox(width: CConstants.GOLDEN_SIZE),
@@ -63,7 +76,7 @@ class CEnseignementCardListComponent extends StatelessWidget {
                       ),
                     ),
                   Text(
-                    'Pool de ${Faker().company.name()}',
+                    _managePCN(teach['visibility']),
                     style: Theme.of(context).textTheme.labelSmall,
                   ),
                 ]),
@@ -74,35 +87,40 @@ class CEnseignementCardListComponent extends StatelessWidget {
             const SizedBox(width: 9.0),
             Column(children: [
               // --- Texts :
-              Row(children: [
-                Expanded(
-                  child: Text(
-                    Faker().lorem.sentence(),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.titleSmall,
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 9.0),
+                child: Row(children: [
+                  Expanded(
+                    child: Text(
+                      teach['title'],
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 18),
+                    ),
                   ),
-                ),
-              ]),
+                ]),
+              ),
 
-              const ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(CConstants.DEFAULT_RADIUS)),
+              ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(CConstants.DEFAULT_RADIUS)),
                 child: Image(
-                  image: AssetImage('lib/assets/pictures/pray_hand.jpg'),
+                  image: CachedNetworkImageProvider(
+                    CImageHandlerClass.byPid(teach['picture'], defaultImage: 'images.image_1'),
+                  ),
                   fit: BoxFit.cover,
                   height: CConstants.GOLDEN_SIZE * 17,
                   width: double.infinity,
                 ),
               ),
 
-              Text(
-                Faker().lorem.sentences(4).join(' '),
-                maxLines: 5,
-                overflow: TextOverflow.ellipsis,
-                // style: Theme.of(context).textTheme.bodyMedium,
-              ),
+              // Text :
+              Row(children: [
+                Expanded(
+                  child: Text(CMiscClass.remeveMarkdownSymboles(teach['text']), maxLines: 5, overflow: TextOverflow.ellipsis),
+                ),
+              ]),
 
-              // --- Actions :
+              // --- Reactions :
               Padding(
                 padding: const EdgeInsets.only(top: 9.0),
                 child: FittedBox(
@@ -110,7 +128,10 @@ class CEnseignementCardListComponent extends StatelessWidget {
                     Row(children: [
                       const Icon(CupertinoIcons.clock, size: 16),
                       const SizedBox(width: CConstants.GOLDEN_SIZE / 2),
-                      Text("il y a 15 mins", style: Theme.of(context).textTheme.labelSmall)
+                      Text(
+                        CMiscClass.date(DateTime.parse(teach['created_at'])).ago(),
+                        style: Theme.of(context).textTheme.labelSmall,
+                      )
                     ]),
 
                     // --- VIEWS :
@@ -118,7 +139,10 @@ class CEnseignementCardListComponent extends StatelessWidget {
                     Row(children: [
                       const Icon(CupertinoIcons.eye, size: 16),
                       const SizedBox(width: CConstants.GOLDEN_SIZE / 2),
-                      Text("29 vues", style: Theme.of(context).textTheme.labelSmall)
+                      Text(
+                        "${CMiscClass.numberAbrev((reactions['views']['count'] as int).toDouble())} vues",
+                        style: Theme.of(context).textTheme.labelSmall,
+                      )
                     ]),
 
                     // --- LIKES :
@@ -126,7 +150,10 @@ class CEnseignementCardListComponent extends StatelessWidget {
                     Row(children: [
                       const Icon(CupertinoIcons.hand_thumbsup, size: 16),
                       const SizedBox(width: CConstants.GOLDEN_SIZE / 2),
-                      Text("8 j'aims", style: Theme.of(context).textTheme.labelSmall)
+                      Text(
+                        "${CMiscClass.numberAbrev((reactions['likes']['count'] as int).toDouble())} j'aims",
+                        style: Theme.of(context).textTheme.labelSmall,
+                      )
                     ]),
 
                     // --- COMMENTS :
@@ -134,7 +161,10 @@ class CEnseignementCardListComponent extends StatelessWidget {
                     Row(children: [
                       const Icon(CupertinoIcons.chat_bubble_2, size: 16),
                       const SizedBox(width: CConstants.GOLDEN_SIZE / 2),
-                      Text("4 Commentaires", style: Theme.of(context).textTheme.labelSmall)
+                      Text(
+                        "${CMiscClass.numberAbrev((reactions['comments']['count'] as int).toDouble())} Commentaires",
+                        style: Theme.of(context).textTheme.labelSmall,
+                      )
                     ]),
                   ]),
                 ),
@@ -142,8 +172,29 @@ class CEnseignementCardListComponent extends StatelessWidget {
             ]),
           ]),
         ),
-        onTap: () => context.pushNamed(ReadTeachingScreen.routeName),
+        onTap: () => context.pushNamed(ReadTeachingScreen.routeName, extra: {'teach_id': teach['id']}),
       ),
     );
+  }
+
+  // METHODS -----------------------------------------------------------------------------------------------------------------
+  String _managePCN(Map? visibility) {
+    Map? data = {};
+
+    switch (visibility?['level']) {
+      case 'pool':
+        data = PcnDataHandlerMv.getPool(visibility?['level_id']);
+        break;
+      case 'com_loc':
+        data = PcnDataHandlerMv.getCom(visibility?['level_id']);
+        break;
+      case 'noyau_af':
+        data = PcnDataHandlerMv.getNa(visibility?['level_id']);
+        break;
+    }
+
+    if (data != null) return "Pool de ${data['nom']}";
+
+    return "PCN inconu";
   }
 }

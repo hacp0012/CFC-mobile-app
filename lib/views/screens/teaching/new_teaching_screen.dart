@@ -22,6 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:markdown_toolbar/markdown_toolbar.dart';
 import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
 class NewTeachingScreen extends StatefulWidget {
@@ -51,6 +52,7 @@ class _NewTeachingScreenState extends State<NewTeachingScreen> {
   var teachingTextFieldKey = GlobalKey<FormState>();
   var dateVerseTextFieldKey = GlobalKey<FormState>();
   var predicatorTextFieldKey = GlobalKey<FormState>();
+  final _focusNodeBodyTextField = FocusNode();
 
   String? selectHeadPicture;
   String? attachedDocument;
@@ -75,7 +77,12 @@ class _NewTeachingScreenState extends State<NewTeachingScreen> {
   }
 
   @override
-  void setState(VoidCallback fn) => super.setState(fn);
+  void dispose() {
+    _focusNodeBodyTextField.dispose();
+    textEditingControllerTeaching.dispose();
+
+    super.dispose();
+  }
 
   // VIEW ------------------------------------------------------------------------------------------------------------------->
   @override
@@ -102,22 +109,20 @@ class _NewTeachingScreenState extends State<NewTeachingScreen> {
             ListView(padding: const EdgeInsets.symmetric(horizontal: CConstants.GOLDEN_SIZE), children: [
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: CConstants.GOLDEN_SIZE),
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(CConstants.DEFAULT_RADIUS / 2)),
-                  child: Form(
-                    key: titleTextFieldKey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    child: TextFormField(
-                      controller: textEditingControllerTitle,
-                      validator: CFormValidator([CFormValidator.required(message: "Un titre est requis")]).validate,
-                      onChanged: (value) => draftInstance.keep('title', value),
-                      decoration: const InputDecoration(
-                        isCollapsed: false,
-                        hintText: "Entrer le titre de l'enseignement",
-                        labelText: "Titre de l'enseignement",
-                        border: InputBorder.none,
-                        prefixIcon: Icon(CupertinoIcons.bookmark_fill),
-                      ),
+                child: Form(
+                  key: titleTextFieldKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: TextFormField(
+                    textCapitalization: TextCapitalization.sentences,
+                    controller: textEditingControllerTitle,
+                    validator: CFormValidator([CFormValidator.required(message: "Un titre est requis")]).validate,
+                    onChanged: (value) => draftInstance.keep('title', value),
+                    decoration: const InputDecoration(
+                      isCollapsed: false,
+                      hintText: "Entrer le titre de l'enseignement",
+                      labelText: "Titre de l'enseignement",
+                      // border: InputBorder.none,
+                      prefixIcon: Icon(CupertinoIcons.bookmark_fill),
                     ),
                   ),
                 ),
@@ -191,52 +196,53 @@ class _NewTeachingScreenState extends State<NewTeachingScreen> {
               // --- Date and Verse :
               Padding(
                 padding: const EdgeInsets.only(top: CConstants.GOLDEN_SIZE),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS / 2),
-                  child: Form(
-                    key: dateVerseTextFieldKey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    child: Row(children: [
-                      // --- Teaching date :
-                      Expanded(
-                        flex: 3,
-                        child: TextFormField(
-                          controller: textEditingControllerDate,
-                          validator: CFormValidator([CFormValidator.date(message: "Ex. jj/mm/aaaa")]).validate,
-                          onChanged: (value) => draftInstance.keep('date', value),
-                          keyboardType: TextInputType.datetime,
-                          inputFormatters: [TextInputMask(mask: '99/99/9999', placeholder: '-', maxPlaceHolders: 8)],
-                          decoration: const InputDecoration(
-                            isCollapsed: false,
-                            hintText: "00/00/2024",
-                            labelText: "Date de prédication",
-                            border: InputBorder.none,
-                            prefixIcon: Icon(CupertinoIcons.calendar),
-                            prefixIconConstraints: BoxConstraints(minWidth: CConstants.GOLDEN_SIZE * 4),
-                          ),
+                child: Form(
+                  key: dateVerseTextFieldKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: Row(children: [
+                    // --- Teaching date :
+                    Expanded(
+                      flex: 3,
+                      child: TextFormField(
+                        controller: textEditingControllerDate,
+                        validator: CFormValidator([CFormValidator.required()]).validate,
+                        readOnly: true,
+                        textCapitalization: TextCapitalization.sentences,
+                        onChanged: (value) => draftInstance.keep('date', value),
+                        keyboardType: TextInputType.datetime,
+                        inputFormatters: [TextInputMask(mask: '99/99/9999', placeholder: '-', maxPlaceHolders: 8)],
+                        decoration: const InputDecoration(
+                          isCollapsed: false,
+                          hintText: "00/00/2024",
+                          labelText: "Date de prédication",
+                          // border: InputBorder.none,
+                          prefixIcon: Icon(CupertinoIcons.calendar),
+                          prefixIconConstraints: BoxConstraints(minWidth: CConstants.GOLDEN_SIZE * 4),
                         ),
+                        onTap: _datePicker,
                       ),
+                    ),
 
-                      // --- Biblic verse :
-                      const SizedBox(width: CConstants.GOLDEN_SIZE),
-                      Expanded(
-                        flex: 4,
-                        child: TextFormField(
-                          controller: textEditingControllerVerse,
-                          // validator: CFormValidator([CFormValidator.date()]).validate,
-                          onChanged: (value) => draftInstance.keep('verse', value),
-                          decoration: const InputDecoration(
-                            isCollapsed: false,
-                            hintText: "Versé ...",
-                            labelText: "Versé biblique",
-                            border: InputBorder.none,
-                            prefixIcon: Icon(CupertinoIcons.book),
-                            prefixIconConstraints: BoxConstraints(minWidth: CConstants.GOLDEN_SIZE * 4),
-                          ),
+                    // --- Biblic verse :
+                    const SizedBox(width: CConstants.GOLDEN_SIZE),
+                    Expanded(
+                      flex: 4,
+                      child: TextFormField(
+                        textCapitalization: TextCapitalization.sentences,
+                        controller: textEditingControllerVerse,
+                        // validator: CFormValidator([CFormValidator.date()]).validate,
+                        onChanged: (value) => draftInstance.keep('verse', value),
+                        decoration: const InputDecoration(
+                          isCollapsed: false,
+                          hintText: "Versé ...",
+                          labelText: "Versé biblique",
+                          // border: InputBorder.none,
+                          prefixIcon: Icon(CupertinoIcons.book),
+                          prefixIconConstraints: BoxConstraints(minWidth: CConstants.GOLDEN_SIZE * 4),
                         ),
                       ),
-                    ]),
-                  ),
+                    ),
+                  ]),
                 ),
               ),
 
@@ -246,20 +252,18 @@ class _NewTeachingScreenState extends State<NewTeachingScreen> {
                 child: Form(
                   key: predicatorTextFieldKey,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS / 2),
-                    child: TextFormField(
-                      controller: textEditingControllerPredicator,
-                      validator:
-                          CFormValidator([CFormValidator.required(message: "Un nom d'un prédicateur est requise")]).validate,
-                      onChanged: (value) => draftInstance.keep('predicator', value),
-                      decoration: const InputDecoration(
-                        isCollapsed: false,
-                        hintText: "Entrer le nom du prédicateur",
-                        labelText: "Prédicateur de l'enseignement",
-                        border: InputBorder.none,
-                        prefixIcon: Icon(CupertinoIcons.person_alt),
-                      ),
+                  child: TextFormField(
+                    controller: textEditingControllerPredicator,
+                    textCapitalization: TextCapitalization.sentences,
+                    validator:
+                        CFormValidator([CFormValidator.required(message: "Un nom d'un prédicateur est requise")]).validate,
+                    onChanged: (value) => draftInstance.keep('predicator', value),
+                    decoration: const InputDecoration(
+                      isCollapsed: false,
+                      hintText: "Entrer le nom du prédicateur",
+                      labelText: "Prédicateur de l'enseignement",
+                      // border: InputBorder.none,
+                      prefixIcon: Icon(CupertinoIcons.person_alt),
                     ),
                   ),
                 ),
@@ -271,37 +275,55 @@ class _NewTeachingScreenState extends State<NewTeachingScreen> {
               // --- Text body :
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: CConstants.GOLDEN_SIZE),
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(CConstants.DEFAULT_RADIUS / 2)),
-                  child: Form(
-                    key: teachingTextFieldKey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    child: TextFormField(
-                      controller: textEditingControllerTeaching,
-                      validator: CFormValidator([
-                        CFormValidator.required(
-                          message: "Un tout petit texte descriptif de votre enseignement est nécessaire.",
-                        ),
-                        CFormValidator.min(9),
-                      ]).validate,
-                      onChanged: (value) => draftInstance.keep('teaching', value),
-                      decoration: const InputDecoration(
-                        labelText: "Enseignement en texte (obligatoire)",
-                        hintText: "Écrivez le cours de vôtre enseignement ici ... Juste quelques lignes ou plus",
-                        border: InputBorder.none,
-                        hintMaxLines: 2,
-                        helperMaxLines: 2,
-                        errorMaxLines: 2,
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                        prefixIcon: Icon(CupertinoIcons.t_bubble),
-                        prefixIconConstraints: BoxConstraints(minWidth: CConstants.GOLDEN_SIZE * 4),
-                        constraints: BoxConstraints(maxHeight: CConstants.GOLDEN_SIZE * 36),
+                child: Form(
+                  key: teachingTextFieldKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: TextFormField(
+                    focusNode: _focusNodeBodyTextField,
+                    controller: textEditingControllerTeaching,
+                    textCapitalization: TextCapitalization.sentences,
+                    validator: CFormValidator([
+                      CFormValidator.required(
+                        message: "Un tout petit texte descriptif de votre enseignement est nécessaire.",
                       ),
-                      maxLines: null,
-                      keyboardType: TextInputType.multiline,
+                      CFormValidator.min(9),
+                    ]).validate,
+                    onChanged: (value) => draftInstance.keep('teaching', value),
+                    decoration: const InputDecoration(
+                      labelText: "Enseignement en texte (obligatoire)",
+                      hintText: "Écrivez le cours de vôtre enseignement ici ... Juste quelques lignes ou plus",
+                      // border: InputBorder.none,
+                      hintMaxLines: 2,
+                      helperMaxLines: 2,
+                      errorMaxLines: 2,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      prefixIcon: Icon(CupertinoIcons.t_bubble),
+                      prefixIconConstraints: BoxConstraints(minWidth: CConstants.GOLDEN_SIZE * 4),
+                      constraints: BoxConstraints(maxHeight: CConstants.GOLDEN_SIZE * 36),
                     ),
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
+                    // onTapOutside: (event) => _focusNodeBodyTextField.unfocus(),
                   ),
                 ),
+              ),
+              // Markdown toolbar
+              MarkdownToolbar(
+                useIncludedTextField: false,
+                controller: textEditingControllerTeaching,
+                focusNode: _focusNodeBodyTextField,
+
+                alignCollapseButtonEnd: true,
+                borderRadius: BorderRadius.circular(CConstants.GOLDEN_SIZE / 2),
+                spacing: CConstants.GOLDEN_SIZE / 2,
+                iconSize: CConstants.GOLDEN_SIZE * 2,
+                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                flipCollapseButtonIcon: true,
+                height: CConstants.GOLDEN_SIZE * 3,
+                width: CConstants.GOLDEN_SIZE * 3,
+                iconColor: Theme.of(context).colorScheme.onSurface,
+                hideCode: true,
+                hideImage: true,
               ),
 
               // --- TTS reader button :
@@ -587,6 +609,19 @@ class _NewTeachingScreenState extends State<NewTeachingScreen> {
       );
 
       context.pop();
+    });
+  }
+
+  void _datePicker() {
+    showDatePicker(
+      context: context,
+      firstDate: DateTime(DateTime.now().year - 3),
+      lastDate: DateTime(DateTime.now().year + 9),
+      helpText: "Date de prédication",
+    ).then((selected) {
+      if (selected != null) {
+        textEditingControllerDate.text = "${selected.day}/${selected.month}/${selected.year}";
+      }
     });
   }
 }

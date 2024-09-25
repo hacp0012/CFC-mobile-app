@@ -21,7 +21,9 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
 
   // INITIALIZER ------------------------------------------------------------------------------------------------------------>
   @override
-  void setState(VoidCallback fn) => super.setState(fn);
+  void setState(VoidCallback fn) {
+    super.setState(fn);
+  }
 
   @override
   void initState() {
@@ -87,6 +89,27 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
 
             // --- Audio :
             FutureBuilder(
+              future: Permission.camera.status,
+              builder: (context, snapshot) {
+                bool state = false;
+
+                if (snapshot.hasData) state = snapshot.data?.isGranted ?? false;
+
+                return CheckboxListTile(
+                  title: const Text("Appareil photo"),
+                  subtitle: const Text("Permettre l'accès aux périphériques de l'appareil photo."),
+                  secondary: const Icon(CupertinoIcons.camera),
+                  isThreeLine: true,
+                  value: state,
+                  onChanged: (state) => setState(() {
+                    Permission.camera.request();
+                  }),
+                );
+              },
+            ),
+
+            // --- Camera :
+            FutureBuilder(
               future: Permission.audio.status,
               builder: (context, snapshot) {
                 bool state = false;
@@ -99,7 +122,9 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
                   secondary: const Icon(CupertinoIcons.music_note),
                   isThreeLine: true,
                   value: state,
-                  onChanged: (state) => setState(() => Permission.audio.request()),
+                  onChanged: (state) => setState(() {
+                    Permission.audio.request();
+                  }),
                 );
               },
             ),
@@ -118,29 +143,31 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
                   isThreeLine: true,
                   secondary: const Icon(CupertinoIcons.bell),
                   value: state,
-                  onChanged: (state) => setState(() => Permission.notification.request()),
+                  onChanged: (state) => setState(() {
+                    Permission.notification.request();
+                  }),
                 );
               },
             ),
 
             // --- Notification Policy :
-            FutureBuilder(
-              future: Permission.accessNotificationPolicy.status,
-              builder: (context, snapshot) {
-                bool state = false;
-
-                if (snapshot.hasData) state = snapshot.data?.isGranted ?? false;
-
-                return CheckboxListTile(
-                  title: const Text("La capabilité à ne pas vous déranger"),
-                  subtitle: const Text("Permettre de vous envoyez des notifications programmé à des moments opportun."),
-                  isThreeLine: true,
-                  secondary: const Icon(CupertinoIcons.bell_slash),
-                  value: state,
-                  onChanged: (state) => setState(() => Permission.accessNotificationPolicy.request()),
-                );
-              },
-            ),
+            // FutureBuilder(
+            //   future: Permission.accessNotificationPolicy.status,
+            //   builder: (context, snapshot) {
+            //     bool state = false;
+            //
+            //     if (snapshot.hasData) state = snapshot.data?.isGranted ?? false;
+            //
+            //     return CheckboxListTile(
+            //       title: const Text("La capabilité à ne pas vous déranger"),
+            //       subtitle: const Text("Permettre de vous envoyez des notifications programmé à des moments opportun."),
+            //       isThreeLine: true,
+            //       secondary: const Icon(CupertinoIcons.bell_slash),
+            //       value: state,
+            //       onChanged: (state) => setState(() => Permission.accessNotificationPolicy.request()),
+            //     );
+            //   },
+            // ),
 
             // --- Media librery :
             FutureBuilder(
@@ -156,7 +183,9 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
                   isThreeLine: true,
                   secondary: const Icon(CupertinoIcons.film_fill),
                   value: state,
-                  onChanged: (state) => setState(() => Permission.mediaLibrary.request()),
+                  onChanged: (state) => setState(() {
+                    Permission.mediaLibrary.request();
+                  }),
                 );
               },
             ),
@@ -194,7 +223,9 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
                   isThreeLine: true,
                   secondary: const Icon(CupertinoIcons.mic),
                   value: state,
-                  onChanged: (state) => setState(() => Permission.microphone.request()),
+                  onChanged: (state) => setState(() {
+                    Permission.microphone.request();
+                  }),
                 );
               },
             ),
@@ -221,7 +252,9 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
 
                 return Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                   ElevatedButton(
-                    onPressed: state == false ? null : () => CSBoot.openSession(context),
+                    onPressed: state == false ? null : () {
+                      CSBoot.openSession(context);
+                    },
                     child: const Text("Continuer"),
                   ),
                 ]);

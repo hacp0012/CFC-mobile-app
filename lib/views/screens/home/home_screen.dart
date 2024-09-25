@@ -13,12 +13,9 @@ import 'package:cfc_christ/views/screens/app/donate_screen.dart';
 import 'package:cfc_christ/views/screens/app/find_cfc_around_screen.dart';
 import 'package:cfc_christ/views/screens/app/invite_friend_screen.dart';
 import 'package:cfc_christ/views/screens/app/leave_notice_screen.dart';
-import 'package:cfc_christ/views/screens/app/search_screen.dart';
 import 'package:cfc_christ/views/screens/comm/new_comm_screen.dart';
 import 'package:cfc_christ/views/screens/echo/new_echo_screen.dart';
 import 'package:cfc_christ/views/screens/home/partials/home_screen_partial_drawer.dart';
-import 'package:cfc_christ/views/screens/home/partials/home_screen_partial_view_echos.dart';
-import 'package:cfc_christ/views/screens/home/partials/home_screen_partial_view_favorits.dart';
 import 'package:cfc_christ/views/screens/notification/notifications_screen.dart';
 import 'package:cfc_christ/views/screens/teaching/new_teaching_screen.dart';
 import 'package:cfc_christ/views/screens/user/profile_screen.dart';
@@ -31,6 +28,8 @@ import 'package:flutter_cache_manager_dio/flutter_cache_manager_dio.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:go_router/go_router.dart';
 import 'package:watch_it/watch_it.dart';
+import 'package:motion_tab_bar_v2/motion-tab-bar.dart';
+import 'package:motion_tab_bar_v2/motion-tab-controller.dart';
 
 class HomeScreen extends WatchingStatefulWidget {
   static const String routeName = 'home';
@@ -47,7 +46,7 @@ class HomeScreen extends WatchingStatefulWidget {
   State<StatefulWidget> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   int selectedPageViewIndex = 0;
   late PageController mainPagesViewControler;
   bool showFloatingActionButton = true;
@@ -56,6 +55,8 @@ class _HomeScreenState extends State<HomeScreen> {
     ThemeMode.dark: CupertinoIcons.moon,
     ThemeMode.system: CupertinoIcons.sunrise_fill,
   };
+
+  MotionTabBarController? _motionTabBarController;
 
   Map userData = {};
 
@@ -70,6 +71,19 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
 
     mainPagesViewControler = PageController(initialPage: selectedPageViewIndex);
+
+    _motionTabBarController = MotionTabBarController(
+      initialIndex: 0,
+      length: 4,
+      vsync: this,
+    );
+  }
+
+  @override
+  void dispose() {
+    _motionTabBarController!.dispose();
+
+    super.dispose();
   }
 
   // VIEW ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,7 +92,11 @@ class _HomeScreenState extends State<HomeScreen> {
     int countNotifications = watchValue((CDefaultState n) => n.notificationsCount);
 
     return DefaultLayout(
-      navColor: Theme.of(context).colorScheme.surfaceContainer,
+      navColor: CMiscClass.whenBrightnessOf(
+        context,
+        light: Theme.of(context).colorScheme.surfaceContainer,
+        dark: const Color.fromARGB(255, 33, 45, 61),
+      ),
       child: Scaffold(
         // --- AppBar :
         appBar: AppBar(
@@ -126,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
           // ),
           // title: const Text("CFC", style: TextStyle(fontWeight: FontWeight.bold)),
           actions: [
-            IconButton(onPressed: () => context.pushNamed(SearchScreen.routeName), icon: const Icon(CupertinoIcons.search)),
+            /*IconButton(onPressed: () => context.pushNamed(SearchScreen.routeName), icon: const Icon(CupertinoIcons.search)),*/
             // IconButton(
             //   onPressed: () => context.pushNamed(NotificationsScreen.routeName),
             //   icon: const Icon(CupertinoIcons.bell),
@@ -246,14 +264,24 @@ class _HomeScreenState extends State<HomeScreen> {
         body: PageView(
           restorationId: "home_main_page_view_restoration_id",
           controller: mainPagesViewControler,
-          children: const [
-            HomeScreenPartialViewHome(),
-            HomeScreenPartialViewTeachings(),
-            HomeScreenPartialViewEchos(),
-            HomeScreenPartialViewFavorits(),
+          children: [
+            const HomeScreenPartialViewHome(),
+            const HomeScreenPartialViewTeachings(),
+            // HomeScreenPartialViewEchos(),
+            // HomeScreenPartialViewFavorits(),
+
+            ...List.generate(2, (element) {
+              return Center(
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Icon(CupertinoIcons.snow, size: CConstants.GOLDEN_SIZE * 12, color: Theme.of(context).colorScheme.primary),
+                const Text("Cette fonctionnalité vient bientôt"),
+              ]));
+            }),
             // UserPartialProfileScreen(showEditButton: true),
           ],
           onPageChanged: (int index) => setState(() {
+            _motionTabBarController?.index = index;
+
             selectedPageViewIndex = index;
             if (index == 3) {
               showFloatingActionButton = false;
@@ -263,33 +291,53 @@ class _HomeScreenState extends State<HomeScreen> {
           }),
         ),
 
+        /*body: TabBarView(
+          physics: const NeverScrollableScrollPhysics(), // swipe navigation handling is not supported
+          // controller: _tabController,
+          controller: _motionTabBarController,
+          children: const <Widget>[
+            HomeScreenPartialViewHome(),
+            HomeScreenPartialViewTeachings(),
+            HomeScreenPartialViewEchos(),
+            HomeScreenPartialViewFavorits(),
+            // UserPartialProfileScreen(showEditButton: true),
+          ],
+        ),*/
+
         // --- Floating button :
         floatingActionButton: SpeedDial(
           visible: showFloatingActionButton,
-          shape: const StadiumBorder(),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CConstants.GOLDEN_SIZE * 2)),
           activeIcon: CupertinoIcons.xmark,
           icon: CupertinoIcons.ellipsis_vertical,
+          buttonSize: const Size(50.4, 50.4),
+          elevation: 6.3,
+          animationCurve: Curves.ease,
           overlayColor: Theme.of(context).colorScheme.surfaceContainer,
           foregroundColor: CMiscClass.whenBrightnessOf(context, dark: Colors.white70),
           childMargin: const EdgeInsets.all(CConstants.GOLDEN_SIZE * 1),
-          label: const Text("Pub"),
+          childPadding: const EdgeInsets.symmetric(vertical: CConstants.GOLDEN_SIZE),
+          label: const Text("Menu"),
           activeLabel: const Text("Fermer"),
           children: [
-            SpeedDialChild(
-              label: "Publier un communiquer",
-              child: const Icon(CupertinoIcons.news),
-              onTap: () => context.pushNamed(NewCommScreen.routeName),
-            ),
-            SpeedDialChild(
-              label: "Publier un écho de la CFC",
-              child: const Icon(CupertinoIcons.radiowaves_right),
-              onTap: () => context.pushNamed(NewEchoScreen.routeName),
-            ),
-            SpeedDialChild(
-              label: "Publier un enseignement",
-              child: const Icon(CupertinoIcons.book),
-              onTap: () => context.pushNamed(NewTeachingScreen.routeName),
-            ),
+            // TODO: User role :
+            if (userData['role']?['role'] == 'COMMUNICATION_MANAGER') ...[
+              SpeedDialChild(
+                label: "Publier un communiquer",
+                child: const Icon(CupertinoIcons.news),
+                onTap: () => context.pushNamed(NewCommScreen.routeName),
+              ),
+              SpeedDialChild(
+                label: "Publier un enseignement",
+                child: const Icon(CupertinoIcons.book),
+                onTap: () => context.pushNamed(NewTeachingScreen.routeName),
+              ),
+              SpeedDialChild(
+                label: "Publier un écho de la CFC",
+                child: const Icon(CupertinoIcons.radiowaves_right),
+                onTap: () => context.pushNamed(NewEchoScreen.routeName),
+              ),
+            ],
             SpeedDialChild(
               label: "Calendrier pastoral",
               child: const Icon(CupertinoIcons.calendar),
@@ -304,7 +352,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
 
         // --- Navigation :
-        bottomNavigationBar: NavigationBarTheme(
+        /*bottomNavigationBar: NavigationBarTheme(
           data: NavigationBarThemeData(
             labelTextStyle: WidgetStatePropertyAll(Theme.of(context).textTheme.labelSmall),
             iconTheme: WidgetStatePropertyAll(
@@ -329,6 +377,38 @@ class _HomeScreenState extends State<HomeScreen> {
               mainPagesViewControler.jumpToPage(index);
             }),
           ),
+        ),*/
+
+        bottomNavigationBar: MotionTabBar(
+          controller: _motionTabBarController, // ADD THIS if you need to change your tab programmatically
+          initialSelectedTab: "Accueil",
+          labels: const ["Accueil", "Enseignements", "Echos", "Favoris"],
+          icons: const [
+            CupertinoIcons.home,
+            CupertinoIcons.book,
+            CupertinoIcons.radiowaves_right,
+            CupertinoIcons.heart,
+          ],
+          tabSize: 45,
+          tabBarHeight: 45,
+          textStyle: Theme.of(context).textTheme.labelSmall,
+          tabIconColor: CMiscClass.whenBrightnessOf(context, light: Colors.black, dark: CConstants.LIGHT_COLOR),
+          tabIconSize: 23.4,
+          tabIconSelectedSize: 23.4,
+          tabSelectedColor: Theme.of(context).colorScheme.primaryContainer,
+          tabIconSelectedColor: CMiscClass.whenBrightnessOf(context, light: Colors.blue, dark: CConstants.LIGHT_COLOR),
+          tabBarColor: CMiscClass.whenBrightnessOf(
+            context,
+            light: Theme.of(context).colorScheme.surfaceContainer,
+            dark: const Color.fromARGB(255, 33, 45, 61),
+          ),
+          onTabItemSelected: (int index) {
+            setState(() {
+              // _tabController!.index = value;
+              // _motionTabBarController!.index = value;
+              mainPagesViewControler.jumpToPage(index);
+            });
+          },
         ),
       ),
     );

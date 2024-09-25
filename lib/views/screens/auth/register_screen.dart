@@ -36,6 +36,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController phoneInputControler = TextEditingController();
   final TextEditingController coupleTextFieldController = TextEditingController();
+  final TextEditingController brithDateController = TextEditingController();
 
   // Couple search datas :
   Map coupleDatas = {
@@ -56,6 +57,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     'na': '',
   };
 
+  final _fucusNode = FocusNode();
+
   @override
   void setState(VoidCallback fn) => super.setState(fn);
 
@@ -64,7 +67,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   void initState() {
     Map extra = (widget.grState?.extra ?? {}) as Map;
-    inputDatas['phone_code'] = extra['phone_code'] ?? '';
+    inputDatas['phone_code'] = extra['phone_code'] ?? '243';
     inputDatas['phone_number'] = extra['phone_number'] ?? '';
     phoneInputControler.text = extra['phone_number'] ?? '';
 
@@ -95,7 +98,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           );
         }).toList();
     List<DropdownMenuEntry> dropDownPhoneCodeList = MiscDataHandlerMv.countriesCodes.map((element) {
-      return DropdownMenuEntry(value: element['code'], label: "${element['country']} ${element['code']}");
+      return DropdownMenuEntry(value: element['code'], label: "${element['code']}");
     }).toList();
 
     // -------------------------------------------------------------- :
@@ -134,6 +137,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: Column(
                         children: [
                           TextFormField(
+                            textCapitalization: TextCapitalization.sentences,
                             validator: CFormValidator([CFormValidator.required(), CFormValidator.min(3)]).validate,
                             decoration: const InputDecoration(hintText: "Nom complet", labelText: 'Nom complet'),
                             textInputAction: TextInputAction.next,
@@ -143,6 +147,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           Row(children: [
                             Expanded(
                               child: TextFormField(
+                                textCapitalization: TextCapitalization.sentences,
                                 validator: CFormValidator([CFormValidator.required()]).validate,
                                 decoration: const InputDecoration(hintText: "Prénom", labelText: 'Prénom'),
                                 textInputAction: TextInputAction.next,
@@ -164,28 +169,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ]),
                           const SizedBox(height: CConstants.GOLDEN_SIZE * 1),
                           TextFormField(
+                            controller: brithDateController,
+                            textCapitalization: TextCapitalization.sentences,
                             validator: CFormValidator([
                               CFormValidator.required(),
-                              CFormValidator.max(10, message: "Data incomplete"),
-                              CFormValidator.min(10, message: "Date incomplete"),
+                              // CFormValidator.max(10, message: "Data incomplete"),
+                              // CFormValidator.min(10, message: "Date incomplete"),
                             ]).validate,
+                            readOnly: true,
+                            onTap: _datePicker,
                             decoration: const InputDecoration(hintText: "jj/mm/aaaa", label: Text("Date de naissance")),
                             keyboardType: TextInputType.datetime,
                             textInputAction: TextInputAction.next,
-                            onChanged: (value) => _s(() => inputDatas['d_naissance'] = value),
+                            // onChanged: (value) => _s(() => inputDatas['d_naissance'] = value),
                             inputFormatters: [TextInputMask(mask: '99/99/9999', placeholder: '-', maxPlaceHolders: 8)],
                           ),
 
                           // -- Couple :
                           const SizedBox(height: CConstants.GOLDEN_SIZE * 1),
                           TextFormField(
+                            textCapitalization: TextCapitalization.sentences,
                             validator: CFormValidator([CFormValidator.required()]).validate,
                             controller: coupleTextFieldController,
                             textInputAction: TextInputAction.next,
                             readOnly: coupleDatas['state'] == 'selected' || typePersonne == 'jeune',
                             decoration: InputDecoration(
                               labelText:
-                                  typePersonne == 'parent' ? (inputDatas['civilite'] == 'F' ? 'Épouse' : 'Épous') : 'Famille',
+                                  typePersonne == 'parent' ? 'Couple' : 'Famille',
                               hintText:
                                   "Le nom de votre ${typePersonne == 'parent' ? 'partenaire (épous/épouse)' : 'Famille'}",
                               suffixIcon: Row(
@@ -234,6 +244,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               Expanded(
                                 flex: 2,
                                 child: TextFormField(
+                                  focusNode: _fucusNode,
+                                  textCapitalization: TextCapitalization.sentences,
                                   validator: CFormValidator([CFormValidator.required()]).validate,
                                   controller: phoneInputControler,
                                   decoration: const InputDecoration(hintText: "Numéro de téléphone"),
@@ -241,6 +253,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   textInputAction: TextInputAction.done,
                                   onChanged: (value) => _s(() => inputDatas['phone_number'] = value),
                                   inputFormatters: [TextInputMask(mask: '999-999-999', placeholder: '_', maxPlaceHolders: 9)],
+                                  onTapOutside: (event) {
+                                    _fucusNode.unfocus();
+                                  },
                                 ),
                               ),
                             ],
@@ -252,7 +267,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             value: inputDatas['deja_membre'],
                             controlAffinity: ListTileControlAffinity.leading,
                             visualDensity: VisualDensity.compact,
-                            title: const Text("Je suis déjà membre d'une communauté, pool ou NA."),
+                            title: const Text("Je suis déjà membre de la communauté famille chrétienne."),
                             onChanged: (bool? state) => setState(() => inputDatas['deja_membre'] = state ?? false),
                           ),
 
@@ -497,17 +512,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
           content: const Text("Échec ! Une erreur est survenue lors de l'enregistrement."),
           backgroundColor: Theme.of(context).colorScheme.error,
         );
-
-        // TODO: remove because is for debug. {#f00,8}
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text("Registration error verif"),
-            // content: Text(error.toString()),
-            content: Text(error.toString()),
-          ),
-        );
       },
     );
+  }
+
+  void _datePicker() {
+    showDatePicker(
+      context: context,
+      firstDate: DateTime(1944),
+      initialDate: brithDateController.text.isEmpty ? DateTime.now() : DateTime.parse(inputDatas['d_naissance']),
+      lastDate: DateTime.now(),
+      helpText: "Date de naissance",
+    ).then((selected) {
+      if (selected != null) {
+        brithDateController.text = "${selected.day}/${selected.month}/${selected.year}";
+        inputDatas['d_naissance'] = selected.toIso8601String();
+      }
+    });
+
   }
 }

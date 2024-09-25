@@ -440,12 +440,14 @@ class _UserFamilyCoupleScreenState extends State<UserFamilyCoupleScreen> {
               Text("Mon couple", style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
               const SizedBox(height: CConstants.GOLDEN_SIZE),
               TextFormField(
+                textCapitalization: TextCapitalization.sentences,
                 validator: CFormValidator([CFormValidator.required(message: "Un couple doit avoir un nom.")]).validate,
                 decoration: const InputDecoration(label: Text("Nom du couple")),
                 controller: coupleNameControler,
               ),
               const SizedBox(height: CConstants.GOLDEN_SIZE),
               TextFormField(
+                textCapitalization: TextCapitalization.sentences,
                 decoration: const InputDecoration(label: Text("Date du mariage")),
                 controller: dMariageNameControler,
                 keyboardType: TextInputType.datetime,
@@ -453,11 +455,13 @@ class _UserFamilyCoupleScreenState extends State<UserFamilyCoupleScreen> {
               ),
               const SizedBox(height: CConstants.GOLDEN_SIZE),
               TextFormField(
+                textCapitalization: TextCapitalization.sentences,
                 decoration: const InputDecoration(label: Text("Adresse")),
                 controller: adresseNameControler,
               ),
               const SizedBox(height: CConstants.GOLDEN_SIZE),
               TextFormField(
+                textCapitalization: TextCapitalization.sentences,
                 decoration: const InputDecoration(label: Text("Numéro de téléphone")),
                 // inputFormatters: [TextInputMask(mask: '999-999-999', placeholder: '_', maxPlaceHolders: 9)],
                 keyboardType: TextInputType.phone,

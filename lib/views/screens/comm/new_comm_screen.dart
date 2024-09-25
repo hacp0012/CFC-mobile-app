@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:markdown_toolbar/markdown_toolbar.dart';
 import 'package:styled_text/styled_text.dart';
 import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
@@ -46,6 +47,8 @@ class _NewCommScreenState extends State<NewCommScreen> {
   TextEditingController textEditingControllerCom = TextEditingController();
   var titleTextFieldKey = GlobalKey<FormState>();
   var comTextFieldKkey = GlobalKey<FormState>();
+
+  final _focusNodeEditCom = FocusNode();
 
   String? selectHeadPicture;
   String? attachedDocument;
@@ -100,6 +103,7 @@ class _NewCommScreenState extends State<NewCommScreen> {
                     key: titleTextFieldKey,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     child: TextFormField(
+                      textCapitalization: TextCapitalization.sentences,
                       controller: textEditingControllerTitle,
                       validator: CFormValidator([CFormValidator.required(message: "Un titre est requis")]).validate,
                       onChanged: (value) => draftInstance.keep('title', value),
@@ -195,44 +199,58 @@ class _NewCommScreenState extends State<NewCommScreen> {
               // --- Text body :
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: CConstants.GOLDEN_SIZE),
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(CConstants.DEFAULT_RADIUS / 2)),
-                  child: Form(
-                    key: comTextFieldKkey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    child: TextFormField(
-                      controller: textEditingControllerCom,
-                      validator: CFormValidator([
-                        CFormValidator.required(
-                          message: "Un tout petit texte descriptif de votre communiqué est nécessaire.",
-                        ),
-                        CFormValidator.min(9),
-                      ]).validate,
-                      onChanged: (value) => draftInstance.keep('teaching', value),
-                      decoration: const InputDecoration(
-                        labelText: "Enseignement en texte (obligatoire)",
-                        hintText: "Écrivez le cours de vôtre enseignement ici ... Juste quelques lignes ou plus",
-                        border: InputBorder.none,
-                        hintMaxLines: 2,
-                        helperMaxLines: 2,
-                        errorMaxLines: 2,
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                        prefixIcon: Icon(CupertinoIcons.t_bubble),
-                        prefixIconConstraints: BoxConstraints(minWidth: CConstants.GOLDEN_SIZE * 4),
-                        constraints: BoxConstraints(maxHeight: CConstants.GOLDEN_SIZE * 36),
+                child: Form(
+                  key: comTextFieldKkey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: TextFormField(
+                    textCapitalization: TextCapitalization.sentences,
+                    controller: textEditingControllerCom,
+                    focusNode: _focusNodeEditCom,
+                    validator: CFormValidator([
+                      CFormValidator.required(
+                        message: "Un tout petit texte descriptif de votre communiqué est nécessaire.",
                       ),
-                      maxLines: null,
-                      keyboardType: TextInputType.multiline,
+                      CFormValidator.min(9),
+                    ]).validate,
+                    onChanged: (value) => draftInstance.keep('teaching', value),
+                    decoration: const InputDecoration(
+                      labelText: "Enseignement en texte (obligatoire)",
+                      hintText: "Écrivez le cours de vôtre enseignement ici ... Juste quelques lignes ou plus",
+                      // border: InputBorder.none,
+                      hintMaxLines: 2,
+                      helperMaxLines: 2,
+                      errorMaxLines: 2,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      prefixIcon: Icon(CupertinoIcons.t_bubble),
+                      prefixIconConstraints: BoxConstraints(minWidth: CConstants.GOLDEN_SIZE * 4),
+                      constraints: BoxConstraints(maxHeight: CConstants.GOLDEN_SIZE * 36),
                     ),
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
                   ),
                 ),
+              ),
+              MarkdownToolbar(
+                useIncludedTextField: false,
+                controller: textEditingControllerCom,
+                focusNode: _focusNodeEditCom,
+                alignCollapseButtonEnd: true,
+                borderRadius: BorderRadius.circular(CConstants.GOLDEN_SIZE / 2),
+                spacing: CConstants.GOLDEN_SIZE / 2,
+                iconSize: CConstants.GOLDEN_SIZE * 2,
+                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                flipCollapseButtonIcon: true,
+                height: CConstants.GOLDEN_SIZE * 3,
+                width: CConstants.GOLDEN_SIZE * 3,
+                iconColor: Theme.of(context).colorScheme.onSurface,
+                hideCode: true,
+                hideImage: true,
               ),
 
               // --- TTS reader button :
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: CConstants.GOLDEN_SIZE),
-                child:
-                    CTtsReaderWidget(text: () => textEditingControllerCom.text, buttonText: "Ecouter les textes écrit"),
+                child: CTtsReaderWidget(text: () => textEditingControllerCom.text, buttonText: "Ecouter les textes écrit"),
               ),
 
               const SizedBox(height: CConstants.GOLDEN_SIZE * 7),

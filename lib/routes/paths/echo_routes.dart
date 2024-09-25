@@ -14,7 +14,7 @@ final List<GoRoute> echoRoutes = [
 
         if (state.extra is Map) data = state.extra as Map;
 
-        return ReadEchoScreen(echoId: data['com_id']);
+        return ReadEchoScreen(echoId: data['echo_id']);
       },
     ),
     GoRoute(

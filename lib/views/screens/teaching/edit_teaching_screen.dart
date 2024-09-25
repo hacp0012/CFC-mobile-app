@@ -27,6 +27,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:markdown_toolbar/markdown_toolbar.dart';
 import 'package:pretty_print_json/pretty_print_json.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:styled_text/styled_text.dart';
@@ -64,6 +65,8 @@ class _EditTeachingScreenState extends State<EditTeachingScreen> {
   var dateVerseTextFieldKey = GlobalKey<FormState>();
   var titleTextFieldKey = GlobalKey<FormState>();
   var echoTextFieldKkey = GlobalKey<FormState>();
+
+  final _focusNodeEditorCom = FocusNode();
 
   String? selectHeadPicture;
   String? attachedDocument;
@@ -216,6 +219,7 @@ class _EditTeachingScreenState extends State<EditTeachingScreen> {
                           key: titleTextFieldKey,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           child: TextFormField(
+                            textCapitalization: TextCapitalization.sentences,
                             controller: textEditingControllerTitle,
                             validator: CFormValidator([CFormValidator.required(message: "Un titre est requis")]).validate,
                             onChanged: (value) => draftInstance.keep('title', value),
@@ -244,6 +248,7 @@ class _EditTeachingScreenState extends State<EditTeachingScreen> {
                             Expanded(
                               flex: 3,
                               child: TextFormField(
+                                textCapitalization: TextCapitalization.sentences,
                                 controller: textEditingControllerDate,
                                 validator: CFormValidator([CFormValidator.date(message: "Ex. jj/mm/aaaa")]).validate,
                                 onChanged: (value) => draftInstance.keep('date', value),
@@ -265,6 +270,7 @@ class _EditTeachingScreenState extends State<EditTeachingScreen> {
                             Expanded(
                               flex: 4,
                               child: TextFormField(
+                                textCapitalization: TextCapitalization.sentences,
                                 controller: textEditingControllerVerse,
                                 // validator: CFormValidator([CFormValidator.date()]).validate,
                                 onChanged: (value) => draftInstance.keep('verse', value),
@@ -292,6 +298,7 @@ class _EditTeachingScreenState extends State<EditTeachingScreen> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(CConstants.DEFAULT_RADIUS / 2),
                           child: TextFormField(
+                            textCapitalization: TextCapitalization.sentences,
                             controller: textEditingControllerPredicator,
                             validator:
                                 CFormValidator([CFormValidator.required(message: "Un nom d'un prédicateur est requise")])
@@ -312,37 +319,54 @@ class _EditTeachingScreenState extends State<EditTeachingScreen> {
                     // --- Text body :
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: CConstants.GOLDEN_SIZE),
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.all(Radius.circular(CConstants.DEFAULT_RADIUS / 2)),
-                        child: Form(
-                          key: echoTextFieldKkey,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          child: TextFormField(
-                            controller: textEditingControllerCom,
-                            validator: CFormValidator([
-                              CFormValidator.required(
-                                message: "Un tout petit texte descriptif de votre communiqué est nécessaire.",
-                              ),
-                              CFormValidator.min(9),
-                            ]).validate,
-                            onChanged: (value) => draftInstance.keep('teaching', value),
-                            decoration: const InputDecoration(
-                              labelText: "Enseignement en texte (obligatoire)",
-                              hintText: "Écrivez le cours de vôtre enseignement ici ... Juste quelques lignes ou plus",
-                              border: InputBorder.none,
-                              hintMaxLines: 2,
-                              helperMaxLines: 2,
-                              errorMaxLines: 2,
-                              floatingLabelBehavior: FloatingLabelBehavior.always,
-                              prefixIcon: Icon(CupertinoIcons.t_bubble),
-                              prefixIconConstraints: BoxConstraints(minWidth: CConstants.GOLDEN_SIZE * 4),
-                              constraints: BoxConstraints(maxHeight: CConstants.GOLDEN_SIZE * 36),
+                      child: Form(
+                        key: echoTextFieldKkey,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        child: TextFormField(
+                          textCapitalization: TextCapitalization.sentences,
+                          controller: textEditingControllerCom,
+                          focusNode: _focusNodeEditorCom,
+                          validator: CFormValidator([
+                            CFormValidator.required(
+                              message: "Un tout petit texte descriptif de votre communiqué est nécessaire.",
                             ),
-                            maxLines: null,
-                            keyboardType: TextInputType.multiline,
+                            CFormValidator.min(9),
+                          ]).validate,
+                          onChanged: (value) => draftInstance.keep('teaching', value),
+                          decoration: const InputDecoration(
+                            labelText: "Enseignement en texte (obligatoire)",
+                            hintText: "Écrivez le cours de vôtre enseignement ici ... Juste quelques lignes ou plus",
+                            // border: InputBorder.none,
+                            hintMaxLines: 2,
+                            helperMaxLines: 2,
+                            errorMaxLines: 2,
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                            prefixIcon: Icon(CupertinoIcons.t_bubble),
+                            prefixIconConstraints: BoxConstraints(minWidth: CConstants.GOLDEN_SIZE * 4),
+                            constraints: BoxConstraints(maxHeight: CConstants.GOLDEN_SIZE * 36),
                           ),
+                          maxLines: null,
+                          keyboardType: TextInputType.multiline,
                         ),
                       ),
+                    ),
+                    // Markdown toolbar
+                    MarkdownToolbar(
+                      useIncludedTextField: false,
+                      controller: textEditingControllerCom,
+                      focusNode: _focusNodeEditorCom,
+
+                      alignCollapseButtonEnd: true,
+                      borderRadius: BorderRadius.circular(CConstants.GOLDEN_SIZE / 2),
+                      spacing: CConstants.GOLDEN_SIZE / 2,
+                      iconSize: CConstants.GOLDEN_SIZE * 2,
+                      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                      flipCollapseButtonIcon: true,
+                      height: CConstants.GOLDEN_SIZE * 3,
+                      width: CConstants.GOLDEN_SIZE * 3,
+                      iconColor: Theme.of(context).colorScheme.onSurface,
+                      hideCode: true,
+                      hideImage: true,
                     ),
 
                     // --- TTS reader button :
@@ -404,9 +428,11 @@ class _EditTeachingScreenState extends State<EditTeachingScreen> {
                     TextButton.icon(
                       icon: const Icon(CupertinoIcons.refresh),
                       style: const ButtonStyle(visualDensity: VisualDensity.compact),
-                      onPressed: isInPushingMode ? null : () {
-                        CSAudioPalyer.inst.source = CDocumentHandlerClass.byPid(teachData['audio'] ?? '---');
-                      },
+                      onPressed: isInPushingMode
+                          ? null
+                          : () {
+                              CSAudioPalyer.inst.source = CDocumentHandlerClass.byPid(teachData['audio'] ?? '---');
+                            },
                       label: const Text("Recharger"),
                     ),
                     FilledButton.icon(

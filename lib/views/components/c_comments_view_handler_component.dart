@@ -6,12 +6,14 @@ import 'package:cfc_christ/classes/c_sections_types_enum.dart';
 import 'package:cfc_christ/configs/c_api.dart';
 import 'package:cfc_christ/configs/c_constants.dart';
 import 'package:cfc_christ/model_view/user_mv.dart';
+import 'package:cfc_christ/views/screens/user/user_profile_details_screen.dart';
 import 'package:cfc_christ/views/widgets/c_snackbar_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pretty_print_json/pretty_print_json.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
 class CCommentsViewHandlerComponent extends StatefulWidget {
   const CCommentsViewHandlerComponent({
@@ -43,6 +45,7 @@ class _CCommentsViewHandlerComponentState extends State<CCommentsViewHandlerComp
 
   var mainTextFieldKey = GlobalKey<FormState>();
   var editTextFieldKey = GlobalKey<FormState>();
+  var mainFocusNode = FocusNode();
 
   List commentsList = [];
 
@@ -65,10 +68,13 @@ class _CCommentsViewHandlerComponentState extends State<CCommentsViewHandlerComp
             key: mainTextFieldKey,
             child: TextFormField(
               controller: mainTextFieldController,
+              textCapitalization: TextCapitalization.sentences,
               validator: CFormValidator([CFormValidator.min(3, message: "Min 3 caractères")]).validate,
               decoration: const InputDecoration().copyWith(hintText: "Laissez votre commentaire ici ..."),
               maxLines: null,
               keyboardType: TextInputType.multiline,
+              focusNode: mainFocusNode,
+              onTapOutside: (event) => mainFocusNode.unfocus(),
             ),
           ),
         ),
@@ -87,10 +93,13 @@ class _CCommentsViewHandlerComponentState extends State<CCommentsViewHandlerComp
               child: const Text("Chargement des commantaires..."),
             );
           } else if (commentsList.isEmpty) {
-            return Text(
-              "Aucun commentaire disponible",
-              style: Theme.of(context).textTheme.labelSmall,
-              textAlign: TextAlign.center,
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 9.0),
+              child: Text(
+                "Aucun commentaire disponible",
+                style: Theme.of(context).textTheme.labelSmall,
+                textAlign: TextAlign.center,
+              ),
             );
           }
 
@@ -102,9 +111,15 @@ class _CCommentsViewHandlerComponentState extends State<CCommentsViewHandlerComp
                 Column(
                   children: [
                     const SizedBox(height: CConstants.GOLDEN_SIZE * 1.5),
-                    CircleAvatar(
-                      backgroundImage: CachedNetworkImageProvider(CImageHandlerClass.userById(comment['poster']['id'])),
-                      radius: CConstants.GOLDEN_SIZE * 2,
+                    GestureAnimator(
+                      child: CircleAvatar(
+                        backgroundImage: CachedNetworkImageProvider(CImageHandlerClass.userById(comment['poster']['id'])),
+                        radius: CConstants.GOLDEN_SIZE * 2,
+                      ),
+                      onTap: () => context.pushNamed(
+                        UserProfileDetailsScreen.routeName,
+                        extra: {'user_id': comment['poster']['id']},
+                      ),
                     ),
                   ],
                 ),
@@ -112,13 +127,18 @@ class _CCommentsViewHandlerComponentState extends State<CCommentsViewHandlerComp
                 Expanded(
                   child: Card(
                     elevation: 0,
-                    // margin: const EdgeInsets.all(CConstants.GOLDEN_SIZE),
                     child: Padding(
                       padding: const EdgeInsets.all(CConstants.GOLDEN_SIZE / 2),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(comment['poster']['fullname']),
+                          Row(children: [
+                            Expanded(child: Text(comment['poster']['fullname'])),
+                            Text(
+                              CMiscClass.date(DateTime.parse(comment['comment']['created_at'])).ago(),
+                              style: Theme.of(context).textTheme.labelSmall,
+                            ),
+                          ]),
                           SelectableText(
                             comment['comment']['comment'],
                             style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -131,9 +151,9 @@ class _CCommentsViewHandlerComponentState extends State<CCommentsViewHandlerComp
                                 visualDensity: VisualDensity.compact,
                                 alignment: Alignment.centerLeft,
                               ),
-                              onPressed: null,
+                              onPressed: isInPushing ? null : () => likeThis(index),
                               icon: const Icon(CupertinoIcons.heart, size: CConstants.GOLDEN_SIZE * 2),
-                              label: const Text("0"),
+                              label: Text(CMiscClass.numberAbrev((commentsList[index]['likes'] as int).toDouble())),
                             ),
                             const Spacer(),
                             const TextButton(
@@ -197,6 +217,7 @@ class _CCommentsViewHandlerComponentState extends State<CCommentsViewHandlerComp
 
     CApi.request.get('/comment/handler/get.EoJkzyMftwPf72SCUuNxv8IMiinUL9rKIOTi', data: data).then(
       (res) {
+        prettyPrintJson(res.data);
         setState(() {
           isInPushing = false;
           isInLoading = false;
@@ -307,6 +328,7 @@ class _CCommentsViewHandlerComponentState extends State<CCommentsViewHandlerComp
                     key: editTextFieldKey,
                     child: TextFormField(
                       controller: editTextFieldController,
+                      textCapitalization: TextCapitalization.sentences,
                       validator: CFormValidator([CFormValidator.min(3, message: 'Min 3 caractères')]).validate,
                       decoration: const InputDecoration().copyWith(
                         hintText: "Modifier votre commentaire ici ...",
@@ -338,6 +360,27 @@ class _CCommentsViewHandlerComponentState extends State<CCommentsViewHandlerComp
         );
       },
     );
+  }
+
+  likeThis(int index) {
+    setState(() => isInPushing = true);
+
+    var comment = commentsList[index];
+
+    Map data = {
+      'commentId': comment['comment']['id'],
+      'reactorId': comment['poster']['id'],
+    };
+
+    CApi.request.post('/comment/handler/like.reaction.gfsUuXfSdNUDdUruwSGDjbm2xQf', data: data).then((res) {
+      setState(() => isInPushing = false);
+
+      if (res.data is Map && res.data['success']) {
+        commentsList[index]['likes'] = res.data['count'];
+      }
+    }).catchError((err) {
+      setState(() => isInPushing = false);
+    });
   }
 
   // ADMIN --> --------------------------------- :

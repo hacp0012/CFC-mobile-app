@@ -54,6 +54,7 @@ class Assets {
   static const String configsTCDialog = 'lib/theme/configs/t_c_dialog.dart';
   static const String configsTcAppbar = 'lib/theme/configs/tc_appbar.dart';
   static const String configsTcButton = 'lib/theme/configs/tc_button.dart';
+  static const String configsTcCard = 'lib/theme/configs/tc_card.dart';
   static const String configsTcDrawer = 'lib/theme/configs/tc_drawer.dart';
   static const String configsTcDropdownButton = 'lib/theme/configs/tc_dropdown_button.dart';
   static const String configsTcListTile = 'lib/theme/configs/tc_list_tile.dart';
@@ -85,6 +86,7 @@ class Assets {
   static const String fontsFigtreeVariableFontWght = 'lib/assets/fonts/Figtree-VariableFont_wght.ttf';
   static const String generatedAssets = 'lib/generated/assets.dart';
   static const String homeHomeScreen = 'lib/views/screens/home/home_screen.dart';
+  static const String iconsBCFC = 'lib/assets/icons/b_CFC.png';
   static const String iconsBackground = 'lib/assets/icons/background.png';
   static const String iconsIcon = 'lib/assets/icons/icon.png';
   static const String iconsLOGOCFC512 = 'lib/assets/icons/LOGO_CFC_512.png';
@@ -178,6 +180,7 @@ class Assets {
   static const String widgetsCAudioRecoderWidget = 'lib/views/widgets/c_audio_recoder_widget.dart';
   static const String widgetsCDocumentSelectFileWidget = 'lib/views/widgets/c_document_select_file_widget.dart';
   static const String widgetsCImageCropper = 'lib/views/widgets/c_image_cropper.dart';
+  static const String widgetsCImagePreviewerWidget = 'lib/views/widgets/c_image_previewer_widget.dart';
   static const String widgetsCModalWidget = 'lib/views/widgets/c_modal_widget.dart';
   static const String widgetsCSnackbarWidget = 'lib/views/widgets/c_snackbar_widget.dart';
   static const String widgetsCTtsReaderWidget = 'lib/views/widgets/c_tts_reader_widget.dart';
